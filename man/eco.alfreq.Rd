@@ -2,14 +2,14 @@
 % Please edit documentation in R/eco.alfreq.R
 \name{eco.alfreq}
 \alias{eco.alfreq}
-\title{Allelic frequency histogram for an ecogen genetic data frame.}
+\title{Allelic frequency histogram for an ecogen genetic data frame}
 \usage{
 eco.alfreq(eco, fact = NULL)
 }
 \arguments{
 \item{eco}{ecogen object}
 
-\item{fact}{optional factor (column of S slot) for ploting by group.}
+\item{fact}{optional factor (column of S slot) for plotting by group.}
 }
 \description{
 This program computes the frequency of each allele and plots

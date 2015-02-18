@@ -3,18 +3,18 @@
 \name{eco.append}
 \alias{eco.append}
 \title{Creating an updated ecogen object by adding
-results to the slot OUT.}
+results to the slot OUT}
 \usage{
 eco.append(eco, ...)
 }
 \arguments{
 \item{eco}{ecogen object.}
 
-\item{...}{objects to append to eco, typed without quotations.}
+\item{...}{objects to include in eco, typed without quotations.}
 }
 \description{
 Creating an updated ecogen object by adding
-results to the slot OUT.
+results to the slot OUT
 }
 \examples{
 \dontrun{

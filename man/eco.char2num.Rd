@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.char2num.R
 \name{eco.char2num}
 \alias{eco.char2num}
-\title{Converting data coded with characters into data coded by numbers.}
+\title{Converting data coded with characters into data coded by numbers}
 \usage{
 eco.char2num(data, ndig = 0)
 }
@@ -14,7 +14,7 @@ alleles. Default takes each cell as having a character or string that
 indicates a single information (see examples).}
 }
 \description{
-Converting data coded with characters into data coded by numbers.
+Converting data coded with characters into data coded by numbers
 }
 \details{
 This function creates a data frame with data recoded in numeric

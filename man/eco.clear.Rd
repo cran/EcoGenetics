@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.clear.R
 \name{eco.clear}
 \alias{eco.clear}
-\title{Clearing the working environment, maintaining only the specified objects.}
+\title{Clearing the working environment, maintaining only the specified objects}
 \usage{
 eco.clear(...)
 }
@@ -10,7 +10,7 @@ eco.clear(...)
 \item{...}{Objects to retain.}
 }
 \description{
-Clearing the working environment, maintaining only the specified objects.
+Clearing the working environment, maintaining only the specified objects
 }
 \examples{
 \dontrun{

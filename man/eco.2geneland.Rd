@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.2geneland.R
 \name{eco.2geneland}
 \alias{eco.2geneland}
-\title{Creating input data for Geneland with an ecogen object.}
+\title{Creating input data for Geneland with an ecogen object}
 \usage{
 eco.2geneland(eco, ndig)
 }
@@ -10,7 +10,7 @@ eco.2geneland(eco, ndig)
 \item{eco}{ecogen object.}
 
 \item{ndig}{Number of digits coding each allele (e.g. 1: x, 2: xx or
-3: xxx) when there is more than one allele per individual locus.}
+3: xxx) when data is diploid.}
 }
 \value{
 XY.txt matrix with coordinates.
@@ -27,10 +27,8 @@ This function creates four data frames in the workspace
 }
 \examples{
 \dontrun{
-
 data(eco.test)
 eco.2geneland(eco, 1)
-
 }
 }
 \author{

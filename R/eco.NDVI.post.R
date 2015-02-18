@@ -1,184 +1,122 @@
-#' Postprocessing for NDVI and MSAVI 2 temporal series of Landsat 5 and 7.
-#' @param tab Table used with \code{\link{eco.NDVI}}.
-#' @param correct Correction method used in \code{\link{eco.NDVI}}.
-#' @param method the vegetation index used in \code{\link{eco.NDVI}}.
-#' @param datatype type of data, see \code{\link[raster]{dataType}}. 
-#' Default "FLT4S".
-#' @param what Functions to apply over the created stack. 
-#' The values permitted are: "none", "max", "min", "mean" and "var".
-#' The functions are implemented with \code{\link[raster]{calc}}.
-#' If more that one function would be applied, must be used the following
-#' syntax: c("fun1", "fun2", "funi"),
-#' @description 
-#' This program must be used sequentially after \code{\link{eco.NDVI}}.
-#' The inputs required (tab, correct, method) are the same described
-#' and used in that function. The algorithm stacks the images and save
-#' the stack into the working directory with the name "time.tif". 
-#' If the user wishes, the program can also compute images of max, min,
-#' mean and var by pixel over the temporal sequence. Default is "mean".
-#' @seealso eco.NDVI
-#' @seealso extract
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
-#' @examples
-#' \dontrun{
-#' 
-#' require(raster)
-#' 
-#' data(eco.test)
-#' temp <- list()
-#'
-#' # we create 4 simulated rasters for the data included in the object tab:
-#'
-#' for(i in 1:4) {
-#' temp[[i]] <- runif(19800, 0, 254)
-#' temp[[i]] <- matrix(temp[[i]], 180, 110)
-#' temp[[i]] <- raster(temp[[i]])
-#' extent(temp[[i]]) <- c(3770000, 3950000,6810000, 6920000)
-#' }
-#'
-#'
-#' writeRaster(temp[[1]], "20040719b4.tif", overwrite = T) 
-#' writeRaster(temp[[2]], "20040719b3.tif", overwrite = T)
-#' writeRaster(temp[[3]], "20091106b4.tif", overwrite = T)
-#' writeRaster(temp[[4]], "20091106b3.tif", overwrite = T)
-#'
-#' # Computing NDVI images: 
-#'
-#' eco.NDVI(tab, "COST", "NDVI", "LT5")
-#'
-#' # Mean NDVI image computed over the NDVI images that we calculated:
-#'
-#' eco.NDVI.post(tab, "COST", "NDVI", what = c("mean", "var"))
-#' mean.ndvi <- raster("NDVI.COST.mean.tif")
-#' plot(mean.ndvi)
-#'
-#' # Extraction of the mean NDVI for each point in the object eco and plot
-#' of the data:
-#' 
-#' ndvi <- extract(mean.ndvi, eco$XY)
-#' ndvi<-eco.rescale(ndvi)
-#' plot(eco$XY[, 1], eco$XY[, 2], col=rgb(ndvi, 0, 0),
-#' pch=15, main = "Mean NDVI", xlab = "X", ylab  = "Y")
-#' 
-#' }
-#' @export
-#' 
+# Postprocessing for NDVI and MSAVI 2 temporal series of Landsat 5 and 7
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# February 18, 2015
 
 
 setGeneric("eco.NDVI.post", 
-					 function(tab,correct = c("COST", "DOS"), 
-					 				 method = c("NDVI", "MSAVI2"), 
-					 				 datatype =  c("FLT4S", "FLT8S", "INT4U", "INT4S", 
-					 				 							"INT2U", "INT2S", "INT1U", "INT1S", 
-					 				 							"LOG1S"), 
-					 				 what = c("mean", "max", "min", "var", "none")) {
-  
-	correct <- match.arg(correct)														
-  method <- match.arg(method)
-	datatype <- match.arg(datatype)
-	what <- match.arg(what, several.ok =  TRUE)
-	
-	y <- pmatch(what, c("mean", "max", "min", "var", "none"))
- 
-  
-  esperar <- function(i){
-    cat ("\r", 100 * i / steps, "% ", "complete",  sep = "")
-  }
-  
-  
-  steps <- nrow(tab)
-  
-  message("\n", "loading parameters", "\n")
-  
-  xmin <- rep(0, nrow(tab))
-  xmax <- rep(0, nrow(tab))
-  ymin <- rep(0, nrow(tab))
-  ymax <- rep(0, nrow(tab))
-  
-  for(i in 1:nrow(tab)) {
-    xmin[i] <- raster::extent(raster::raster(as.character(paste(method, correct,
-                                                tab[i, 7], ".tif",
-                                                sep = ""))))@xmin
-    xmax[i] <- raster::extent(raster::raster(as.character(paste(method, correct,
-                                                tab[i, 7], ".tif",
-                                                sep = ""))))@xmax
-    ymin[i] <- raster::extent(raster::raster(as.character(paste(method, correct,
-                                                tab[i, 7], ".tif",
-                                                sep = ""))))@ymin
-    ymax[i] <- raster::extent(raster::raster(as.character(paste(method, correct,
-                                                tab[i, 7], ".tif",
-                                                sep = ""))))@ymax
-  }
-  
-  dimension = c(max(xmin), min(xmax), max(ymin), min(ymax))
-  
-  message("\n", "stacking images, please wait...", "\n")
-  
-  raster::writeRaster(raster::crop(raster::raster(as.character(paste(method, correct,
-                                             tab[1, 7], ".tif",
-                                             sep = ""))), 
-                   raster::extent(dimension)), paste(method, correct, "time.tif",
-                                             sep = ""), format = "GTiff",
-  						datatype = datatype, overwrite = T)
-  
-  
-  for(i in 2:nrow(tab)) {
-    raster::writeRaster(raster::addLayer(raster::brick(paste(method, correct, "time.tif",
-                                     sep = "")), 
-    										raster::crop(raster::raster(as.character(paste(method, correct,
-                                                        tab[i, 7], 
-                                                        ".tif", sep = ""))),
-                              raster::extent(dimension))), format = "GTiff",
-    						datatype = datatype,  "temporal.tif", 
-                overwrite = T)    
-    raster::writeRaster(raster::brick("temporal.tif"), paste(method, correct, "time.tif", 
-                                             sep = ""), format = "GTiff",
-    						datatype = datatype,  overwrite = T)
-    esperar(i)
-    
-  }
-  file.remove("temporal.tif")
-  
-  
-  message("computing...")
-  
-  time <- raster::brick(paste(method, correct, "time.tif",  sep = ""))
-	
-	if(any(y == 1)) {
-		cat("\n", "computing mean", "\n")
-		temp <- raster::calc(time, mean)
-		raster::writeRaster(temp, paste(method, ".", correct, ".", "mean.tif",
-																		sep = ""), format="GTiff", 
-												datatype = datatype,  overwrite = T)
-	}
-  
-  if(any(y == 2)) {
-    cat("\n", "computing max", "\n")
-    temp <- raster::calc(time, max)
-    raster::writeRaster(temp, paste(method, ".", correct, ".", "max.tif",
-                            sep = ""), format="GTiff",
-    						datatype = datatype, overwrite = T)
-  }
-  
-  if(any(y == 3)) {
-    cat("\n", "computing min", "\n") 
-    temp <- raster::calc(time, min)
-    raster::writeRaster(temp, paste(method, ".", correct, ".", "min.tif",
-                            sep = ""), format="GTiff", 
-    										datatype = datatype, overwrite = T)
-  }
-  
-  
-  if(any(y == 4)) {
-    cat("\n", "computing variance", "\n")
-    temp <- raster::calc(time, var)
-    raster::writeRaster(temp, paste(method, ".", correct, ".", "var.tif",
-                            sep = ""), format = "GTiff", 
-    										datatype = datatype, overwrite = T)
-  }
-	
-  cat("\n", "done", "\n")
-  ReturnVal <- tcltk::tkmessageBox(title = "VI post process", 
-                                    message = "process successful!",
-                                    icon = "info", type = "ok")
-})
+           function(tab,correct = c("COST", "DOS"), 
+                    method = c("NDVI", "MSAVI2"), 
+                    datatype =  c("FLT4S", "FLT8S", "INT4U", "INT4S", 
+                                  "INT2U", "INT2S", "INT1U", "INT1S", 
+                                  "LOG1S"), 
+                    what = c("mean", "max", "min", "var", "none")) {
+             
+             correct <- match.arg(correct)              
+             method <- match.arg(method)
+             datatype <- match.arg(datatype)
+             what <- match.arg(what, several.ok =  TRUE)
+             
+             y <- pmatch(what, c("mean", "max", "min", "var", "none"))
+             
+             
+             esperar <- function(i){
+               cat ("\r", 100 * i / steps, "% ", "complete",  sep = "")
+             }
+             
+             
+             steps <- nrow(tab)
+             
+             message("\n", "loading parameters", "\n")
+             
+             xmin <- rep(0, nrow(tab))
+             xmax <- rep(0, nrow(tab))
+             ymin <- rep(0, nrow(tab))
+             ymax <- rep(0, nrow(tab))
+             
+             for(i in 1:nrow(tab)) {
+               xmin[i] <- raster::extent(raster::raster(as.character(paste(method, correct,
+                                                                           tab[i, 7], ".tif",
+                                                                           sep = ""))))@xmin
+               xmax[i] <- raster::extent(raster::raster(as.character(paste(method, correct,
+                                                                           tab[i, 7], ".tif",
+                                                                           sep = ""))))@xmax
+               ymin[i] <- raster::extent(raster::raster(as.character(paste(method, correct,
+                                                                           tab[i, 7], ".tif",
+                                                                           sep = ""))))@ymin
+               ymax[i] <- raster::extent(raster::raster(as.character(paste(method, correct,
+                                                                           tab[i, 7], ".tif",
+                                                                           sep = ""))))@ymax
+             }
+             
+             dimension = c(max(xmin), min(xmax), max(ymin), min(ymax))
+             
+             message("\n", "stacking images, please wait...", "\n")
+             
+             raster::writeRaster(raster::crop(raster::raster(as.character(paste(method, correct,
+                                                                                tab[1, 7], ".tif",
+                                                                                sep = ""))), 
+                                              raster::extent(dimension)), paste(method, correct, "time.tif",
+                                                                                sep = ""), format = "GTiff",
+                                 datatype = datatype, overwrite = T)
+             
+             
+             for(i in 2:nrow(tab)) {
+               raster::writeRaster(raster::addLayer(raster::brick(paste(method, correct, "time.tif",
+                                                                        sep = "")), 
+                                                    raster::crop(raster::raster(as.character(paste(method, correct,
+                                                                                                   tab[i, 7], 
+                                                                                                   ".tif", sep = ""))),
+                                                                 raster::extent(dimension))), format = "GTiff",
+                                   datatype = datatype,  "temporal.tif", 
+                                   overwrite = T)    
+               raster::writeRaster(raster::brick("temporal.tif"), paste(method, correct, "time.tif", 
+                                                                        sep = ""), format = "GTiff",
+                                   datatype = datatype,  overwrite = T)
+               esperar(i)
+               
+             }
+             file.remove("temporal.tif")
+             
+             
+             message("computing...")
+             
+             time <- raster::brick(paste(method, correct, "time.tif",  sep = ""))
+             
+             if(any(y == 1)) {
+               cat("\n", "computing mean", "\n")
+               temp <- raster::calc(time, mean)
+               raster::writeRaster(temp, paste(method, ".", correct, ".", "mean.tif",
+                                               sep = ""), format="GTiff", 
+                                   datatype = datatype,  overwrite = T)
+             }
+             
+             if(any(y == 2)) {
+               cat("\n", "computing max", "\n")
+               temp <- raster::calc(time, max)
+               raster::writeRaster(temp, paste(method, ".", correct, ".", "max.tif",
+                                               sep = ""), format="GTiff",
+                                   datatype = datatype, overwrite = T)
+             }
+             
+             if(any(y == 3)) {
+               cat("\n", "computing min", "\n") 
+               temp <- raster::calc(time, min)
+               raster::writeRaster(temp, paste(method, ".", correct, ".", "min.tif",
+                                               sep = ""), format="GTiff", 
+                                   datatype = datatype, overwrite = T)
+             }
+             
+             
+             if(any(y == 4)) {
+               cat("\n", "computing variance", "\n")
+               temp <- raster::calc(time, var)
+               raster::writeRaster(temp, paste(method, ".", correct, ".", "var.tif",
+                                               sep = ""), format = "GTiff", 
+                                   datatype = datatype, overwrite = T)
+             }
+             
+             cat("\n", "done", "\n")
+             ReturnVal <- tcltk::tkmessageBox(title = "VI post process", 
+                                              message = "process successful!",
+                                              icon = "info", type = "ok")
+           })

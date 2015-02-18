@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.theilsen.R
 \name{eco.theilsen}
 \alias{eco.theilsen}
-\title{Theil-sen regression for a raster time series.}
+\title{Theil-sen regression for a raster time series}
 \usage{
 eco.theilsen(stacked, date, adjust = c("none", "holm", "hochberg", "hommel",
   "bonferroni", "BH", "BY", "fdr"))

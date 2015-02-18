@@ -1,30 +1,6 @@
-#' Wilcoxon (Mann-Whitney U) and Tukey-HSD tests for an ecogen object.
-#' @param eco Ecogen object.
-#' @param df The data frame for the analysis. Could be "P", "E" or "C".
-#' @param x The name of the S slot column with the groups for the analysis.
-#' @param test Test to perform ("wilcoxon", "tukey").
-#' @param  only.p  Should be only returned a matrix with P values? 
-#' Default TRUE.
-#' @param adjust The p.value adjustment method passed to \code{\link{p.adjust}}. 
-#' for the Wilkoxon tests. Defalut is "fdr".
-#' @param ... Additional arguments passed to \code{\link{wilcox.test}} 
-#' or  \code{\link{TukeyHSD}}.
-#' @details This program returns the Wilcoxon (Mann-Whitney U) or Tukey-HSD 
-#' statistics and p values for the multiple comparisons of the variables contained
-#' in the selected data frame,  among the levels of a factor of the slot "S".
-#' @seealso \code{\link{wilcox.test}} \code{\link{TukeyHSD}}
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
-#' @examples 
-#' \dontrun{
-#' 
-#' data(eco.test)
-#' wil <- eco.pairtest(eco = eco, df = "P", x = "structure")
-#' wil <- eco.pairtest(eco = eco,df = "E", x = "structure")
-#' wil <- eco.pairtest(eco = eco, df = "P", x = "structure", only.p = FALSE)
-#' wil <- eco.pairtest(eco = eco,df = "P", x = "structure", test = "tukey")
-#' 
-#' }
-#' @export
+# Wilcoxon (Mann-Whitney U) and Tukey-HSD tests for an ecogen object
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# February 18, 2015
 
 setGeneric("eco.pairtest", 
 					 

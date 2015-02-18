@@ -3,7 +3,7 @@
 \name{eco.NDVI}
 \alias{eco.NDVI}
 \title{Generating atmospherically corrected NDVI and MSAVI2 images for
-temporal series of Landsat 5 and 7.}
+temporal series of Landsat 5 and 7}
 \usage{
 eco.NDVI(tab, correct = c("COST", "DOS"), method = c("NDVI", "MSAVI2"),
   landsat = c("LT5", "LT7.L", "LT7.H"), datatype = c("FLT4S", "FLT8S",
@@ -29,7 +29,7 @@ Default "FLT4S".}
 }
 \description{
 Generating atmospherically corrected NDVI and MSAVI2 images for
-temporal series of Landsat 5 and 7.
+temporal series of Landsat 5 and 7
 }
 \examples{
 \dontrun{

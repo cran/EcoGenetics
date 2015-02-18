@@ -3,7 +3,7 @@
 \name{eco.remove}
 \alias{eco.remove}
 \title{Creating an updated ecogen object by removing
-results of the slot OUT.}
+results of the slot OUT}
 \usage{
 eco.remove(object, ...)
 }
@@ -14,7 +14,7 @@ eco.remove(object, ...)
 }
 \description{
 Creating an updated ecogen object by removing
-results of the slot OUT.
+results of the slot OUT
 }
 \examples{
 \dontrun{

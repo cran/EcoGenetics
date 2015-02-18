@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.order.R
 \name{eco.order}
 \alias{eco.order}
-\title{Ordering the rows of the data frames contained in an ecogen object.}
+\title{Ordering the rows of the data frames contained in an ecogen object}
 \usage{
 eco.order(object)
 }
@@ -10,7 +10,7 @@ eco.order(object)
 \item{object}{ecogen object.}
 }
 \description{
-Ordering the rows of the data frames contained in an ecogen object.
+Ordering the rows of the data frames contained in an ecogen object
 }
 \details{
 This program generates an ecogen object with the rows of all

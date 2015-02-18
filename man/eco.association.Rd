@@ -3,7 +3,7 @@
 \name{eco.association}
 \alias{eco.association}
 \title{Chi-square and Fisher's exact test for association  of loci and alleles
-with a factor.}
+with a factor}
 \usage{
 eco.association(eco, assoc = c("within", "between"), x,
   method = c("fisher.test", "chisq.test"), nrep = 99, adjust = c("none",
@@ -33,7 +33,7 @@ Default is "none" (no correction).}
 }
 \description{
 Chi-square and Fisher's exact test for association  of loci and alleles
-with a factor.
+with a factor
 }
 \examples{
 \dontrun{

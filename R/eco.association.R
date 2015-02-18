@@ -1,180 +1,152 @@
-#' Chi-square and Fisher's exact test for association  of loci and alleles 
-#' with a factor.
-#' @param eco ecogen object.
-#' @param assoc "between" if the association test should be performed between
-#'  a factor and a loci, or "within" if the association test should be performed
-#'  between a factor and alleles within loci. For haploid data,
-#'  use option "within".
-#' @param x The name of the S slot column with the groups for the association
-#' test.
-#' @param method Test method ("chisq.test" or "fisher.test").
-#'  Default is "fisher.test".
-#' @param nrep Number of repetitions for the permutation test.
-#' @param adjust Correction method passed to \code{\link[stats]{p.adjust}}.
-#'  Default is "none" (no correction).
-#' @param ndig Number of digits coding each alleles 
-#' (e.g. 2: xx, or 3: xxx) when assoc is "within".
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
-#' @seealso \code{\link[stats]{chisq.test}} \code{\link[stats]{fisher.test}}
-#' \code{\link[stats]{fisher.test}}
-#' @examples
-#' \dontrun{
-#' 
-#' data(eco.test)
-#' eco.association(eco, "within", "structure")
-#' eco.association(eco, "within", "structure", adjust="fdr")
-#' eco.association(eco, "within", "structure", method = "chisq.test")
-#' eco.association(eco, "between", "structure", ndig = 1)
-#' eco.association(eco, "between", "structure",method = "chisq.test", ndig = 1)
-#' 
-#' }
-#' @export 
+# Chi-square and Fisher's exact test for association  of loci and alleles with a factor
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# February 18, 2015
 
 setGeneric("eco.association",  
-					 function(eco,
-					 				 assoc = c("within", "between"),
-					 				 x, 
-					 				 method = c("fisher.test", "chisq.test"), 
-					 				 nrep = 99,
-					 				 adjust = c("none", "holm", "hochberg", 
-					 				 					 "hommel", "bonferroni", "BH",
-					 				 					 "BY", "fdr"), 
-					 				 ndig = NA) {
-						
-						
-  cat("\n","#### Test of association of type", assoc,"with", nrep,
-  		"repetitions","####", "\n\n")
-														
-  assoc  <- match.arg(assoc)
-  method <- match.arg(method)
-  adjust <- match.arg(adjust)
-
-  
-  if(adjust!="none") {
-	
-  	cat(paste("\n",method,"with", adjust, "P adjusted values", "\n\n"))
-  } else {
-  	cat("\n",method,"without P correction for multiple comparisons", "\n\n")
-  }
-  fact <- match(x, colnames(eco@S), nomatch = 0)
-  fact <- fact[fact != 0]
-  if(length(fact) == 0) {
-    stop("incorrect factor name")
-  }
-  
-  
-  if(assoc == "within") {
-  	
-  grp <- eco@S[,fact]
-  met <- c("chisq.test", "fisher.test")
-  nom <- match(method,met, nomatch = 0)
-  nom <- nom[nom != 0]
-  if(length(nom) == 0) {
-      stop(paste("invalid", method))
-  }
-  marcadores <- eco@GENIND$tab
-  marcadores[marcadores == 1.0] <- 2
-  marcadores[marcadores == 0.5] <- 1
-  ifelse(method == "chisq.test", 
-         chi <- apply(marcadores, 2, 
-         						 function(u){ 
-                                 chisq.test(u, grp, simulate.p.value = T, 
-                                 B = nrep)
-                                  }),
-          chi <- apply(marcadores, 2,  
-          						 function(u){
-                              	fisher.test(u, 	grp, simulate.p.value = T,
-                                            B = nrep)
+           function(eco,
+                    assoc = c("within", "between"),
+                    x, 
+                    method = c("fisher.test", "chisq.test"), 
+                    nrep = 99,
+                    adjust = c("none", "holm", "hochberg", 
+                               "hommel", "bonferroni", "BH",
+                               "BY", "fdr"), 
+                    ndig = NA) {
+             
+             
+             cat("\n","#### Test of association of type", assoc,"with", nrep,
+                 "repetitions","####", "\n\n")
+             
+             assoc  <- match.arg(assoc)
+             method <- match.arg(method)
+             adjust <- match.arg(adjust)
+             
+             
+             if(adjust!="none") {
+               
+               cat(paste("\n",method,"with", adjust, "P adjusted values", "\n\n"))
+             } else {
+               cat("\n",method,"without P correction for multiple comparisons", "\n\n")
+             }
+             fact <- match(x, colnames(eco@S), nomatch = 0)
+             fact <- fact[fact != 0]
+             if(length(fact) == 0) {
+               stop("incorrect factor name")
+             }
+             
+             
+             if(assoc == "within") {
+               
+               grp <- eco@S[,fact]
+               met <- c("chisq.test", "fisher.test")
+               nom <- match(method,met, nomatch = 0)
+               nom <- nom[nom != 0]
+               if(length(nom) == 0) {
+                 stop(paste("invalid", method))
+               }
+               marcadores <- eco@GENIND$tab
+               marcadores[marcadores == 1.0] <- 2
+               marcadores[marcadores == 0.5] <- 1
+               ifelse(method == "chisq.test", 
+                      chi <- apply(marcadores, 2, 
+                                   function(u){ 
+                                     chisq.test(u, grp, simulate.p.value = T, 
+                                                B = nrep)
+                                   }),
+                      chi <- apply(marcadores, 2,  
+                                   function(u){
+                                     fisher.test(u, 	grp, simulate.p.value = T,
+                                                 B = nrep)
                                    }))
-  
-  if(method == "chisq.test") {
-  estadistico <- sapply(chi, function(u) c(u$statistic))
-  estadistico<- round((data.frame(estadistico)), 3)
-  pvalor <- sapply(chi, function(u) c(u$p.value))
-  pvalor <- round(data.frame(p.adjust(pvalor, method = adjust)), 3)
-  pvalor <- data.frame(estadistico, pvalor)
-  colnames(pvalor) <- c("statistic", "P value")
-  rownames(pvalor) <- colnames(marcadores)
-  return(pvalor)
-  } else if(method == "fisher.test") {
-  	
-  pvalor <- sapply(chi, function(u) c(u$p.value))
-  pvalor <- round(data.frame(p.adjust(pvalor, method = adjust)), 3)
-  colnames(pvalor) <- "P value"
-  rownames(pvalor) <- colnames(marcadores)
-  return(pvalor)
- }
-  
-} else if(assoc == "between") {
-	
-	if(is.na(ndig)) {
-		stop("please provide a value for the number digits per allele (ndig)")
-	}
-		
-	x <- eco.sortalleles(eco, ndig)@G
-	x <-as.matrix(x)
-	x[x == 0] <-NA
-	pop <- eco@S[, fact]
-	nloc <- ncol(x)
-	y <-list()
-	for(i in 1:nloc) {
- y[[i]] <-as.factor(x[,i])
-	}
-
-	tab <- list()
-	for(i in 1:nloc) {
-		tab[[i]] <- table(pop,y[[i]], exclude =NA)[,-1]
-	}
-	
-	chi <- data.frame(matrix(nrow = 2, ncol = nloc))
-	rownames(chi) <- c("statistic", "P value")
-	colnames(chi) <- colnames(x)
-	
-	
-		
-		if(method == "chisq.test") { 
-			chi <- data.frame(matrix(nrow = 2, ncol = nloc))
-			rownames(chi) <- c("statistic", "P value")
-			colnames(chi) <- colnames(x)
-			
-			for(i in 1:nloc) {
-			temp <- chisq.test(tab[[i]], 
-												 simulate.p.value =TRUE,
-												 B = nrep)
-			chi[, i] <- c(round(temp$statistic, 3), 
-										round(temp$p.value, 3))
-			
-		}
-		if(adjust != "none") {
-			chi[2,] <- round(p.adjust(chi[2,], method = adjust), 3)
-			return(t(chi))
-			
-		} else {
-			return(t(chi))
-		}
-		} else if(method == "fisher.test")  {
-			chi <- data.frame(matrix(nrow = 1, ncol = nloc))
-			rownames(chi) <- "P value"
-			colnames(chi) <- colnames(eco@G)
-			
-			
-			for(i in 1:nloc) {
-			temp <- fisher.test(tab[[i]], 
-									simulate.p.value = TRUE,
-									B = nrep)
-			chi[, i] <- temp$p.value
-		}
-		
-		if(adjust != "none") {
-			chi<- round(p.adjust(chi, method = adjust), 3)
-			return(t(chi))
-			
-		} else {
-			chi <- round(chi,3)
-			return(t(chi))
-		}
-		}
-
-}
-
-})
+               
+               if(method == "chisq.test") {
+                 estadistico <- sapply(chi, function(u) c(u$statistic))
+                 estadistico<- round((data.frame(estadistico)), 3)
+                 pvalor <- sapply(chi, function(u) c(u$p.value))
+                 pvalor <- round(data.frame(p.adjust(pvalor, method = adjust)), 3)
+                 pvalor <- data.frame(estadistico, pvalor)
+                 colnames(pvalor) <- c("statistic", "P value")
+                 rownames(pvalor) <- colnames(marcadores)
+                 return(pvalor)
+               } else if(method == "fisher.test") {
+                 
+                 pvalor <- sapply(chi, function(u) c(u$p.value))
+                 pvalor <- round(data.frame(p.adjust(pvalor, method = adjust)), 3)
+                 colnames(pvalor) <- "P value"
+                 rownames(pvalor) <- colnames(marcadores)
+                 return(pvalor)
+               }
+               
+             } else if(assoc == "between") {
+               
+               if(is.na(ndig)) {
+                 stop("please provide a value for the number digits per allele (ndig)")
+               }
+               
+               x <- eco.sort(eco@G, ndig)
+               x <-as.matrix(x)
+               x[x == 0] <-NA
+               pop <- eco@S[, fact]
+               nloc <- ncol(x)
+               y <-list()
+               for(i in 1:nloc) {
+                 y[[i]] <-as.factor(x[,i])
+               }
+               
+               tab <- list()
+               for(i in 1:nloc) {
+                 tab[[i]] <- table(pop,y[[i]], exclude =NA)[,-1]
+               }
+               
+               chi <- data.frame(matrix(nrow = 2, ncol = nloc))
+               rownames(chi) <- c("statistic", "P value")
+               colnames(chi) <- colnames(x)
+               
+               
+               
+               if(method == "chisq.test") { 
+                 chi <- data.frame(matrix(nrow = 2, ncol = nloc))
+                 rownames(chi) <- c("statistic", "P value")
+                 colnames(chi) <- colnames(x)
+                 
+                 for(i in 1:nloc) {
+                   temp <- chisq.test(tab[[i]], 
+                                      simulate.p.value =TRUE,
+                                      B = nrep)
+                   chi[, i] <- c(round(temp$statistic, 3), 
+                                 round(temp$p.value, 3))
+                   
+                 }
+                 if(adjust != "none") {
+                   chi[2,] <- round(p.adjust(chi[2,], method = adjust), 3)
+                   return(t(chi))
+                   
+                 } else {
+                   return(t(chi))
+                 }
+               } else if(method == "fisher.test")  {
+                 chi <- data.frame(matrix(nrow = 1, ncol = nloc))
+                 rownames(chi) <- "P value"
+                 colnames(chi) <- colnames(eco@G)
+                 
+                 
+                 for(i in 1:nloc) {
+                   temp <- fisher.test(tab[[i]], 
+                                       simulate.p.value = TRUE,
+                                       B = nrep)
+                   chi[, i] <- temp$p.value
+                 }
+                 
+                 if(adjust != "none") {
+                   chi<- round(p.adjust(chi, method = adjust), 3)
+                   return(t(chi))
+                   
+                 } else {
+                   chi <- round(chi,3)
+                   return(t(chi))
+                 }
+               }
+               
+             }
+             
+           })

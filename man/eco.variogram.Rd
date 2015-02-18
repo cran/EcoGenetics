@@ -2,31 +2,38 @@
 % Please edit documentation in R/eco.variogram.R
 \name{eco.variogram}
 \alias{eco.variogram}
-\title{Variogram for variables of an ecogen object.}
+\title{Empirical variogram}
 \usage{
-eco.variogram(eco, var, ...)
+eco.variogram(z, xy, int, smax, w = c("B", "W"), nsim = 0, latlon = FALSE)
 }
 \arguments{
-\item{eco}{An ecogen object.}
+\item{z}{vector for the analysis.}
 
-\item{var}{Variable to analyze (see description).}
+\item{xy}{data frame or matrix with UTM or decimal coordinates.}
 
-\item{...}{Further arguments passed to \code{\link[gstat]{variogram}}.}
+\item{int}{Interval distance in m.}
+
+\item{smax}{Maximum distance in m.}
+
+\item{w}{Weight matrix style. "B" for binary (default) or "W" for row standardized.}
+
+\item{nsim}{Number of Monte-Carlo simulations.}
+
+\item{latlon}{Are the coordinates in decimal degrees format? Default FALSE.}
 }
 \description{
-This program calls  \code{\link[gstat]{variogram}}
-and plots a variogram of a selected variable contained in an ecogen object.
-
-For example, for selecting the variable P2 of the data frame P,
-it should be written eco$P$P2, and so on.
+This program computes the empirical variogram of a selected variable.
+If the coordinates are given in decimal degrees, set latlon = TRUE.
+In this case, a distance matrix is computed under a spherical Earth model.
+A distance matrix with UTM coordinates is suggested as imput.
 }
 \examples{
 \dontrun{
-
 data(eco.test)
-variog<-eco.variogram(eco, eco$P$P2, cutoff = 3000)
-variog
-
+variog <- eco.variogram(eco$P[, 2], eco$XY, int=100, smax=1000)
+plot(variog)
+variog <- eco.variogram(eco$P[, 2], eco$XY, int=100, smax=1000, nsim = 99)
+plot(variog)
 }
 }
 \author{

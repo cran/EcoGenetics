@@ -2,8 +2,8 @@
 % Please edit documentation in R/eco.2columns.R
 \name{eco.2columns}
 \alias{eco.2columns}
-\title{Exporting an ecogen genetic data frame with two locus per column
-into a data frame with one locus per column format.}
+\title{Converting an ecogen genetic data frame with two alleles per column
+into a data frame with one allele per column}
 \usage{
 eco.2columns(eco, ndig)
 }
@@ -14,8 +14,8 @@ eco.2columns(eco, ndig)
 (e.g., 1: x, 2: xx, or 3: xxx).}
 }
 \description{
-Exporting an ecogen genetic data frame with two locus per column
-into a data frame with one locus per column format.
+Converting an ecogen genetic data frame with two alleles per column
+into a data frame with one allele per column
 }
 \examples{
 \dontrun{

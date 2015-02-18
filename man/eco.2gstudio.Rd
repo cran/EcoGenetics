@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.2gstudio.R
 \name{eco.2gstudio}
 \alias{eco.2gstudio}
-\title{Converting an ecogen genetic data frame into a gstudio object.}
+\title{Converting an ecogen genetic data frame into a gstudio object}
 \usage{
 eco.2gstudio(eco, type = "separated", ...)
 }
@@ -16,7 +16,7 @@ Default is "separated" (data as microsatellites or individual haplotypes);
 \item{...}{Further arguments passed to \code{\link[adegenet]{df2genind}}}
 }
 \description{
-Converting an ecogen genetic data frame into a gstudio object.
+Converting an ecogen genetic data frame into a gstudio object
 }
 \examples{
 \dontrun{

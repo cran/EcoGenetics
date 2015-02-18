@@ -6,26 +6,18 @@
  Analysis of Phenotypic, Genotypic and Environmental Data
 }
 \description{
-  This package allows users to analyze phenotypic, genotypic 
-  and environmental data with a single object of class
-  "ecogen". EcoGenetics was designed to make easy the storing,
-  handling and integration of the available information from
-  multiple sources. Ecogen objects have proper operations over
-  a set of n "stacked" data frames (as for example, subsetting,
-  merging or combining data by row or column). Also, ecogen
-  objects include a dynamic genind slot, achieving in this way
-  a high performance. The package provides extra functions such
-  as conversion tools (ecogen genetic data frames to hierfstat,
-  gstudio and Genepop, creation of Geneland input files, etc.),
-  processing of Landsat images, and many more.
+ Analysis of phenotypic, genotypic and environmental data 
+ with an object of class "ecogen", designed to make easy the integration
+ of the available information from multiple sources. Also including 
+ geostatistical tools and extra functions.
 }
 
 \details{
  \tabular{ll}{
  Package: \tab EcoGenetics\cr
  Type: \tab Package\cr
- Version: \tab 1.0\cr
- Date: \tab 2015-01-15\cr
+ Version: \tab 1.1.0\cr
+ Date: \tab 2015-02-18\cr
  License: \tab GPL (>=2) \cr
  }
  
@@ -120,7 +112,6 @@ We can analyze the data and store the new information generated. For example, we
   \strong{eco <- eco.append(eco, a, b)} 
   
   
-
 As it can be seen, the panel show us the object with the results and their classes in parentheses. Always the results are stored in alphabetical order for easy seach. If needed, as $OUT is a list we may write                      \emph{eco$OUT$linear.analysis} to recover this data.
  
  We can also remove results from our object:
@@ -145,8 +136,8 @@ As it can be seen, the panel show us the object with the results and their class
 
 \references{
 
- Bivand, R., Bernat, A., Carvalho, M., Chun, Y., Dormann, C., Dray, S., & SparseM, S. (2005). The spdep package. Comprehensive R Archive Network, Version 0.3-13.
- 
+Anselin, L. (1995). Local indicators of spatial association - LISA. Geographical analysis, 27(2), 93-115.
+
  Chander, G., Markham, B. L., & Helder, D. L. (2009). Summary of current radiometric calibration coefficients for Landsat MSS, TM, ETM+, and EO-1 ALI sensors. Remote sensing of environment, 113(5), 893-903.
  
  Chavez, P. S. (1996). Image-based atmospheric corrections-revisited and improved. Photogrammetric engineering and remote sensing, 62(9), 1025-1035.
@@ -154,6 +145,7 @@ As it can be seen, the panel show us the object with the results and their class
  Cliff, A. D., & Ord, J. K. (1981). Spatial processes: models & applications (Vol. 44). London: Pion.
  
  Dray, S., & Dufour, A. B. (2007). The ade4 package: implementing the duality diagram for ecologists. Journal of statistical software, 22(4), 1-20.
+ 
  Goudet, J. (2005). Hierfstat, a package for R to compute and test hierarchical F-statistics. Molecular Ecology Notes, 5(1), 184-186.
  
  Guillot, G., Mortier, F., & Estoup, A. (2005). GENELAND: a computer package for landscape genetics. Molecular Ecology Notes, 5(3), 712-715.
@@ -162,15 +154,25 @@ As it can be seen, the panel show us the object with the results and their class
  
  Jombart, T. (2008). adegenet: a R package for the multivariate analysis of genetic markers. Bioinformatics, 24(11), 1403-1405.
  
+  Legendre, P., & Fortin, M. J. (1989). Spatial pattern and ecological analysis. Vegetatio, 80(2), 107-138.
+  
+ Legendre, P., & Legendre, L. F. (2012). Numerical ecology (Vol. 24). Elsevier.
+ 
+ Mantel, N. (1967). The detection of disease clustering and a generalized regression approach. Cancer research, 27(2 Part 1), 209-220.
+ 
  Moran, P. A. (1948). The interpretation of statistical maps. Journal of the Royal Statistical Society. Series B (Methodological), 10(2), 243-251.
  
  Nei, M. (1978). Estimation of average heterozygosity and genetic distance from a small number of individuals. Genetics, 89(3), 583-590.
+ 
+ Ord, J. K., & Getis, A. (1995). Local spatial autocorrelation statistics: distributional issues and an application. Geographical analysis, 27(4), 286-306.
  
  Pebesma, E. J. (2004). Multivariable geostatistics in S: the gstat package. Computers & Geosciences, 30(7), 683-691.
  
  Petit, R. J., & Pons, O. (1998). Bootstrap variance of diversity and differentiation estimators in a subdivided population. Heredity, 80(1), 56-61.
  
  Sen, P. K. (1968). Estimates of the regression coefficient based on Kendalls tau. Journal of the American Statistical Association, 63(324), 1379-1389.
+ 
+Sokal, R. R., & Oden, N. L. (1978). Spatial autocorrelation in biology: 1. Methodology. Biological journal of the Linnean Society, 10(2), 199-228.
 
  Tucker, C. J. (1979). Red and photographic infrared linear combinations for monitoring vegetation. Remote sensing of Environment, 8(2), 127-150.
 
@@ -223,7 +225,9 @@ As it can be seen, the panel show us the object with the results and their class
 
  eco2 <- eco.subset(eco, "structure", 1)  \# subsetting by groups
  
- variog <- eco.variogram(eco, eco$P\$P1)
+
+ variog <- eco.variogram(eco$P[, 2], eco$XY, int=100, smax=1000)
+ 
  eco <- eco.append(eco, variog)           \#updating by adding results
  eco <- eco.append(eco, variog)           \#updating by removing results
  
@@ -279,15 +283,113 @@ summary(mod)
 
  data(eco.test)
  boot.test <- eco.boothet(eco, "structure", nrep = 20, pres = T)
+ 
+ 
+\# Moran I statistic with Monte-Carlo test:
+
+data(eco.test)
+require(adegenet)
+con <- chooseCN(eco$XY, type = 1, result.type = "listw",
+plot.nb = FALSE)
+eco.moran(eco$P[, 3], con, nsim = 99)
+
+
+\# Geary C statistic with Monte-Carlo test:
+
+data(eco.test)
+require(adegenet)
+con<-chooseCN(eco$XY, type = 1, result.type = "listw", 
+plot.nb = FALSE)
+eco.geary(eco$P[, 3], con, nsim = 99)
+
+
+\# Join-Count statistic with Monte-Carlo test:
+
+data(eco.test)
+require(adegenet)
+con<-chooseCN(eco$XY, type = 1, result.type = "listw",
+plot.nb = FALSE)
+eco.joincount(2 * eco$GENIND$tab[, 3], con,
+nsim = 99, ncod = 1)
+
+
+\# Local Getis-Ord G and G* statistics with Monte-Carlo test:
+
+data(eco.test)
+require(adegenet)
+con<-chooseCN(eco$XY, type = 1, result.type = "listw", plot.nb = FALSE)
+eco.getisord(eco$P[, 3], con, nsim = 99,
+test = "permutation", classG = "G")
+getis <- eco.getisord(eco$P[, 3], con, nsim = 99, classG = "G*")
+eco.rankplot(getis, eco$XY)
+getis <- eco.getisord(eco$P[, 3], con, nsim = 99, classG = "G*",
+test = "bootstrap")
+eco.forestplot(getis)
+
+\# Local Moran I test
+
+data(eco.test)
+require(adegenet)
+con <- chooseCN(eco$XY, type = 1, result.type = "listw", plot.nb = FALSE)
+local <- eco.localmoran(eco$P[, 2], con, nsim = 99)
+eco.rankplot(local, eco$XY)
+local <- eco.localmoran(eco$P[, 2], con, nsim = 99, test = "bootstrap")
+eco.forestplot(local)
+
+
+\# Mantel test:
+
+data(eco.test)
+eco.mantel(dist(eco$P), dist(eco$XY), 99)
+
+
+\# Mantel correlogram:
+
+data(eco.test)
+corm <- eco.cormantel(z = eco$P, xy = eco$XY,
+nsim = 99,int=50, smax=1000, test = "permutation")
+plot(corm)
+corm <- eco.cormantel(z = eco$P, xy = eco$XY,
+nsim = 99,int=50, smax=1000, test = "bootstrap")
+plot(corm)
 
  
-\# Moran s I for distance classes with bootstrap confidence intervals:  
+\# Moran I, Geary C, Join-Count, local Getis-Ord G and local Moran I correlograms   
 
- data(eco.test)
- eco.ac <- eco.autocor(eco, int = 50, smax = 1000, d.class = "phenotype")
- plot(eco.ac, var = 6)
- plot(eco.ac, var = 3)
- 
+ eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "P", select = "moran", nsim = 10)
+plot(eco.ac, var = "P2")
+
+eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "P", select = "geary", nsim = 10)
+plot(eco.ac, var = "P2")
+
+eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "GENIND", select = "joincount", nsim = 10,
+indvar="L1.1")
+plot(eco.ac)
+
+eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "P", select = "getisord", nsim = 10)
+plot(eco.ac, var = "P2")
+eco.rankplot(eco.ac, eco$XY, "P2")
+eco.forestplot(eco.ac, "P2")
+
+eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "P", select = "localmoran", nsim = 10)
+plot(eco.ac, var = "P2")
+eco.rankplot(eco.ac, eco$XY, "P2")
+eco.forestplot(eco.ac, "P2")
+
+
+\# Semivariogram for a selected variable:
+
+data(eco.test)
+variog <- eco.variogram(eco$P[, 2], eco$XY, int=100, smax=1000)
+plot(variog)
+variog <- eco.variogram(eco$P[, 2], eco$XY, int=100, smax=1000, nsim = 99)
+plot(variog)
+
  
 \# Computing NDVI with atmospheric correction 
 \# over a time series and estimation of the temporal mean:

@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.subset.R
 \name{eco.subset}
 \alias{eco.subset}
-\title{Subsetting an ecogen object by group.}
+\title{Subsetting an ecogen object by group}
 \usage{
 eco.subset(object, fact, grp, missing = c(0, "NA", "MEAN"), ...)
 }
@@ -20,7 +20,7 @@ Missing elements are treated as zeros in the default option.}
 \item{...}{Further arguments passed to \code{\link[adegenet]{df2genind}}.}
 }
 \description{
-Subsetting an ecogen object by group.
+Subsetting an ecogen object by group
 }
 \examples{
 \dontrun{

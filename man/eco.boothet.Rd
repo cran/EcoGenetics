@@ -3,7 +3,7 @@
 \name{eco.boothet}
 \alias{eco.boothet}
 \title{Heterozygosity estimates with bootstrap confidence intervals over
-individuals and loci, and jackkninfe estimates over populations.}
+individuals and loci, and jackkninfe estimates over populations}
 \usage{
 eco.boothet(eco, grp, nrep = 99, boot.indiv = TRUE, boot.loci = TRUE,
   jack.pop = TRUE, pres = FALSE)
@@ -30,7 +30,7 @@ Default FALSE.}
 }
 \description{
 Heterozygosity estimates with bootstrap confidence intervals over
-individuals and loci, and jackkninfe estimates over populations.
+individuals and loci, and jackkninfe estimates over populations
 }
 \details{
 This program estimates  bootstrap confidence intervals for the

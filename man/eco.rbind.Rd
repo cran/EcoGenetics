@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.rbind.R
 \name{eco.rbind}
 \alias{eco.rbind}
-\title{Combining the rows of two ecogen objects.}
+\title{Combining the rows of two ecogen objects}
 \usage{
 eco.rbind(e1, e2)
 }
@@ -12,7 +12,7 @@ eco.rbind(e1, e2)
 \item{e2}{ecogen object}
 }
 \description{
-Combining the rows of two ecogen objects.
+Combining the rows of two ecogen objects
 }
 \examples{
 \dontrun{

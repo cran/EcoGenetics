@@ -3,7 +3,7 @@
 \name{eco.lmtree}
 \alias{eco.lmtree}
 \title{Fitting Multiple Linear Regression models by stepwise AIC selection and
-Multiple Classification and Regression Trees via party.}
+Multiple Classification and Regression Trees via party}
 \usage{
 eco.lmtree(df1, df2, analysis = c("mlm", "mctree"), mod.class = "+",
   fact = NULL, ...)

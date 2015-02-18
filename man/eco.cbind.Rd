@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.cbind.R
 \name{eco.cbind}
 \alias{eco.cbind}
-\title{Combining the columns of two ecogen object.}
+\title{Combining the columns of two ecogen object}
 \usage{
 eco.cbind(e1, e2, ..., missing = 0)
 }
@@ -22,7 +22,7 @@ It can take three values as described in that program ("NA", 0 or "MEAN").
 Missing elements are treated as zero across alleles in the default option.}
 }
 \description{
-Combining the columns of two ecogen object.
+Combining the columns of two ecogen object
 }
 \examples{
 \dontrun{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.rarefact.R
 \name{eco.rarefact}
 \alias{eco.rarefact}
-\title{Multiple rarefaction estimates via bootstrap for ecogen genetic data frames.}
+\title{Multiple rarefaction estimates via bootstrap for ecogen genetic data frames}
 \usage{
 eco.rarefact(eco, x, nrep = 99, mode = "Ae", type = NA)
 }

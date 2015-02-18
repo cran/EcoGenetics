@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.NDVI.post.R
 \name{eco.NDVI.post}
 \alias{eco.NDVI.post}
-\title{Postprocessing for NDVI and MSAVI 2 temporal series of Landsat 5 and 7.}
+\title{Postprocessing for NDVI and MSAVI 2 temporal series of Landsat 5 and 7}
 \usage{
 eco.NDVI.post(tab, correct = c("COST", "DOS"), method = c("NDVI", "MSAVI2"),
   datatype = c("FLT4S", "FLT8S", "INT4U", "INT4S", "INT2U", "INT2S", "INT1U",

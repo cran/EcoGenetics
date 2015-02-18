@@ -2,77 +2,95 @@
 % Please edit documentation in R/eco.autocor.R
 \name{eco.autocor}
 \alias{eco.autocor}
-\title{Moran's I, Geary's C and Join-Count  correlograms for an ecogen object.}
+\title{Moran's I, Geary's C, Join-Count, local Getis-Ord's G and local Moran's I
+correlograms for an ecogen object}
 \usage{
-eco.autocor(eco, fact = NA, int, smax, nsim = 99, select = c("moran",
-  "geary", "join-count"), d.class = c("alleles", "locus", "phenotype"),
-  grp = NA, style = c("B", "W", "C", "U", "minmax", "S"),
-  zero.policy = TRUE)
+eco.autocor(eco, int, smax, df = c("P", "G", "E", "GENIND", "C"),
+  select = c("moran", "geary", "joincount", "getisord", "localmoran"),
+  nsim = 99, indvar = NULL, w = c("B", "W"), latlon = FALSE,
+  fact = NA, grp = NA, ncod = NULL, ...)
 }
 \arguments{
-\item{eco}{ecogen object.}
+\item{eco}{ecogen object for the analysis.}
+
+\item{int}{Lag class interval distance in meters.}
+
+\item{smax}{Maximum lag distance in meters.}
+
+\item{df}{Data frame in eco to analyze.}
+
+\item{select}{Analysis to perform. Can be "moran", "geary" , "joincount", "getisord",
+"localmoran".}
+
+\item{nsim}{Number of Monte-Carlo simulations.}
+
+\item{indvar}{Name of the variable in df when a single trait should be analyzed
+instead of the complete df data.}
+
+\item{w}{Weight matrix style. "B" for binary (default) or "W" for row standardized.}
+
+\item{latlon}{Logical. Are the coordinates in decimal degrees format? Default FALSE.}
 
 \item{fact}{The name of the S slot column when analysis per-group is required.
 Default analysis takes in account all sites.}
 
-\item{int}{Interval distance for the analysis.}
-
-\item{smax}{Maximum distance for the analysis.}
-
-\item{nsim}{Number of Monte - Carlo simulations.}
-
-\item{select}{The analysis type ("moran", "geary", "join-count").}
-
-\item{d.class}{The class of data to analyze ("alleles", "locus",
-"phenotype").}
-
-\item{grp}{The group (contained in x) to analyze if analysis
+\item{grp}{The group (contained in fact) to analyze if analysis
 per-group is required. Default analysis takes in account all sites.}
 
-\item{style}{Weights matrix style passed to \code{\link[spdep]{nb2listw}}.
-Can take  the values "W", "B", "C", "U", "minmax" and "S".}
+\item{ncod}{number of characters coding the information in each cell of df
+for Join-Count analysis.}
 
-\item{zero.policy}{Default TRUE assign zero to the lagged value
-of zones without neighbors, if FALSE assign NA, if NULL use global option
-value.}
+\item{...}{Further arguments passed to \code{\link{eco.moran}} \code{\link{eco.geary}}
+\code{\link{eco.joincount}}, \code{\link{eco.getisord}} or \code{\link{eco.localmoran}}}
 }
 \value{
-An object of class "RelDist" with data frames for the statistic
-and the 95\% upper and lower confidence interval bounds estimated by
-bootstrap.
+The program returns an object with data frames containing the statistic,
+the mean class distance interval and the 95\% upper and lower confidence
+interval bounds of the null hypoteses estimated by bootstrap.
 }
 \description{
-This program can manipulate different class of data.
-For data of class "allele" the program takes the data frame allocated
-in the GENIND slot. For data of class "locus", the program takes
-the data frame of the G slot and transforms the genotypes
-of the individual loci into factor levels (e.g., for a biallelic loci
-with alleles A and B, three levels could be present in the data:
-"AA","AB","BB"). Before the "locus" analysis, it is necessary
-to run \code{\link{eco.sortalleles}} in codominant diploid
- data if the alleles are not ordered (e.g., 15 and 51 will
- be interpreted as two levels).  For data of class "phenotype"
-  the data frame used is the allocated in the P slot.
-For "allele" and "phenotype" data, "moran", "geary" and
-"join-count" analysis are available (the user must match
-their data with the  statistic, according to the class of analysis,
-data is taken as factor with join-count).
-For "locus" data, only join-count is available.
+This program can manipulate the different classes of data included
+in an ecogen object. The action changes according to the data frame selected
+and the statistic to compute. For Join-Count analysis it is require a ncod
+argument (the number of characters in each cell) when df is not "GENIND".
+When a single variable is the objective to analyze instead of a complete data frame,
+it could be provided an "indvar" argument, with the name of the trait.
+If the coordinates are given in decimal degrees, set latlon = TRUE.
+In that case, a distance matrix is computed under a spherical Earth model.
+A distance matrix with UTM coordinates is suggested as imput.
 }
 \examples{
 \dontrun{
 data(eco.test)
-eco.ac <- eco.autocor(eco, int = 50, smax = 1000, d.class = "phenotype")
-plot(eco.ac, var = 6)
-plot(eco.ac, var = 3)
+
+eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "P", select = "moran", nsim = 10)
+plot(eco.ac, var = "P2")
+
+eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "P", select = "geary", nsim = 10)
+plot(eco.ac, var = "P2")
+
+eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "GENIND", select = "joincount", nsim = 10,
+indvar="L1.1")
+plot(eco.ac)
+
+eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "P", select = "getisord", nsim = 10)
+plot(eco.ac, var = "P2")
+eco.rankplot(eco.ac, eco$XY, "P2")
+eco.forestplot(eco.ac, "P2")
+
+eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
+df = "P", select = "localmoran", nsim = 10)
+plot(eco.ac, var = "P2")
+eco.rankplot(eco.ac, eco$XY, "P2")
+eco.forestplot(eco.ac, "P2")
 
 }
 }
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
-\seealso{
-\code{\link[spdep]{moran}} \code{\link[spdep]{geary}}
-\code{\link[spdep]{joincount.test}}
 }
 

@@ -3,7 +3,7 @@
 \name{eco.merge}
 \alias{eco.merge}
 \title{Merging two ecogen objects. Ordering the rows of an ecogen
-object according to the rows of another.}
+object according to the rows of another}
 \usage{
 eco.merge(e1, e2, ...)
 }
@@ -20,7 +20,7 @@ data as "0".}
 }
 \description{
 Merging two ecogen objects. Ordering the rows of an ecogen
-object according to the rows of another.
+object according to the rows of another
 }
 \details{
 This program generates an ecogen object binding the columns

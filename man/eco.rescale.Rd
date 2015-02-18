@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.rescale.R
 \name{eco.rescale}
 \alias{eco.rescale}
-\title{Scaling a data frame or matrix to 0 - 1 range.}
+\title{Scaling a data frame or matrix to 0 - 1 range}
 \usage{
 eco.rescale(dfm)
 }

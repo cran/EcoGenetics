@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.pairtest.R
 \name{eco.pairtest}
 \alias{eco.pairtest}
-\title{Wilcoxon (Mann-Whitney U) and Tukey-HSD tests for an ecogen object.}
+\title{Wilcoxon (Mann-Whitney U) and Tukey-HSD tests for an ecogen object}
 \usage{
 eco.pairtest(eco, df = c("P", "E", "C"), x, test = c("wilcoxon", "tukey"),
   adjust = c("fdr", "holm", "hochberg", "hommel", "bonferroni", "BH", "BY",
@@ -17,7 +17,7 @@ eco.pairtest(eco, df = c("P", "E", "C"), x, test = c("wilcoxon", "tukey"),
 
 \item{test}{Test to perform ("wilcoxon", "tukey").}
 
-\item{adjust}{The p.value adjustment method passed to \code{\link{p.adjust}}.
+\item{adjust}{The p.value adjustment method passed to \code{\link{p.adjust}}
 for the Wilkoxon tests. Defalut is "fdr".}
 
 \item{only.p}{Should be only returned a matrix with P values?
@@ -27,7 +27,7 @@ Default TRUE.}
 or  \code{\link{TukeyHSD}}.}
 }
 \description{
-Wilcoxon (Mann-Whitney U) and Tukey-HSD tests for an ecogen object.
+Wilcoxon (Mann-Whitney U) and Tukey-HSD tests for an ecogen object
 }
 \details{
 This program returns the Wilcoxon (Mann-Whitney U) or Tukey-HSD

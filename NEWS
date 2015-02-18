@@ -1,0 +1,14 @@
+EcoGenetics 1.1.0 (Release date: 2015-02-18)
+==============
+	
+	Changes:
+	
+  * Included the new functions: eco.cormantel, eco.forestplot, eco.geary, 
+eco.getisord, eco.joincount, eco.laglistw, eco.localmoran, latlon2distm, eco.mantel, eco.moran, eco.rankplot.
+  * Adaptation of eco.autocor to the new functions of
+    this version. Now also able to create a correlogram for local Getis-Ord's G and local Moran's I statistics.
+  * Actualization of the function eco.variogram.
+  * Minor changes in dependences.
+
+    
+    

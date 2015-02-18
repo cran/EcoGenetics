@@ -1,24 +1,10 @@
-#' Subsetting an ecogen object by group.
-#' @param object Ecogen object. 
-#' @param fact The name of the S slot column with the groups for the analysis.
-#' @param grp The group in the column x in which te partition will be 
-#' @param missing Missing Argument passed to \code{\link[adegenet]{df2genind}} 
-#' This can take three values as described in the latter ("0", "NA" or "MEAN"). 
-#' Missing elements are treated as zeros in the default option.
-#' @param ... Further arguments passed to \code{\link[adegenet]{df2genind}}.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
-#' @examples
-#' \dontrun{
-#' 
-#' data(eco.test)
-#' eco<-eco.subset(eco,"structure", 1) 
-#' 
-#' }
-#' @export
+# Subsetting an ecogen object by group
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# February 18, 2015
 
 setGeneric("eco.subset",
-					 
-					 function(object, fact, grp, missing = c(0, "NA",  "MEAN"), ...)  {
+      
+      function(object, fact, grp, missing = c(0, "NA",  "MEAN"), ...)  {
   
   grupo <- object$S
   x <- match(fact, colnames(object$S), nomatch = 0)

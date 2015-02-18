@@ -3,7 +3,7 @@
 \name{eco.2hierfstat}
 \alias{eco.2hierfstat}
 \title{Converting an ecogen genetic data frame into a hierfstat
-data frame.}
+data frame}
 \usage{
 eco.2hierfstat(eco, fact = NULL)
 }

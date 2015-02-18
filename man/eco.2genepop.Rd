@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.2genepop.R
 \name{eco.2genepop}
 \alias{eco.2genepop}
-\title{Exporting an ecogen genetic data frame into Genepop format.}
+\title{Exporting an ecogen genetic data frame into Genepop format}
 \usage{
 eco.2genepop(eco, x, ndig)
 }
@@ -18,7 +18,7 @@ eco.2genepop(eco, x, ndig)
 The exported file \emph{infile.genepop.txt} in the workspace.
 }
 \description{
-Exporting an ecogen genetic data frame into Genepop format.
+Exporting an ecogen genetic data frame into Genepop format
 }
 \examples{
 data(eco.test)
