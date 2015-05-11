@@ -1,20 +1,25 @@
 # Exporting an ecogen genetic data frame into Genepop format
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015. 
 
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# May 11, 2015 
 
 setGeneric("eco.2genepop", 
-           function(eco, x, ndig) {
+           function(eco, grp = NULL, ndig, name = "infile.genepop.txt") {
              
              
              grupo <- eco$S
-             fact <- match(x, colnames(eco$S), nomatch = 0)
-             fact <- fact[!fact == 0]
-             if(length(fact) == 0) {
-               stop("incorrect factor name")
+             if(!is.null(grp)) {
+               fact <- match(grp, colnames(eco$S), nomatch = )
+               fact <- fact[!fact == 0]
+               if(length(fact) == 0) {
+                 stop("incorrect factor name")
+               }
+               dat0 <- cbind(eco$S[, fact], eco$G)
+             } else {
+               dat0 <- cbind(rep(1, nrow(eco$XY)), eco$G)
              }
              
-             dat0 <- cbind(eco$S[, fact], eco$G)
+             
              dat0 <- as.matrix(dat0)
              rownames(dat0) <- rownames(eco$G)
              
@@ -56,8 +61,8 @@ setGeneric("eco.2genepop",
              }
              
              if((n1 == "codom") && (n2 != 1)) {
-               a[a == "00 "] <- "000"
-               b[b == "00 "] <- "000"
+               a[a == "00"] <- "000"
+               b[b == "00"] <- "000"
                a <- paste(a, b, sep = "")
              }
              
@@ -66,14 +71,14 @@ setGeneric("eco.2genepop",
              a[, 1] <- paste(rownames(dat0), ",")
              
              lista <- list()
-             pop <- rep(" ", ncol(dat0))
-             pop <- as.matrix(t(pop))
-             pop[1] <- "POP"
+             grp <- rep(" ", ncol(dat0))
+             grp <- as.matrix(t(grp))
+             grp[1] <- "POP"
              maxf <- max(as.numeric(dat0[, 1]))
-             matriz <- matrix(nrow = 0, ncol = ncol(pop))
+             matriz <- matrix(nrow = 0, ncol = ncol(grp))
              for(i in 1:maxf) {
                lista[[i]] <- a[dat0[, 1] == i, ]
-               lista[[i]] <- rbind(pop, lista[[i]])
+               lista[[i]] <- rbind(grp, lista[[i]])
                matriz <- rbind(matriz, lista[[i]])
              }
              
@@ -83,6 +88,8 @@ setGeneric("eco.2genepop",
              nombres[, 1] <- c("Data exported from EcoGenetics", colnames(dat0[, -1]))
              colnames(nombres) <- colnames(matriz)
              matriz <- rbind(as.matrix(nombres), matriz) 
-             write.table(matriz, "infile.genepop.txt", row.names = FALSE,
+             
+             write.table(matriz, name, row.names = FALSE,
                          col.names = FALSE, quote = FALSE)
+             
            })

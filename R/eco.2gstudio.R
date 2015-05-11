@@ -1,6 +1,7 @@
-# Converting an ecogen genetic data frame into a gstudio object
+# Converting a diploid ecogen genetic data frame into a gstudio object
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015 
 
 setGeneric("eco.2gstudio", 
            function(eco, type = "separated", ...) {
@@ -9,7 +10,7 @@ setGeneric("eco.2gstudio",
              if(type == "separated") {
                dat <- adegenet::df2genind(eco$G)
                dat <- adegenet::genind2df(dat, sep = ":")
-               for(i in 1:ncol(dat)) {	
+               for(i in 1:ncol(dat)) {  
                  dat[, i] = gstudio::locus(dat[, i], type = "separated")
                }
              } else {

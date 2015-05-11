@@ -1,12 +1,35 @@
+
+EcoGenetics 1.2.0 (Release date: 2015-05-11)
+==============
+	
+	Changes:
+	
+  * This version has improvements in the modular design of the package. 
+  Many functions of the version 1.1.0 were adapted to an improved S4 
+  structure. Three main functions for autocorrelation analysis were
+  generated: eco.gsa, eco.lsa and eco.correlog, replacing the deprecated
+  eco.moran, eco.geary, eco.joincount,  eco.localmoran, 
+  eco.getisord and eco.autocor.
+  * New functions: eco.detrend, eco.2spagedi, aux.image2df, aux.filter. 
+  New functionalities: partial Mantel test, partial Mantel correlograms,
+  cross-correlation, cross-correlograms and local-Geary's C.
+  * Incorporation of new and improved examples.
+  * Bugs in the Getis-Ord (internal) function and in eco.mantel were corrected.
+  * Minor changes in dependences.
+
+
+
 EcoGenetics 1.1.0 (Release date: 2015-02-18)
 ==============
 	
 	Changes:
 	
   * Included the new functions: eco.cormantel, eco.forestplot, eco.geary, 
-eco.getisord, eco.joincount, eco.laglistw, eco.localmoran, latlon2distm, eco.mantel, eco.moran, eco.rankplot.
+    eco.getisord, eco.joincount, eco.laglistw, eco.localmoran, latlon2distm, 
+    eco.mantel, eco.moran, eco.rankplot.
   * Adaptation of eco.autocor to the new functions of
-    this version. Now also able to create a correlogram for local Getis-Ord's G and local Moran's I statistics.
+    this version. Now also able to create a correlogram for local Getis-Ord's G
+    and local Moran's I statistics.
   * Actualization of the function eco.variogram.
   * Minor changes in dependences.
 

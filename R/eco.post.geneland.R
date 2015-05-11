@@ -1,6 +1,7 @@
-#' Log posterior probability plot for Geneland repetitions with fixed K
+# Log posterior probability plot for Geneland repetitions with fixed K
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015
 
 setGeneric("eco.post.geneland", 
            function(niter, burnin) {

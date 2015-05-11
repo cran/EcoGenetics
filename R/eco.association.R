@@ -1,6 +1,8 @@
-# Chi-square and Fisher's exact test for association  of loci and alleles with a factor
+# Chi-square and Fisher's exact test for association of loci and alleles 
+# with a factor
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015
 
 setGeneric("eco.association",  
            function(eco,
@@ -8,26 +10,21 @@ setGeneric("eco.association",
                     x, 
                     method = c("fisher.test", "chisq.test"), 
                     nrep = 99,
-                    adjust = c("none", "holm", "hochberg", 
-                               "hommel", "bonferroni", "BH",
-                               "BY", "fdr"), 
+                    adjust = "none", 
                     ndig = NA) {
              
              
-             cat("\n","#### Test of association of type", assoc,"with", nrep,
-                 "repetitions","####", "\n\n")
+             cat("\n","#### Test of association <", assoc,">, with", nrep,
+                 "repetitions","####", "\n")
              
              assoc  <- match.arg(assoc)
              method <- match.arg(method)
-             adjust <- match.arg(adjust)
              
              
-             if(adjust!="none") {
-               
-               cat(paste("\n",method,"with", adjust, "P adjusted values", "\n\n"))
-             } else {
-               cat("\n",method,"without P correction for multiple comparisons", "\n\n")
-             }
+             
+             cat(paste("\n","Method: ", method,"\n",
+                       "P-adjust method: ", adjust, "\n\n"))
+             
              fact <- match(x, colnames(eco@S), nomatch = 0)
              fact <- fact[fact != 0]
              if(length(fact) == 0) {
@@ -55,7 +52,7 @@ setGeneric("eco.association",
                                    }),
                       chi <- apply(marcadores, 2,  
                                    function(u){
-                                     fisher.test(u, 	grp, simulate.p.value = T,
+                                     fisher.test(u,   grp, simulate.p.value = T,
                                                  B = nrep)
                                    }))
                
@@ -83,7 +80,7 @@ setGeneric("eco.association",
                  stop("please provide a value for the number digits per allele (ndig)")
                }
                
-               x <- eco.sort(eco@G, ndig)
+               x <- aue.sort(eco@G, ndig)
                x <-as.matrix(x)
                x[x == 0] <-NA
                pop <- eco@S[, fact]

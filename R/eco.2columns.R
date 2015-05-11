@@ -1,13 +1,15 @@
-# Converting an ecogen genetic data frame with two alleles per column
-# into a data frame with one allele per column 
+# Converting a diploid ecogen genetic data frame with two alleles per column
+# into a data frame with one allele per column
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015 
 
 setGeneric("eco.2columns", 
            function(eco, ndig) {
              
              
-             geno <- as.matrix(eco@G)
+             geno <- as.matrix(eco$G)
+             
              
              m1 <- substr(geno, 1, ndig)
              
@@ -44,7 +46,7 @@ setGeneric("eco.2columns",
              m3[m3 == "0"] <- "NA"
              m3[m3 == ""] <- "NA"
              m3 <- as.data.frame(m3)
-             
+             rownames(m3) <- rownames(eco$G)
              m3
              
            })

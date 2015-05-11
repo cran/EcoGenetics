@@ -1,8 +1,8 @@
-# Merging two ecogen objects. 
-# Ordering the rows of an ecogen object according to the rows of another
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# Merging two ecogen objects. Ordering the rows of an ecogen 
+# object according to the rows of another
 
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# May 11, 2015
 
 setGeneric("eco.merge",
            function(e1, e2, ...) {
@@ -110,6 +110,11 @@ setGeneric("eco.merge",
                rownames(z@C)<- z@C[, 1]
                z@C <- z@C[, -c(1,2)]
              }
+             
+             attr(z, "format") <- attr(e1, "format")
+             attr(z, "type") <-  attr(e1, "type")
+             attr(z, "missing") <- attr(e1, "missing")
+             attr(z, "ploidy") <- attr(e1, "ploidy")
              
              z
              

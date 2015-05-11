@@ -1,7 +1,7 @@
 # Combining the columns of two ecogen object
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
 
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# May 11, 2015
 
 setGeneric("eco.cbind", 
            function(e1, e2, ..., 
@@ -106,6 +106,10 @@ setGeneric("eco.cbind",
                z@XY <- e2@XY
              } 
              
+             attr(z, "format") <- attr(e1, "format")
+             attr(z, "type") <-  attr(e1, "type")
+             attr(z, "missing") <- attr(e1, "missing")
+             attr(z, "ploidy") <- attr(e1, "ploidy")
              
              return(z)
              })

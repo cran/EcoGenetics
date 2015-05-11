@@ -1,86 +1,86 @@
 # Ordering the rows of the data frames contained in an ecogen object
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015
 
 setGeneric("eco.order", 
-           function(object) {
+           function(eco) {
              
              
-             posit0 <- seq(along=object@XY[,1])
+             posit0 <- seq(along=eco@XY[,1])
              
-             posit <- seq(along = rownames(object@P))
-             temporalP <- merge(data.frame(rownames(object@XY),
+             posit <- seq(along = rownames(eco@P))
+             temporalP <- merge(data.frame(rownames(eco@XY),
                                            posit0), 
-                                data.frame(rownames(object@P),
-                                           rownames(object@P),
+                                data.frame(rownames(eco@P),
+                                           rownames(eco@P),
                                            posit), 
                                 by = 1)
              temporalP <- temporalP[order(temporalP$posit0), ]
-             c.names <- colnames(object@P)
+             c.names <- colnames(eco@P)
              r.names <- temporalP[,3]
-             object@P <- data.frame(object@P[temporalP$posit, ])
-             colnames(object@P) <- c.names
-             rownames(object@P) <- r.names  
+             eco@P <- data.frame(eco@P[temporalP$posit, ])
+             colnames(eco@P) <- c.names
+             rownames(eco@P) <- r.names  
              
-             posit <- seq(along = rownames(object@G))
-             temporalG <- merge(data.frame(rownames(object@XY),
+             posit <- seq(along = rownames(eco@G))
+             temporalG <- merge(data.frame(rownames(eco@XY),
                                            posit0), 
-                                data.frame(rownames(object@G), 
-                                           rownames(object@G),
+                                data.frame(rownames(eco@G), 
+                                           rownames(eco@G),
                                            posit),
                                 by = 1)
              temporalG <- temporalG[order(temporalG$posit0), ]
-             c.names <- colnames(object@G)
+             c.names <- colnames(eco@G)
              r.names <- temporalG[,3]
-             object@G <- data.frame(object@G[temporalG$posit, ])
-             colnames(object@G) <- c.names
-             rownames(object@G) <- r.names
+             eco@G <- data.frame(eco@G[temporalG$posit, ])
+             colnames(eco@G) <- c.names
+             rownames(eco@G) <- r.names
              
-             posit <- seq(along = rownames(object@E))
-             temporalE <- merge(data.frame(rownames(object@XY),
+             posit <- seq(along = rownames(eco@E))
+             temporalE <- merge(data.frame(rownames(eco@XY),
                                            posit0),
-                                data.frame(rownames(object@E), 
-                                           rownames(object@E),
+                                data.frame(rownames(eco@E), 
+                                           rownames(eco@E),
                                            posit),
                                 by = 1)
              temporalE <- temporalE[order(temporalE$posit0), ]
-             c.names <- colnames(object@E)
+             c.names <- colnames(eco@E)
              r.names <- temporalE[,3]
-             object@E <- data.frame(object@E[temporalE$posit, ])
-             colnames(object@E) <- c.names
-             rownames(object@E) <- r.names
+             eco@E <- data.frame(eco@E[temporalE$posit, ])
+             colnames(eco@E) <- c.names
+             rownames(eco@E) <- r.names
              
              
-             posit <- seq(along = rownames(object@S))
-             temporalS <- merge(data.frame(rownames(object@XY),
+             posit <- seq(along = rownames(eco@S))
+             temporalS <- merge(data.frame(rownames(eco@XY),
                                            posit0),
-                                data.frame(rownames(object@S), 
-                                           rownames(object@S), 
+                                data.frame(rownames(eco@S), 
+                                           rownames(eco@S), 
                                            posit),
                                 by = 1)
              temporalS <- temporalS[order(temporalS$posit0), ]
-             c.names <- colnames(object@S)
+             c.names <- colnames(eco@S)
              r.names <- temporalS[,3]
-             object@S <- data.frame(object@S[temporalS$posit, ])
-             colnames(object@S) <- c.names
-             rownames(object@S) <- r.names
+             eco@S <- data.frame(eco@S[temporalS$posit, ])
+             colnames(eco@S) <- c.names
+             rownames(eco@S) <- r.names
              
              
-             posit <- seq(along = rownames(object@C))
-             temporalC <- merge(data.frame(rownames(object@XY), 
+             posit <- seq(along = rownames(eco@C))
+             temporalC <- merge(data.frame(rownames(eco@XY), 
                                            posit0), 
-                                data.frame(rownames(object@C),
-                                           rownames(object@C),
+                                data.frame(rownames(eco@C),
+                                           rownames(eco@C),
                                            posit),
                                 by = 1)
              temporalC <- temporalC[order(temporalC$posit0), ]
-             c.names <- colnames(object@C)
+             c.names <- colnames(eco@C)
              r.names <- temporalC[,3]
-             object@C <- data.frame(object@C[temporalC$posit, ])
-             colnames(object@C) <- c.names
-             rownames(object@C) <- r.names
+             eco@C <- data.frame(eco@C[temporalC$posit, ])
+             colnames(eco@C) <- c.names
+             rownames(eco@C) <- r.names
              
-             
-             object
+             eco
              
            })

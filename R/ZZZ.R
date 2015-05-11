@@ -1,3 +1,5 @@
+#' @keywords internal
+
 
 .onAttach <- function(...) {
 	

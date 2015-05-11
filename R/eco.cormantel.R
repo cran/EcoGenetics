@@ -1,146 +1,193 @@
-# Mantel correlogram
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# Mantel and partial Mantel correlograms
 
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# May 11, 2015
 
 setGeneric("eco.cormantel", 
-           function(z, xy, int, smax, 
-           				  nsim = 99, 
-           				  latlon = FALSE, 
-           				  adjust = c("none", "holm", "hochberg", 
-           				 					   "hommel", "bonferroni", "BH",
-           				 					   "BY", "fdr"), 
+           function(M, XY, MC = NULL, int = NULL, smin = 0,
+                    smax =NULL, nclass = NULL, seqvec = NULL,
+                    size = NULL,  bin = c("sturges", "FD"), 
+                    nsim = 99, classM = c("dist", "simil"),
+                    method = c("pearson", "spearman", "kendall"),
+                    test = c("permutation", 
+                             "bootstrap"),
                     alternative = c("auto", "two.sided", 
                                     "greater", "less"),
-                    test = c("permutation", "bootstrap"), ...) {
+                    adjust = "holm", 
+                    sequential = TRUE, 
+                    latlon = FALSE,
+                    ...) {
              
              
              alternative.i <- match.arg(alternative)
-             adjust <- match.arg(adjust)
              test <- match.arg(test)
+             bin <- match.arg(bin)
+             classM <- match.arg(classM)
+             method <- match.arg(method)
              
-             if(ncol(xy)>2) {
-               cat("The XY data frame contains more that 2 columns.
-                   (maybe altitude data, but it is ok). The program takes the 
-                   first two columns as latitude -longitude information.", "\n\n")
-               xy <- as.matrix(xy[,1:2])
+             #some check of the data
+             
+             #XY CHECKING
+             if(ncol(XY)>2) {
+               message(paste("XY with > 2 columns. The
+                             first two are taken as X-Y coordinates"))
+               XY <-XY[,1:2]
              } 
              
-             hmuch <- sum(dist(xy) < int)
-             if(hmuch < 5) {
-               stop("Scale not apropiated.Increase distance interval")
+             if(latlon == TRUE) {
+               XY <- SoDA::geoXY(XY[,2], XY[,1], unit=1)
              }
-             hlast <- sum(dist(xy) > smax - int)
-             if(hlast < 5) {
-               stop("Range not apropiated. Decrease smax value")
-             }
+             distancia <- dist(XY)
+             
+             #####
+             
+             #LAG PARAMETERS
              
              
-             d.max<- seq(int, smax, int)
-             d.min <- d.max - int
-             d.min[1] <- 1e-10
+             if(is.null(smax) & is.null(nclass) & is.null(seqvec)) {
+               smax <- max(distancia)
+             }
+             
+             if(!is.null(int) & !is.null(smax)) {
+               
+               hmuch <- sum(distancia > 0 & distancia < int)
+               if(hmuch < 5) {
+                 stop("Scale not apropiated.Increase distance interval")
+               }
+               hlast <- sum(distancia > smax - int)
+               if(hlast < 5) {
+                 stop("Range not apropiated. Decrease smax value")
+               }
+             }
+             
+             #range parametrization
+             
+             listaw <- eco.lagweight(XY, 
+                                     int = int, 
+                                     smin = smin,
+                                     smax = smax, 
+                                     nclass = nclass,
+                                     size = size,
+                                     seqvec = seqvec,
+                                     row.sd = FALSE,
+                                     bin = bin,
+                                     cummulative = FALSE)
+             
+             lag <- listaw@W
+             
+             d.mean <- listaw@MEAN
+             d.mean <- round(d.mean, 3)
+             cardinal <- listaw@CARDINAL
+             
+             breakpoints <- listaw@BREAKS
+             
+             d.max <- round(breakpoints[-1], 3)
+             d.min <- round(breakpoints[-length(breakpoints)], 3)
              
              dist.dat<-paste("d=", d.min, "-", d.max)
-             dist.dat[1]<-paste("d=","0", "-", d.max[1])
+             lengthbreak <- length(breakpoints) - 1
              
-             if(class(z) != "dist") {
-               m1 <- as.numeric(dist(as.data.frame(z), ...))
-             } else { 
-               m1 <- as.numeric(z)
-             }
-             
-             if(latlon == FALSE) {
-               distancia <- as.numeric(dist(xy))
+             if(is.null(MC)) {
+               method.mantel <- "Mantel statistic"
              } else {
-               distancia <- as.numeric(latlon2distm(xy))
+               method.mantel <- "Partial Mantel statistic"
              }
              
-             listamedias <- vector()
-             j <- 1
+             cat("\r", "interval", 0,"/", lengthbreak , "completed")
              
-             cat("\n", "wait...","\n\n")
              
+             #starting the computation of the statistic
+             
+             ####bootstrap case ####
              if(test == "bootstrap") {
-               tab <- data.frame(matrix(nrow = length(d.min), ncol=4))
+               tab <- data.frame(matrix(nrow = length(d.min), ncol=5))
                rownames(tab) <- dist.dat
-               colnames(tab) <- c("d.mean","est", "lwr", "uppr")
+               colnames(tab) <- c("d.mean","obs", "lwr", "uppr", "size")
                
-               for (i in seq(int, smax, int)) {
-                 temp <- which((distancia <= i) & (distancia > i - int))
-                 d.mean <- mean(distancia[temp])
-                 dummy <- distancia
-                 dummy <- dummy - distancia
-                 dummy[temp] <- 1
+               for(i in 1:length(lag)) {
                  
-                 obs <- -cor(m1, dummy)  #sign changed. Also for the replicates
+                 #mantel test
                  
-                 rep <-  -replicate(nsim, cor(sample(m1, replace = T), dummy))
-                 ext <- quantile(rep, probs = c(0.05, 0.95),  na.rm = TRUE)
+                 result <- int.mantel(d1 = M, d2 = as.dist(lag[[i]]), 
+                                      dc = MC, nsim = nsim, test = "bootstrap", 
+                                      method = method, ...)
                  
-                 tab[j,] <-c(d.mean, obs, ext)
-                 j <- j + 1
+                 obs <- result$obs
+                 ext <- result$CI
+                 ext1 <- ext[1]
+                 ext2 <- ext[2]
+                 
+                 # change of sign for "dist" data
+                 if(classM == "dist") {
+                   obs <- - obs
+                 }
+                 
+                 tab[i, ] <-c(d.mean[i],
+                              round(obs, 4),
+                              round(ext1, 4),
+                              round(ext2, 4),
+                              cardinal[i])
+                 
+                 cat("\r", "interval", i,"/", lengthbreak , "completed")
                  
                }
                
-               salida <- new("eco.boot")
-               
+               ####permutation case ####
              } else if(test == "permutation") {
-               tab <- data.frame(matrix(nrow = length(d.min), ncol= 4))
+               tab <- data.frame(matrix(nrow = length(d.min), ncol= 5))
                rownames(tab) <- dist.dat
-               colnames(tab) <- c("d.mean","est", "exp", "pval")
+               colnames(tab) <- c("d.mean","obs", "exp", "pval", "cardinal")
                
-               for (i in seq(int, smax, int)) {
-                 temp <- which((distancia <= i) & (distancia > i - int))
-                 d.mean <- mean(distancia[temp])
-                 dummy <- distancia
-                 dummy <- dummy - distancia
-                 dummy[temp] <- 1
+               for(i in 1:length(lag)) {
                  
-                 obs <- -cor(m1, dummy)
+                 result <- int.mantel(d1 = M, d2 = as.dist(lag[[i]]), 
+                                      dc = MC, nsim,  test = "permutation",
+                                      alternative = alternative, 
+                                      method = method, ...)
                  
-                 repsim <- -replicate(nsim, cor(sample(m1), dummy))
+                 obs <- result$obs
+                 expected <- result$exp
+                 p.val <- result$p.val
                  
-                 alternative <- alternative.i
-                 
-                 expected <- mean(repsim)
-                 if(alternative == "auto") {
-                   alter <- expected - obs
-                   if(alter > 0) {
-                     alternative <- "less"
-                   } else if (alter < 0) {
-                     alternative <- "greater"
-                   }
+                 # change of sign for "dist" data
+                 if(classM == "dist") {
+                   obs <- - obs
+                   expected <- - expected
                  }
                  
-                 if(alternative == "greater") {
-                   howmany <- sum(repsim >= obs)
-                   p.val <- (howmany + 1) / (nsim + 1)
-                   
-                 } else if(alternative == "less") {
-                   howmany <- sum(repsim <= obs)
-                   p.val <- (howmany + 1) / (nsim + 1)
-                   
-                 } else if(alternative == "two.sided") {
-                   howmany <- sum(abs(repsim) >= abs(obs))
-                   p.val <- (howmany + 1) / (nsim + 1)
-                 }
-                 tab[j,] <-c(round(d.mean, 3), round(obs, 4),
-                 						round(expected, 4), p.val)
-                 j <- j + 1
+                 tab[i,] <-c(round(d.mean[i], 3),
+                             round(obs, 4),
+                             round(expected, 4), 
+                             round(p.val, 5),
+                             cardinal[i])
+                 
+                 cat("\r", "interval", i,"/", lengthbreak , "completed")
+                 
                }
-               tab[, 3] <- round(p.adjust(tab[, 3], method = adjust), 4)
                
-               salida <- new("eco.permut")
+               
+               #sequential correction
+               
+               if(sequential) {
+                 for(j in 1:nrow(tab)) {
+                   tab[j, 4] <- (p.adjust(tab[1:j, 4], method= adjust))[j]
+                 }
+               } else {
+                 tab[ , 4] <- p.adjust(tab[ , 4], method = adjust)
+               }
+               
              }
              
-             
+             salida <- new("eco.correlog")
              salida@OUT <- list (tab)
-             salida@NAMES <- colnames(as.data.frame(as.matrix(z)))
-             salida@INTERVAL <- int
-             salida@MAX <- smax
-             salida@TYPE <- "dfm"
-             salida@METHOD <- "mantel"
-             salida@RANDTEST <- test
-           
+             salida@IN <- list(XY = XY, M = M, MC = MC)
+             salida@BREAKS <- breakpoints
+             salida@CARDINAL <- cardinal
+             salida@METHOD <- c(method.mantel, method)
+             salida@DISTMETHOD <- listaw@METHOD
+             salida@TEST <- test
+             salida@NSIM <- nsim
+             salida@PADJUST <- paste(adjust, "-sequential:", sequential)
+             
              salida
            })

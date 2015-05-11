@@ -6,127 +6,150 @@
  Analysis of Phenotypic, Genotypic and Environmental Data
 }
 \description{
- Analysis of phenotypic, genotypic and environmental data 
- with an object of class "ecogen", designed to make easy the integration
- of the available information from multiple sources. Also including 
- geostatistical tools and extra functions.
+This package allows users to analyze phenotypic, genotypic and environmental data with a single object of class "ecogen". EcoGenetics has been designed to make easy the storing, handling and integration of the available information from multiple sources. It also provides geostatistical tools for analyzing spatial patterns, and extra functions. 
 }
 
 \details{
  \tabular{ll}{
  Package: \tab EcoGenetics\cr
  Type: \tab Package\cr
- Version: \tab 1.1.0\cr
- Date: \tab 2015-02-18\cr
+ Version: \tab 1.2.0\cr
+ Date: \tab 2015-05-11\cr
  License: \tab GPL (>=2) \cr
  }
  
-In the ecogenetics discipline, when working with a set of individuals, we have different kind of data that we wish to integrate and analyze. The ecogen class is a powerful unit of information storing and processing, designed to make comfortable and faster that work.
+ ----------------------- o
+ -----------------------
+ 
+ \bold{\emph{Structure of an ecogen object: handling and integrating information}}
 
-The basic structure of an ecogen object is the following:
 
-\enumerate{
-\item A \strong{P} slot, storing a phenotypic data frame.
-\item A \strong{G} slot, storing a genotypic data frame.
-\item An \strong{E} slot, storing an environmental data frame.
-\item A \strong{S} slot, storing a data frame with classes assigned to the individuals. For example, an S data frame could consist of a first column with demes and a second with region information, both numeric. The only requirement that this data frame must fulfil, is to provide classification rules. 
-\item A \strong{GENIND} slot, with a genind object, containing in genind
-format the G information.
-\item A \strong{C} slot, for a custom data frame. For example, it could be epigenetic information or other class of G data that should be stored apart.
-\item An \strong{OUT} slot, containing a list for the storage of the results. 
+Ecological genetics research requires the integration of data originated in different sources. The object class "ecogen" has been designed for handling multidimensional data. Its basic structure is the following:
+
+- A \strong{P} slot, storing a phenotypic data frame.  
+
+- A \strong{G} slot, storing a genotypic data frame.  
+
+- An \strong{E} slot, storing an environmental data frame.  
+
+- A \strong{S} slot, storing a data frame with classes assigned to the 
+individuals. 
+
+- A \strong{GENIND} slot,containing in \emph{genind} format the information of @G.
+
+- A \strong{C} slot, for a custom data frame. 
+
+- An \strong{OUT} slot, containing a list for the storage of the results.
+
+
+The construction of a new "ecogen" object is made with the homonymous function.This object class allows the importation from different genetic formats (codominant-dominant data of class "data.frame", "DNAbin" and "allignment"):
+
+\emph{library("EcoGenetics")}
+
+\emph{data(eco.test)}
+
+\emph{# "data.frame" data}
+
+\emph{eco <- ecogen(XY = coordinates, P = phenotype, G = genotype, E = environment, S = structure)}
+
+\emph{# "DNAbin" data}
+
+\emph{require("ape")}
+
+\emph{data(woodmouse)}
+
+\emph{G <- woodmouse}
+
+\emph{eco.dnabin <- ecogen(G = G)}
+
+\emph{# "allignment" data}
+
+\emph{require("seqinr")}
+
+\emph{data(mase)}
+
+\emph{G <- mase}
+
+\emph{eco.allign <- ecogen( G = G)}
+
+
+Continuing with the first example, the following available methods can be used with ecogen objects:
+
+- - - - - - 
+
+\bold{# 1. subsetting-method}
+
+\emph{eco.sub <- eco[1:50]}
+
+\bold{# 2. merging-method, for two objects}
+
+\emph{eco1 <- eco}
+
+\emph{merged <- eco.merge(eco, eco1)}
+
+\bold{# 3. subsetting-method, in reference to a group in the S slot (in this case, "1")}
+
+\emph{eco.subS <- eco.subset(eco,"pop", 1)}
+
+
+\bold{# 4. binding by row-method}
+
+\emph{eco.r <- eco.rbind(eco, eco1)}
+
+\bold{# 5. binding by column-method}
+
+\emph{eco.c <- eco.cbind(eco, eco1)}
+
+\bold{# 6. ordering by row-method, using the rows in the XY data frame as reference}
+
+\emph{eco1$P <- eco$P[sample(1:173), ] ## object with unordered rows in P data frame}
+
+\emph{ordered <- eco.order(eco1)}
+
+\bold{# 7. appending-method (storing information generated)}
+
+\emph{## fitting a multiple linear regression model:}
+ 
+\emph{linear.analysis <- eco.lmtree(eco$P, eco$E, "mlm")}
+ 
+\emph{## storing the results:}
+ 
+\emph{eco <- eco.append(eco, linear.analysis)}
+ 
+\emph{eco}
+
+\emph{## Storing multiple result at once:}
+ 
+\emph{a <- c(1:10)}
+
+\emph{b <- c(2:30)}
+  
+\emph{eco <- eco.append(eco, a, b)}
+
+\emph{eco}
+  
+\emph{# the panel shows the object with the results in alphabetical order and their classes in parentheses}
+
+\bold{# 8. removing-method}
+
+\emph{eco <- eco.remove(eco, a, b) #removing objects a and b eco}
+
+- - - - - - 
+
+Finally, the workspace can be cleared, only storing the ecogen object:
+
+\emph{eco.clear(eco)}
+
+ ----------------------- o
+ -----------------------
+ 
+ \bold{\emph{Structure of the package}}
+
+The package has four basic modules. The \strong{base module} is composed by general functions (multiple lm, conversion utilities, etc.). 
+The \strong{general spatial module} computes global (Moran's I, Mantel test, etc.) and local (Getis-Ord's G*, local Moran's I, etc.) spatial tests. These analyses use a spatial weights matrix, provided by the  \strong{spatial weights module}.  The \strong{lag analysis module} performs two basic analyses: the obtention  of variograms and correlograms. This module uses the other tool provided by the spatial weights module: a sequence of spatial weights matrices. 
 }
 
-Each time we wish to store new results, we use the function \code{\link{eco.append}}, assigning the new result to our ecogen object. In the examples below we explain better how this work. First, with the data preloaded into our workspace, we create a new ecogen object. There are two option. We create an empty object and then we add the data,  or we add all the data at once:
 
-In the first one option:
-
-\strong{empty <- ecogen()}
-
-\strong{empty}
-
-
-Next, we include into our object, for example, the P data frame:
-
-\strong{empty$P <- phenotype}
-
-
-In the second one option:
-
-\strong{eco <- ecogen(XY = coordinates, P = phenotype, G = genotype, E = environment, S = as.data.frame(structure))}
-
-
-We are free of including the data desired when needed.
-
-With all the information stored in our ecogen object, we clear out the workspace with the function \code{\link{eco.clear}}, removing all the older data:
-
-\strong{eco.clear(eco)}
-
-
-Then, we can for example merge two objects of this class.  For simplicity, we create a new object shuffling eco rows:
-
- \strong{eco1 <- eco}
- 
- \strong{eco1$XY <- eco$XY[sample(1:173), ]}
- 
- 
-We merge both data sets:
-
- \strong{merged <- eco.merge(eco, eco1)}
- 
- 
-New object with the data of both eco and eco1:
-
- \strong{merged} 
- 
-Subsetting by rows, individuals 1 to 50: 
-
-\strong{merged[1:50]}
-
-Subsetting by groups, in this case by group 1:
-
-\strong{eco.subset(eco,"structure", 1)}
-
-
-We can analyze the data and store the new information generated. For example, we fit a multiple linear regression model:
- 
- \strong{linear.analysis <- eco.lmtree(merged$P, merged$E, "mlm")}
- 
- \strong{ linear.analysis}
- 
- \strong{summary(linear.analysis)}
- 
- 
- We store the results:
- 
- \strong{merged <- eco.append(merged, linear.analysis)} 
- 
- \strong{merged} 
- 
- 
- We store multiple result at once:
- 
-  \strong{a <- c(1:10)}
-  
-  \strong{b <- c(2:30)}
-  
-  \strong{eco <- eco.append(eco, a, b)} 
-  
-  
-As it can be seen, the panel show us the object with the results and their classes in parentheses. Always the results are stored in alphabetical order for easy seach. If needed, as $OUT is a list we may write                      \emph{eco$OUT$linear.analysis} to recover this data.
- 
- We can also remove results from our object:
- 
- \strong{eco <- eco.remove(eco, a)}
- 
- 
- 
- Finally, we clear out the workspace, only storing the ecogen object:
- 
- \strong{eco.clear(eco)}    
- 
- 
- }
- 
 \author{
 
  Leandro Roser, Juan Vilardi, Beatriz Saidman and Laura Ferreyra
@@ -135,305 +158,360 @@ As it can be seen, the panel show us the object with the results and their class
 }
 
 \references{
+ 
+Anselin L. 1995. Local indicators of spatial association-LISA. Geographical analysis. 27: 93-115.
 
-Anselin, L. (1995). Local indicators of spatial association - LISA. Geographical analysis, 27(2), 93-115.
+Borcard D., F. Gillet, and P. Legendre. 2011. Numerical ecology with R. Springer Science & Business Media.
 
- Chander, G., Markham, B. L., & Helder, D. L. (2009). Summary of current radiometric calibration coefficients for Landsat MSS, TM, ETM+, and EO-1 ALI sensors. Remote sensing of environment, 113(5), 893-903.
+Chander G., B. Markham, and D. Helder. 2009. Summary of current radiometric calibration coefficients for Landsat MSS, TM, ETM+, and EO-1 ALI sensors. Remote sensing of environment, 113: 893-903.
+
+Chavez P. 1989. Radiometric calibration of Landsat Thematic Mapper multispectral images. Photogrammetric Engineering and Remote Sensing, 55: 1285-1294.
+
+Chavez P. 1996. Image-based atmospheric corrections-revisited and improved. Photogrammetric engineering and remote sensing, 62: 1025-1035.
+
+Dray S., and A., Dufour. 2007. The ade4 package: implementing the duality diagram for ecologists. Journal of statistical software, 22: 1-20.
  
- Chavez, P. S. (1996). Image-based atmospheric corrections-revisited and improved. Photogrammetric engineering and remote sensing, 62(9), 1025-1035.
- 
- Cliff, A. D., & Ord, J. K. (1981). Spatial processes: models & applications (Vol. 44). London: Pion.
- 
- Dray, S., & Dufour, A. B. (2007). The ade4 package: implementing the duality diagram for ecologists. Journal of statistical software, 22(4), 1-20.
- 
- Goudet, J. (2005). Hierfstat, a package for R to compute and test hierarchical F-statistics. Molecular Ecology Notes, 5(1), 184-186.
- 
- Guillot, G., Mortier, F., & Estoup, A. (2005). GENELAND: a computer package for landscape genetics. Molecular Ecology Notes, 5(3), 712-715.
- 
- Hothorn, T., Hornik, K., & Zeileis, A. (2006). Unbiased recursive partitioning: A conditional inference framework. Journal of Computational and Graphical statistics, 15(3), 651-674.
- 
- Jombart, T. (2008). adegenet: a R package for the multivariate analysis of genetic markers. Bioinformatics, 24(11), 1403-1405.
- 
-  Legendre, P., & Fortin, M. J. (1989). Spatial pattern and ecological analysis. Vegetatio, 80(2), 107-138.
+Freedman D., and P. Diaconis. 1981. On the histogram as a density estimator: L 2 theory. Probability theory and related fields, 57: 453-476.
   
- Legendre, P., & Legendre, L. F. (2012). Numerical ecology (Vol. 24). Elsevier.
- 
- Mantel, N. (1967). The detection of disease clustering and a generalized regression approach. Cancer research, 27(2 Part 1), 209-220.
- 
- Moran, P. A. (1948). The interpretation of statistical maps. Journal of the Royal Statistical Society. Series B (Methodological), 10(2), 243-251.
- 
- Nei, M. (1978). Estimation of average heterozygosity and genetic distance from a small number of individuals. Genetics, 89(3), 583-590.
- 
- Ord, J. K., & Getis, A. (1995). Local spatial autocorrelation statistics: distributional issues and an application. Geographical analysis, 27(4), 286-306.
- 
- Pebesma, E. J. (2004). Multivariable geostatistics in S: the gstat package. Computers & Geosciences, 30(7), 683-691.
- 
- Petit, R. J., & Pons, O. (1998). Bootstrap variance of diversity and differentiation estimators in a subdivided population. Heredity, 80(1), 56-61.
- 
- Sen, P. K. (1968). Estimates of the regression coefficient based on Kendalls tau. Journal of the American Statistical Association, 63(324), 1379-1389.
- 
-Sokal, R. R., & Oden, N. L. (1978). Spatial autocorrelation in biology: 1. Methodology. Biological journal of the Linnean Society, 10(2), 199-228.
+Geary R. 1954. The contiguity ratio and statistical mapping. The incorporated statistician, 115-146.
 
- Tucker, C. J. (1979). Red and photographic infrared linear combinations for monitoring vegetation. Remote sensing of Environment, 8(2), 127-150.
+Getis A., and J. Ord. 1992. The analysis of spatial association by use of distance statistics. Geographical analysis, 24: 189-206.
 
- Wu, C. F. J. (1986). Jackknife, bootstrap and other resampling methods in regression analysis. the Annals of Statistics, 1261-1295.
+Goslee S. 2011. Analyzing remote sensing data in R: the landsat package. Journal of Statistical Software, 43: 1-25.
 
+Goudet J. 2005. Hierfstat, a package for R to compute and test hierarchical F-statistics. Molecular Ecology Notes, 5: 184-186.
+ 
+Guillot G., F. Mortier and A. Estoup. 2005. GENELAND: a computer package for landscape genetics. Molecular Ecology Notes, 5: 712-715.
+ 
+Jombart T. 2008. adegenet: a R package for the multivariate analysis of genetic markers. Bioinformatics, 24: 1403-1405.
+
+Legendre P., and L. Legendre. 2012. Numerical ecology. Third English edition .Elsevier Science, Amsterdam, Netherlands.
+
+Lichstein J., T. Simons, S. Shriner, and K. Franzreb. 2002. Spatial autocorrelation and autoregressive models in ecology. Ecological monographs, 72: 445-463.
+
+Moran P. 1950. Notes on continuous stochastic phenomena. Biometrika, 17-23.
+
+Oden N., and R. Sokal. 1986. Directional autocorrelation: an extension of spatial correlograms to two dimensions. Systematic Zoology, 35: 608-617.
+
+Ord J., and A. Getis. 1995. Local spatial autocorrelation statistics: distributional issues and an application. Geographical analysis, 27: 286-306.
+
+Reich R., R. Czaplewski and W. Bechtold. 1994. Spatial cross-correlation of undisturbed, natural shortleaf pine stands in northern Georgia. Environmental and Ecological Statistics, 1: 201-217.
+
+Sokal R., and N. Oden 1978. Spatial autocorrelation in biology: 1. Methodology. Biological journal of the Linnean Society, 10: 199-228.
+
+Sokal R., and N. Oden. 1978. Spatial autocorrelation in biology. 2. Some biological implications and four applications of evolutionary and ecological interest. Biological Journal of the Linnean Society, 10: 229-49.
+
+Sokal R. 1979. Ecological parameters inferred from spatial correlograms. In: G. Patil and M. Rosenzweig, editors. Contemporary Quantitative Ecology and elated Ecometrics. International Co-operative Publishing House: Fairland, MD, pp. 167-96.
+
+Sokal R. 1986. Spatial data analysis and historical processes. In: E. Diday, Y. Escoufier, L. Lebart, J. Pages, Y. Schektman, and R. Tomassone, editors. Data analysis and informatics, IV. North-Holland, Amsterdam, The Netherlands, pp. 29-43.
+
+Sokal R., N. Oden and B. Thomson. 1998. Local spatial autocorrelation in a biological model. Geographical Analysis, 30: 331-354.
+
+Sokal R., and B. Thomson. 2006. Population structure inferred by local spatial autocorrelation: an example from an Amerindian tribal population. American journal of physical anthropology, 129: 121-131.
+
+Song C., C. Woodcock, K. Seto, M. Lenney and S. Macomber. 2001. Classification and change detection using Landsat TM data: when and how to correct atmospheric effects?. Remote sensing of Environment, 75: 230-244.
+
+Sturges H. 1926. The choice of a class interval. Journal of the American Statistical Association, 21: 65-66.
+
+Tucker C. 1979. Red and photographic infrared linear combinations for monitoring vegetation. Remote sensing of Environment, 8: 127-150.
+
+Wu. 1986. Jackknife, bootstrap and other resampling methods in regression analysis. the Annals of Statistics, 1261-1295.
+ 
 }
  
 \examples{
 
  \dontrun{
  
- \# Creating an empty ecogen object:
  
- empty <- ecogen()
- 
- 
- \# Creating a filled ecogen object with microsatellite data:
- 
- data(eco.test)
- eco <- ecogen(XY = coordinates, P = phenotype, G = genotype, 
- E = environment, S = as.data.frame(structure))
- eco <- eco.sortalleles(eco, 1)           \# ordering the alleles in a codominant marker
+#---Detrending spatial data with polynomial interpolation---#
  
  
- \# Creating an ecogen object with "DNAbin" imported data:
- 
- library("ape")
- data(woodmouse)
- G <- woodmouse
- eco <- ecogen( G = G, format = "DNAbin" ,missing = 0)
- 
- 
- \# Creating an ecogen object with "allignment" imported data:
- 
- library("seqinr")
- data(mase)
- G <- mase
- eco <- ecogen( G = G, format = "alignment" ,missing = 0)
- 
- 
- \# Operations over ecogen objects:
- 
- data(eco.test)
- 
- eco2 <- eco.cbind(eco, eco, "P")         \# binding rows
- 
- eco2 <- eco.rbind(eco, eco)              \#binding columns
- 
- eco2 <- eco[1:20]                        \# subsetting from rows 1 to 20
+data(eco2)
 
- eco2 <- eco.subset(eco, "structure", 1)  \# subsetting by groups
- 
+## original data
+data1 <- matrix(eco2$P[,1], 30, 30)
+image(data1)
 
- variog <- eco.variogram(eco$P[, 2], eco$XY, int=100, smax=1000)
- 
- eco <- eco.append(eco, variog)           \#updating by adding results
- eco <- eco.append(eco, variog)           \#updating by removing results
- 
- \# Ordering rows 
- 
- data(eco.test)
- eco1 <- eco
- eco1$P <- eco$P[sample(1:173), ]         \#object with shuffled rows
- eco1$E <- eco$E[sample(1:173), ]
- ordered <- eco.order(eco1)
- ordered$XY; ordered$P; ordered$E; ordered$S
- 
-\# Merging two ecogen objects:
+## original data + trend
+data2 <- matrix(eco2$P[,2], 30, 30)
+image(data2)
 
- data(eco.test)
- eco1 <- eco
- eco1$XY <- eco$XY[sample(1:173), ]       \# object with shuffled rows
- eco1$P <- eco$P[sample(1:173), ]
- eco$XY
- eco1$XY
- merged <- eco.merge(eco, eco1)
- eco2 <- eco.cbind(eco, eco, "ALL")
- eco2$XY
+## data detrending
+data2.det <- eco.detrend(Z = eco2$P[,2], XY =  eco2$XY, degree =  1)
+data2.det <- data2.det@RES
+data2.det <- matrix(data2.det$df1, 30, 30)
+image(data2.det)
+
+
+#---Multiple Linear Regression fit---#
  
  
- \# Multiple Linear Regression fit:
- 
- data(eco.test)
- mymod <- "E1+E2*E3"
- mod <- eco.lmtree(df1 = eco$P, df2 = eco$E, 
- analysis = "mlm", mod.class = mymod) 
- summary(mod)
+data(eco.test)
+mymod <- "E1+E2*E3"
+mod <- eco.lmtree(df1 = eco$P, df2 = eco$E, 
+analysis = "mlm", mod.class = mymod) 
+summary(mod)
  
  
- \# Multiple Conditional Inference Trees:
+#---Multiple Conditional Inference Trees---#
+
 
 data(eco.test)
 mymod <- "E1+E2*E3"
 mod <- eco.lmtree(df1 = eco$P, df2 = eco$E, 
-analysis = "ctree", mod.class = mymod, fact = eco$S$structure)
+analysis = "mctree", mod.class = mymod, fact = eco$S$structure)
 summary(mod)
 
- 
- \# Bootstrap estimates of the effective 
- \# number of alleles per locus and group, 
- \# and harmonic overall mean:
- 
- data(eco.test)
- Ae.raref <- eco.rarefact(eco, "structure", nrep = 50)
- 
- 
-\# Bootstrap estimates of heterozygocity:
 
- data(eco.test)
- boot.test <- eco.boothet(eco, "structure", nrep = 20, pres = T)
+#---Global spatial analysis---#
  
  
-\# Moran I statistic with Monte-Carlo test:
+## Moran's I 
+
+### one test
+data(eco.test)
+con <- eco.weight(eco$XY, method = "circle", d1 = 0, d2 = 2)
+global <- eco.gsa(Z = eco$P[, 1], con = con, , method = "I", nsim = 200)
+global
+
+require(adegenet)
+con2<-chooseCN(eco$XY, type = 1, result.type = "listw", plot.nb = FALSE)
+global <- eco.gsa(Z = eco$P[, 1], con = con2, , method = "I", nsim = 200)
+global
+
+### multiple tests
+con <- eco.weight(eco$XY, method = "circle", d1 = 0, d2 = 2)
+global <- eco.gsa(Z = eco$P, con = con, , method = "I", nsim = 200)
+global
+
+
+## Geary's C 
 
 data(eco.test)
-require(adegenet)
-con <- chooseCN(eco$XY, type = 1, result.type = "listw",
-plot.nb = FALSE)
-eco.moran(eco$P[, 3], con, nsim = 99)
+global.C <- eco.gsa(Z = eco$P[, 1], con = con, method = "C", nsim = 200)
+global.C
 
 
-\# Geary C statistic with Monte-Carlo test:
+## Bivariate's Moran's Ixy
 
 data(eco.test)
-require(adegenet)
-con<-chooseCN(eco$XY, type = 1, result.type = "listw", 
-plot.nb = FALSE)
-eco.geary(eco$P[, 3], con, nsim = 99)
+global.Ixy <- eco.gsa(Z = eco$P[, 1], Y = eco$E[, 1],
+con = con, method = "CC", nsim = 200)
+global.Ixy
 
 
-\# Join-Count statistic with Monte-Carlo test:
-
-data(eco.test)
-require(adegenet)
-con<-chooseCN(eco$XY, type = 1, result.type = "listw",
-plot.nb = FALSE)
-eco.joincount(2 * eco$GENIND$tab[, 3], con,
-nsim = 99, ncod = 1)
-
-
-\# Local Getis-Ord G and G* statistics with Monte-Carlo test:
+## Join-Count
 
 data(eco.test)
-require(adegenet)
-con<-chooseCN(eco$XY, type = 1, result.type = "listw", plot.nb = FALSE)
-eco.getisord(eco$P[, 3], con, nsim = 99,
-test = "permutation", classG = "G")
-getis <- eco.getisord(eco$P[, 3], con, nsim = 99, classG = "G*")
-eco.rankplot(getis, eco$XY)
-getis <- eco.getisord(eco$P[, 3], con, nsim = 99, classG = "G*",
+global.JC <- eco.gsa(Z = 2* eco$GENIND$tab[, 1], ncod = 1,
+con = con, method = "JC", nsim = 10)
+global.JC
+
+
+# Mantel test
+
+data(eco.test)
+eco.mantel(d1 = dist(eco$P), d2 = dist(eco$E), nsim = 99)  
+
+
+## Partial Mantel test
+
+data(eco.test)
+eco.mantel(d1 = dist(eco$P), d2 = dist(eco$E),
+dc = dist(eco$XY), nsim = 99)  
+
+
+#---Local spatial analysis---#
+
+
+## Getis-Ord's G*
+
+data(eco.test)
+require(ggplot2)
+con<- eco.weight(eco$XY, method = "knearest",  k = 4, self = TRUE) 
+### self = TRUE for G*
+getis.ak <- eco.lsa(eco$P[, 1], con, method = "G*", nsim = 99, 
+adjust = "none")
+getis.ak
+
+### to plot the results, the function "eco.lsa" calls "eco.rankplot"
+(see ?eco.rankplot) when test = "permutation" and "eco.forestplot"
+(see ?eco.forestplot) when test = "bootstrap"
+
+p <- plot(getis.ak)   ###  rankplot graph
+p                     ###  points with colors of the color-scale:
+                      ###  points with P < 0.05. Yellow points : 
+                      ###  points with P > 0.05
+p <- plot(getis.ak, significant = FALSE)
+p                     ###  all points have a color of the color-scale
+
+### bootstrap example
+getis.akb <- eco.lsa(eco$P[, 1], con, method = "G*", nsim = 99,
 test = "bootstrap")
-eco.forestplot(getis)
-
-\# Local Moran I test
-
-data(eco.test)
-require(adegenet)
-con <- chooseCN(eco$XY, type = 1, result.type = "listw", plot.nb = FALSE)
-local <- eco.localmoran(eco$P[, 2], con, nsim = 99)
-eco.rankplot(local, eco$XY)
-local <- eco.localmoran(eco$P[, 2], con, nsim = 99, test = "bootstrap")
-eco.forestplot(local)
+p <- plot(getis.akb)     ### forestplot graph
+p + ggplot2::theme_bw()  ### the plot can be modified with ggplot2
+                         ### In this case, the background color is modified 
 
 
-\# Mantel test:
+## Getis-Ord's G
 
 data(eco.test)
-eco.mantel(dist(eco$P), dist(eco$XY), 99)
+require(ggplot2)
+con<- eco.weight(eco$XY, method = "knearest", k = 4)
+### self = FALSE for G
+getis <- eco.lsa(eco$P[, 1], con, method = "G", nsim = 99, adjust = "none")
+plot(getis)
 
 
-\# Mantel correlogram:
+## Local Moran's I
 
 data(eco.test)
-corm <- eco.cormantel(z = eco$P, xy = eco$XY,
-nsim = 99,int=50, smax=1000, test = "permutation")
+require(ggplot2)
+con<- eco.weight(eco$XY, method = "knearest",  k = 4, row.sd = TRUE)
+### row standardized weights = TRUE
+localmoran <- eco.lsa(eco$P[, 1], con, method = "I", nsim = 99, 
+adjust = "none")
+plot(localmoran)
+
+
+## Local Geary's C
+
+data(eco.test)
+require(ggplot2)
+con<- eco.weight(eco$XY, method = "knearest",  k = 4, row.sd = TRUE)
+### row standardized weights = TRUE
+localgeary <- eco.lsa(eco$P[, 1], con, method = "C", nsim = 99, 
+adjust = "none")
+plot(localgeary)
+
+
+#---Moran's I, Geary's C and bivariate Moran's Ixy correlograms---#
+
+
+## Moran's I correlogram
+
+### single test
+data(eco.test)
+require(ggplot2)
+moran <- eco.correlog(Z=eco$P[,1], XY = eco$XY, method = "I",
+smax=10, size=1000)
+plot(moran)
+
+### multiple tests
+moran2 <- eco.correlog(Z=eco$P, XY = eco$XY, method = "I",
+smax=10, size=1000)
+plot(moran2, var ="P2")
+plot(moran2, var ="P3")
+
+### correlogram plots support the use of ggplot2 syntax
+moranplot <- plot(moran2, var ="P3") + theme_bw() + theme(legend.position="none")
+moranplot
+
+
+## Geary's C correlogram
+
+data(eco.test)
+require(ggplot2)
+geary <- eco.correlog(Z=eco$P[,1], XY = eco$XY, method = "C",
+smax=10, size=1000)
+plot(geary)
+
+
+## Moran's Ixy cross-correlogram
+
+data(eco.test)
+require(ggplot2)
+cross <- eco.correlog(Z=eco$P[,1], XY = eco$XY, Y = eco$E[, 1],
+method = "CC", int= 2, smax=15)
+plot(cross)
+
+
+#---Mantel and partial Mantel correlograms---#
+
+
+data(eco.test)
+require(ggplot2)
+corm <- eco.cormantel(M = dist(eco$P), size=1000,smax=7, XY = eco$XY,
+nsim = 99)
 plot(corm)
-corm <- eco.cormantel(z = eco$P, xy = eco$XY,
-nsim = 99,int=50, smax=1000, test = "bootstrap")
+
+corm <- eco.cormantel(M = dist(eco$P), size=1000,smax=7, XY = eco$XY,
+nsim = 99, test = "bootstrap")
 plot(corm)
 
- 
-\# Moran I, Geary C, Join-Count, local Getis-Ord G and local Moran I correlograms   
 
- eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
-df = "P", select = "moran", nsim = 10)
-plot(eco.ac, var = "P2")
+## partial Mantel correlogram
 
-eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
-df = "P", select = "geary", nsim = 10)
-plot(eco.ac, var = "P2")
+corm <- eco.cormantel(M = dist(eco$P), MC = dist(eco$E),
+size=1000, smax=7, XY = eco$XY, nsim = 99)
+plot(corm)
 
-eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
-df = "GENIND", select = "joincount", nsim = 10,
-indvar="L1.1")
-plot(eco.ac)
-
-eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
-df = "P", select = "getisord", nsim = 10)
-plot(eco.ac, var = "P2")
-eco.rankplot(eco.ac, eco$XY, "P2")
-eco.forestplot(eco.ac, "P2")
-
-eco.ac <- eco.autocor(eco, int = 200, smax = 2000,
-df = "P", select = "localmoran", nsim = 10)
-plot(eco.ac, var = "P2")
-eco.rankplot(eco.ac, eco$XY, "P2")
-eco.forestplot(eco.ac, "P2")
+### correlogram plots support the use of ggplot2 syntax
+mantelplot <- plot(corm) + theme_bw() + theme(legend.position="none")
+mantelplot
 
 
-\# Semivariogram for a selected variable:
+#---Empirical variogram---#
+
 
 data(eco.test)
-variog <- eco.variogram(eco$P[, 2], eco$XY, int=100, smax=1000)
+require(ggplot2)
+variog <- eco.variogram(Z = eco$P[, 2],XY =  eco$XY)
 plot(variog)
-variog <- eco.variogram(eco$P[, 2], eco$XY, int=100, smax=1000, nsim = 99)
-plot(variog)
+
+## variogram plots support the use of ggplot2 syntax
+variogplot <- plot(variog) + theme_bw() + theme(legend.position="none")
+variogplot
 
  
-\# Computing NDVI with atmospheric correction 
-\# over a time series and estimation of the temporal mean:
+#---Computing NDVI with atmospheric correction
+#---over a time series, and estimation of the temporal mean---#
 
- data(eco.test)
- temp <- list()
+require(raster)
+data(tab)
+data(eco3)
+set.seed(6)
 
-##### we create 4 simulated rasters for the data included in the object tab:
+temp <- list()
 
- for(i in 1:4) {
- temp[[i]] <- runif(19800, 0, 254)
- temp[[i]] <- matrix(temp[[i]], 180, 110)
- temp[[i]] <- raster::raster(temp[[i]])
- extent(temp[[i]]) <- c(3770000, 3950000,6810000, 6920000)
- }
+## we create 4 simulated rasters for the data included in the object tab:
 
- 
- writeRaster(temp[[1]], "20040719b4.tif", overwrite = T) 
- writeRaster(temp[[2]], "20040719b3.tif", overwrite = T)
- writeRaster(temp[[3]], "20091106b4.tif", overwrite = T)
- writeRaster(temp[[4]], "20091106b3.tif", overwrite = T)
- 
- #### Computing NDVI images: 
+for(i in 1:4) {
+temp[[i]] <- runif(19800, 0, 254)
+temp[[i]] <- matrix(temp[[i]], 180, 110)
+temp[[i]] <- raster(temp[[i]], crs="+proj=utm")
+extent(temp[[i]])<-c(3770000, 3950000, 6810000, 6920000)
+}
 
- eco.NDVI(tab, "COST", "NDVI", "LT5")
+writeRaster(temp[[1]], "20040719b4.tif", overwrite = T)
+writeRaster(temp[[2]], "20040719b3.tif", overwrite = T)
+writeRaster(temp[[3]], "20091106b4.tif", overwrite = T)
+writeRaster(temp[[4]], "20091106b3.tif", overwrite = T)
+
+## Computing NDVI images:
+
+eco.NDVI(tab, "COST", "NDVI", "LT5")
+
+## Mean NDVI image computed over the NDVI images that we calculated:
+
+eco.NDVI.post(tab, "COST", "NDVI", what = c("mean", "var"))
+mean.ndvi <- raster("NDVI.COST.mean.tif")
+plot(mean.ndvi)
+
+## Extraction of the mean NDVI for each point in the object eco and plot of the data:
+
+ndvi <- extract(mean.ndvi, eco3$XY)
+ndvi<- aue.rescale(ndvi)
+plot(eco3$XY[, 1], eco3$XY[, 2], col=rgb(ndvi, 0, 0),
+pch=15, main = "Mean NDVI", xlab = "X", ylab  = "Y")
  
- #### Mean NDVI image computed over the NDVI images that we created:
  
- eco.NDVI.post(tab, "COST", "NDVI", what = "mean")
- mean.ndvi <- raster("NDVI.COST.mean.tif")
- plot(mean.ndvi)
- 
- #### Extraction of the mean NDVI for each point in the object eco and plot of the data:
- 
- ndvi <- extract(mean.ndvi, eco$XY)
- ndvi<-eco.rescale(ndvi)
- plot(eco$XY[, 1], eco$XY[, 2], col=rgb(ndvi, 0, 0),
- pch=15, main = "Mean NDVI", xlab = "X", ylab  = "Y")
- 
- 
- \# Theil-sen estimation for a raster:
- 
+#---Theil-sen estimation for a raster---#
+
 require("raster")
 require("animation")
+set.seed(6)
 
 temp <- list()
 
@@ -462,6 +540,51 @@ slope <- raster("slope.tif")
 par(mfrow = c(1, 2))
 plot(pvalue, main = "p-value")
 plot(slope, main = "slope")
+
+
+#---Conversion of ecogen data to several formats---#
+
+
+## Converting a diploid ecogen genetic data frame with two alleles 
+## per column into a data frame with one allele per column
+
+data(eco3)
+eco.2al <- eco.2columns(eco3, 1)
+eco.2al
+
+
+## Creating input data for Geneland with an ecogen object
+
+data(eco.test)
+eco.2geneland(eco, 1)
+
+
+## Exporting an ecogen genetic data frame into Genepop format
+
+data(eco.test)
+eco.2genepop(eco, grp = "pop", ndig = 1, name = "infile.genepop.txt")
+### an output file "infile.genepop.txt" is generated in the working directory
+
+
+## Converting a diploid ecogen genetic data frame into a gstudio object
+
+data(eco.test)
+gsteco <- eco.2gstudio(eco, "separated")
+gsteco
+
+
+## Converting an ecogen genetic data frame into a hierfstat data frame
+
+data(eco.test)
+hiereco <- eco.2hierfstat(eco, "pop")
+require("hierfstat")
+basic.stats(hiereco)
+
+
+## Exporting an ecogen genetic data frame into SPAGeDI format
+
+data(eco.test)
+eco.2spagedi(eco, "pop", ndig = 1,int=2, smax=6, name="infile.spagedi.txt")
 
 }
 }

@@ -1,7 +1,8 @@
-# Generating atmospherically corrected NDVI and MSAVI2 images 
-# for temporal series of Landsat 5 and 7
+# Generating atmospherically corrected NDVI and MSAVI2 images for 
+# temporal series of Landsat 5 and 7
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015
 
 setGeneric("eco.NDVI", 
            function(tab, 
@@ -156,8 +157,5 @@ setGeneric("eco.NDVI",
                }
                
              }
-             
-             ReturnVal <- tcltk::tkmessageBox(title = "VI estimation", 
-                                              message = "process successful!",
-                                              icon = "info", type = "ok")
+             cat("done!")
            })

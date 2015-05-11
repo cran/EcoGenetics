@@ -1,14 +1,16 @@
-# Creating an updated ecogen object by removing results of the slot OUT
+# Creating an updated ecogen object by removing
+# results of the slot @OUT
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015
 
 setGeneric("eco.remove", 
            
-           function(object, ...) {
+           function(eco, ...) {
              
              res.names <- as.character(match.call())
              res.names <- res.names[-c(1:2)]
-             del <- (names(object@OUT)) %in% res.names
-             object@OUT <- object@OUT[!del]
-             object
+             del <- (names(eco@OUT)) %in% res.names
+             eco@OUT <- eco@OUT[!del]
+             eco
            })

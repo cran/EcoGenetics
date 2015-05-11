@@ -1,12 +1,11 @@
 # Theil-sen regression for a raster time series
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015 
 
 setGeneric("eco.theilsen", 
            function(stacked, date, 
-                    adjust = c("none", "holm", "hochberg", 
-                               "hommel", "bonferroni", "BH",
-                               "BY", "fdr")) {
+                    adjust = "none") {
              
              
              adjust <- match.arg(adjust)
@@ -70,9 +69,6 @@ setGeneric("eco.theilsen",
              
              cat("\n","done!","\n\n" )
              
-             ReturnVal <- tcltk::tkmessageBox(title = "Trend estimation",
-                                              message = "process successful!",
-                                              icon = "info", type = "ok")
              
              raster::writeRaster(pvalor, "pvalue.tif", overwrite = T)
              

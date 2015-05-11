@@ -1,7 +1,7 @@
 # Postprocessing for NDVI and MSAVI 2 temporal series of Landsat 5 and 7
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
 
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# May 11, 2015
 
 setGeneric("eco.NDVI.post", 
            function(tab,correct = c("COST", "DOS"), 
@@ -11,7 +11,7 @@ setGeneric("eco.NDVI.post",
                                   "LOG1S"), 
                     what = c("mean", "max", "min", "var", "none")) {
              
-             correct <- match.arg(correct)              
+             correct <- match.arg(correct)  													
              method <- match.arg(method)
              datatype <- match.arg(datatype)
              what <- match.arg(what, several.ok =  TRUE)
@@ -116,7 +116,5 @@ setGeneric("eco.NDVI.post",
              }
              
              cat("\n", "done", "\n")
-             ReturnVal <- tcltk::tkmessageBox(title = "VI post process", 
-                                              message = "process successful!",
-                                              icon = "info", type = "ok")
+             
            })

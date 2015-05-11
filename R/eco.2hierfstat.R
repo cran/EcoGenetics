@@ -1,38 +1,57 @@
 # Converting an ecogen genetic data frame into a hierfstat data frame
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015
 
 setGeneric("eco.2hierfstat", 
-           function(eco, fact = NULL) {
+           function(eco, pop = NULL) {
              
              u <- eco$G
              
              grupo <- eco@S
              
-             if(is.null(fact))
+             if(is.null(pop))
              {
-               factord <- 	as.data.frame(rep(1, nrow(u)))
+               factord <- as.data.frame(rep(1, nrow(u)))
                cnom <- "pop"
                rnom <- rownames(eco@G)
                Gord <- u
              } else {
                
-               fact <- match(fact, colnames(eco@S), nomatch = 0)
-               fact <- fact[fact != 0]
-               if(length(fact) == 0) {
+               pop <- match(pop, colnames(eco@S), nomatch = 0)
+               pop <- pop[pop != 0]
+               if(length(pop) == 0) {
                  stop("incorrect factor name")
                }
-               orden <- order(eco@S[, fact])
+               orden <- order(eco@S[, pop])
                Gord <- u[orden,]
-               factord <- eco@S[orden, fact]
+               factord <- eco@S[orden, pop]
                factord <- as.numeric(factord)
-               cnom <- colnames(eco@S[fact])
+               cnom <- colnames(eco@S[pop])
                rnom <- rownames(eco@G)[orden]
              }
              
              datahier <- data.frame(factord, Gord)
              colnames(datahier)[1] <- cnom
              rownames(datahier) <- rnom
+             datahier
+             
+             #class control
+             clases <- character()
+             j <- 1
+             for(i in 2:ncol(datahier)) {
+               clases[j] <- class(datahier[, i])
+               j <- j + 1
+             }
+             if(any(clases != "numeric" | clases != "integer")) {
+               datahier <- as.matrix(datahier)
+               colhier <- ncol(datahier)
+               rowhier <- nrow(datahier)
+               datahier <- matrix(as.numeric(datahier), ncol = colhier, nrow= rowhier)
+               datahier <- as.data.frame(datahier)
+               datahier[, 1] <- as.factor(datahier[, 1])
+             }
+             rownames(datahier) <- rownames(eco$G)
              datahier
              
            })

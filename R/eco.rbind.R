@@ -1,6 +1,7 @@
 # Combining the rows of two ecogen objects
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015
 
 setGeneric("eco.rbind", 
            function(e1, e2)  {
@@ -39,6 +40,11 @@ setGeneric("eco.rbind",
              z$S <- rbind(e1$S, e2$S)
              z$C <- rbind(e1$C, e2$C)
              z$OUT <- list()
+             
+             attr(z, "format") <- attr(e1, "format")
+             attr(z, "type") <-  attr(e1, "type")
+             attr(z, "missing") <- attr(e1, "missing")
+             attr(z, "ploidy") <- attr(e1, "ploidy")
              
              return(z)
            })

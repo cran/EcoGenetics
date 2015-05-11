@@ -1,69 +1,82 @@
-#' Empirical variogram
+# Empirical variogram
+
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# February 18, 2015
+# May 11, 2015 
 
 setGeneric("eco.variogram",  
-      function(z, xy, int, smax, w = c("B", "W"), nsim = 0, latlon = FALSE) {
- 
- w <- match.arg(w)
- 
-  if(latlon == FALSE) {
- distancia <- dist(xy)
- } else {
-   distancia <- latlon2distm(xy)
- }
-       
- 
- mat <- as.matrix(dist(z))
- 
- d.max<- seq(int, smax, int)
- d.min <- d.max - int
- d.min[1] <- 1e-10
- classes <- length(d.min)
- 
- dist.dat<-paste("d=", d.min, "-", d.max)
- dist.dat[1]<-paste("d=","0", "-", d.max[1])
+           function(Z, XY, 
+                    int = NULL,
+                    smin = 0,
+                    smax = NULL,
+                    nclass = NULL,
+                    seqvec = NULL,
+                    size = NULL,
+                    bin = c("sturges", "FD"),
+                    row.sd = FALSE,
+                    latlon = FALSE) {
+             
+             bin <- match.arg(bin)
+             
+             #CHECKING XY DATA
+             
+             if(ncol(XY) > 2) {
+               message("XY slot with > 2 columns. The first two are taken as X-Y coordinates")
+               XY <- XY[,1:2]
+             } 
+             
+             if(latlon == TRUE) {
+               XY <- SoDA::geoXY(XY[,2], XY[,1], unit=1)
+             } 
+             
+             
+             ####
+             
+             mat <- as.matrix(dist(Z))
+             
+             listaw <- eco.lagweight(XY, 
+                                     int = int, 
+                                     smin = smin,
+                                     smax = smax, 
+                                     nclass = nclass,
+                                     size = size,
+                                     seqvec = seqvec,
+                                     row.sd = row.sd,
+                                     bin = bin)
+             
+             wg <- listaw@W
+             
+             breakpoints <- listaw@BREAKS
+             d.max <- round(breakpoints[-1], 3)
+             d.min <- round(breakpoints[-length(breakpoints)], 3)
+             classint <- listaw@MEAN
+             classint <- round(classint, 3)
+             cardinal <- listaw@CARDINAL
+             
+             dist.dat<-paste("d=", d.min, "-", d.max)
+             
+             d.mean <- listaw@MEAN
+             
+             mat2 <- mat ^ 2
+             wsub <- (2 * sapply(wg, sum))
+             est <- sapply(wg, function(x) sum(x * mat2)) / wsub 
+             
+             
+             tab <- data.frame(matrix(nrow = length(dist.dat), ncol = 2))
+             rownames(tab) <- dist.dat
+             tab[, 1] <- d.mean
+             tab[, 2] <- est
+             colnames(tab) <- c("d.mean","obs")
+             
+             salida <- new("eco.correlog")
+             
+             salida@OUT <- list(tab)
+             salida@IN <- list(XY = XY, Z = Z)
+             salida@BREAKS <- breakpoints
+             salida@CARDINAL <- cardinal
+             salida@METHOD <- "empirical variogram"
+             salida@DISTMETHOD <- listaw@METHOD
+             
+             salida
+             
+           })
 
- j <- 1
- d.mean <- numeric()
- dist2 <- dist(xy)
- for (i in seq(int, smax, int)) {
-  temp <- which((distancia <= i) & (distancia > i - int))
-  d.mean[j] <- round(mean(distancia[temp]), 3)
-  j <- j+1
- }
-
- mat2 <- mat ^ 2
- wg <- eco.laglistw(xy, int, smax, w)
-  wsub <- (2 * sapply(wg, sum))
- est <- sapply(wg, function(x) sum(x * mat2)) / wsub 
-  
- 
- if(nsim != 0) {
- boot.vario <- list()
- for(i in 1:nsim) {
- mat2 <- as.matrix(dist(sample(z, replace = TRUE)))
- mat2 <- mat2 ^ 2
- boot.vario[[i]] <- sapply(wg, function(x) sum(x * mat2)) / wsub
-}
-  boot.vario <- sapply(boot.vario, c)
- ext <- apply(boot.vario, 1, quantile, probs = c(0.05, 0.95),  na.rm = TRUE)
- tab <- data.frame(matrix(nrow = classes, ncol = 4))
- rownames(tab) <- dist.dat
- colnames(tab) <- c("d.mean","est", "lwr", "uppr")
- tab[, 1] <- d.mean
- tab[, 2] <- est
- tab[, 3:4] <- data.frame(t(ext))
- 
- } else {
-  tab <- data.frame(matrix(nrow = classes, ncol = 2))
-  rownames(tab) <- dist.dat
-  colnames(tab) <- c("d.mean","est")
-  tab[, 1] <- d.mean
-  tab[, 2] <- est
- }
- 
- class(tab) <-"eco.variog"
- tab
-})
-  
