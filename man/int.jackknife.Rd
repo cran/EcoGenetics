@@ -2,17 +2,19 @@
 % Please edit documentation in R/int.jackknife.R
 \name{int.jackknife}
 \alias{int.jackknife}
-\title{Jackknife estimation.}
+\title{d-Jackknife estimation.}
 \usage{
-int.jackknife(x, fun)
+int.jackknife(x, fun, d = 1, alpha = 0.05)
 }
 \arguments{
 \item{x}{vector with simulations or matrix with variables in columns, simulations in rows.}
 
-\item{fun}{function to apply.}
+\item{fun}{function to apply}
+
+\item{d}{how many elements to leave out. For "leave one out",  d= 1 (default)}
 }
 \description{
-Jackknife estimation.
+d-Jackknife estimation.
 }
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}

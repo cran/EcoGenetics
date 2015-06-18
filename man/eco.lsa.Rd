@@ -7,7 +7,7 @@
 eco.lsa(Z, con, method = c("G*", "G", "I", "C"), zerocon = NA, nsim = 99,
   conditional = c("auto", TRUE, FALSE), test = c("permutation",
   "bootstrap"), alternative = c("auto", "two.sided", "greater", "less"),
-  adjust = "fdr")
+  adjust = "none")
 }
 \arguments{
 \item{Z}{Vector for the analysis.}
@@ -40,7 +40,7 @@ program determines the alternative hypothesis in each individual test.
 Other options are: "two.sided", "greater" and "less".}
 
 \item{adjust}{Correction method of P-values for multiple tests,
-passed to \code{\link[stats]{p.adjust}}. Defalut is "fdr".}
+passed to \code{\link[stats]{p.adjust}}. Defalut is "none" (no correction).}
 }
 \value{
 The program returns an object of class "eco.lsa" with the following slots:
@@ -69,7 +69,7 @@ the data Z, with P-values or bootstrap confidence intervals.
 
 data(eco.test)
 
-# Getis-Ord's G*
+# ---Getis-Ord's G*---
 
 con<- eco.weight(eco$XY, method = "knearest",  k = 4, self = TRUE) # self = TRUE for G*
 getis.ak <- eco.lsa(eco$P[, 1], con, method = "G*", nsim = 99, adjust = "none")
@@ -90,22 +90,51 @@ p <- plot(getis.akb)      # forestplot graph
 p + ggplot2::theme_bw()   # the plot can be modified with ggplot2
                           # In this case, the background is modified  (white color)
 
+#-------------------------------------------------------------------------------------#
 
-# Getis-Ord's G
+# ---Getis-Ord's G---
 
 con<- eco.weight(eco$XY, method = "knearest", k = 4)
 # self = FALSE for G
-getis <- eco.lsa(eco$P[, 1], con, method = "G", nsim = 99, adjust = "none")
+getis <- eco.lsa(eco$P[, 1], con, method = "G", nsim = 99)
 plot(getis)
 
-# local Moran's I
+#-------------------------------------------------------------------------------------#
+
+# ---local Moran's I---
+
+# **test for phenotypic data**
+
+con <- eco.weight(eco$XY, method = "knearest",  k = 4, row.sd = TRUE)
+# row standardized weights = TRUE
+
+localmoran <- eco.lsa(eco$P[, 1], con,
+method = "I", nsim = 99)                       # test for the first trait
+
+plot(localmoran)
+
+# ---------#
+
+# **test for genotypic data** (concept also valid for the other statistics)
+
+# eco$GENIND$tab is a matrix with the genetic data of "eco"
+# as frequencies for each allele in each individual. Each allele
+# can be analyzed as single traits.
+# see "tab" in the genind help (?genind) of the adegenet package.
+
+head(eco$GENIND$tab)      # head of the matrix
 
 con<- eco.weight(eco$XY, method = "knearest",  k = 4, row.sd = TRUE)
 # row standardized weights = TRUE
-localmoran <- eco.lsa(eco$P[, 1], con, method = "I", nsim = 99, adjust = "none")
-plot(localmoran)
 
-# local Geary's C
+localmoran.geno <- eco.lsa(eco$GENIND$tab[, 2], con,
+method = "I", nsim = 99)  # test for the second allele
+
+plot(localmoran.geno)
+
+#-------------------------------------------------------------------------------------#
+
+# ---local Geary's C---
 
 con<- eco.weight(eco$XY, method = "knearest",  k = 4, row.sd = TRUE)
 # row standardized weights = TRUE

@@ -1,7 +1,8 @@
-# eco.correlog-class
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+# eco.correlog-class
 
 setClass("eco.correlog", 
          
@@ -17,11 +18,13 @@ setClass("eco.correlog",
                         PADJUST = "character")
 )
 
+#################################################
 
 # eco.variogram class
 
 setClass("eco.variogram", contains = "data.frame")
 
+#################################################
 
 # eco.gsa class
 
@@ -37,6 +40,7 @@ setClass("eco.gsa",
          
 )
 
+#################################################
 
 # eco.lsa class
 
@@ -50,6 +54,8 @@ setClass("eco.lsa",
                         XY = "data.frame")
 )
 
+
+#################################################
 
 # eco.weight class
 
@@ -67,9 +73,10 @@ setClass("eco.weight",
                         AVG = "numeric")
 )
 
+#################################################
 
 # eco.lagweight class
-
+ 
 setClass("eco.lagweight",  
          
          representation(W = "list",
@@ -125,3 +132,11 @@ setClass("eco.detrend",
                         ANALYSIS ="eco.mlm")
                        
 )
+
+
+###################################
+
+setClass("int.multiplot")
+setClass("eco.IBD", representation(SP = "list"), contains = "eco.correlog")
+
+

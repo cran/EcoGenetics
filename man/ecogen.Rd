@@ -9,38 +9,39 @@ ecogen(XY = data.frame(), P = data.frame(), G = data.frame(),
   "NA", "MEAN"), ploidy = 2, ...)
 }
 \arguments{
-\item{XY}{Data frame of 2 columns by n rows (individuals).}
+\item{XY}{Data frame with m columns (coordinates) and n rows (individuals).}
 
-\item{P}{Data frame of n rows (individuals) with phenotypic data
-(traits in columns).}
+\item{P}{Data frame with n rows (individuals), and phenotypic data in columns.}
 
-\item{G}{Data frame of n rows (individuals) with genotypic data
-(loci in columns).
-Data should be in a format accepted by the adegenet
-\code{\link[adegenet]{df2genind}} function.}
+\item{G}{Data of class:
 
-\item{E}{Data frame of n rows (individuals) with environmental data
+- "data.frame", with n rows (individuals), and genotypic data in columns
+(loci), in a format accepted by the adegenet \code{\link[adegenet]{df2genind}} function.
+
+
+- "DNAbin", converted to genind via \code{\link[adegenet]{DNAbin2genind}}
+
+
+- "allignment", converted to genind via \code{\link[adegenet]{alignment2genind}}}
+
+\item{E}{Data frame with n rows (individuals), and environmental data
 in columns.}
 
-\item{S}{Data frame of n rows (individuals) with group factors in columns.
-Different columns indicate levels or grouping models (see details).}
+\item{S}{Data frame with n rows (individuals), and groups (factors) in columns.
+The program converts non factor data into factor.}
 
-\item{C}{data frame of n rows (individuals) with custom variables.}
+\item{C}{data frame with n rows (individuals), and custom variables in columns.}
 
-\item{missing}{Argument passed to \code{\link[adegenet]{df2genind}} when
-G input is a data.frame. Else, when data is of classes "DNAbin" or
-"alignment", this function can operate over missing data with the same
-three values ("0", "NA", or "MEAN"). Missing elements are treated as
- zeros in the default option.}
+\item{missing}{Missing data treatment ("0", "NA", or "MEAN") for the GENIND
+@tab slot (see details in \code{\link[adegenet]{df2genind}}).
+Missing elements are set to 0 in the default option.}
 
-\item{ploidy}{Ploidy of the G data frame. For an haploid data frame,
-ploidy =1 must be included in the function. Default ploidy = 2 for this
-class of data.}
+\item{ploidy}{Ploidy of the G data frame. Default ploidy = 2.}
 
-\item{...}{further arguments passed to \code{\link[adegenet]{df2genind}}
+\item{...}{Further arguments passed to \code{\link[adegenet]{df2genind}}
 when G data is of class "data.frame", otherwise are passed to
 \code{\link[adegenet]{DNAbin2genind}} when G data is of class "DNAbin" or to
-\code{\link[adegenet]{alignment2genind}} when data is of class "alignment".}
+\code{\link[adegenet]{alignment2genind}} when G data is of class "alignment".}
 }
 \description{
 Creating a new ecogen object.
@@ -48,13 +49,12 @@ Creating a new ecogen object.
 \details{
 This is a generic function for creating an ecogen object. The non
 genetic data must be of class "data.frame". For the genetic data, there are
-three options: Data of "data.frame" class, (for example, microsatellite,
-AFLP, RAPD, etc.); data of "DNAbin" class (ape data). The program
-recognizes the classes and can discern a codominant data frame from a
-presence - absence data frame. When data is composed entirely of two
-values, the program takes these data is of presence - absence
-type.
-Cells in data frames with missing data must be filled with 0.
+three options: Data of "data.frame" class (for example, microsatellite,
+AFLP, RAPD, etc.); data of "DNAbin" class (ape data); and data of
+"allignment" class (seqinr data). The program is able to recognize
+the classes and differentiate between codominant and presence-absence
+(binary) data.
+Cells in data frames with missing data must be filled with the value 0.
 }
 \examples{
 \dontrun{
@@ -64,7 +64,17 @@ Cells in data frames with missing data must be filled with 0.
 data(eco.test)
 eco <- ecogen(XY = coordinates, P = phenotype, G = genotype,
 E = environment, S = as.data.frame(structure))
-eco <- aue.sort(eco, 1)
+
+summary(eco)              # mean and standard deviation of the P variables, and
+                          # genetic summary via adegenet
+
+summary(eco, "pop")       # P summary by factor "pop"
+
+save_summary <- summary(eco, "pop")
+save_summary$P_mean
+save_summary$P_sd
+save_summary$P_mean.and.sd
+save_summary$G_summary
 
 #Example with G data of class "data.frame", corresponding to a
 #presence - absence molecular marker:

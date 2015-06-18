@@ -26,8 +26,6 @@ is more efficient in managing memory.
 
 require("raster")
 require("animation")
-set.seed(6)
-
 temp <- list()
 
 for(i in 1:100) {

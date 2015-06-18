@@ -1,7 +1,8 @@
-# Subsetting an ecogen object by group
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+# Subsetting an ecogen object by group
 
 setGeneric("eco.subset",
 					 
@@ -29,7 +30,15 @@ setGeneric("eco.subset",
   z$G <- eco$G[grupo, ]
   z$E <- eco$E[grupo, ]
   z$XY <- eco$XY[grupo, ]
+  
   z$S <- as.data.frame(eco$S[grupo, ])
+  #all S columns of z as factors, removing unused levels
+  if(dim(z$S)[1] != 0) {
+    for(i in 1:(ncol(z$S))) {
+      z$S[, i] <- factor(z$S[, i])
+    }
+  }
+  
   z$GENIND <- df2genind(eco$G[grupo, ], missing = missing, ...)
   
   colnames(z$S) <- colnames(eco$S)

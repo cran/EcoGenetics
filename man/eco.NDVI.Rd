@@ -41,7 +41,6 @@ is needed for processing the information.
 require(raster)
 
 data(tab)
-set.seed(6)
 
 temp <-list()
 

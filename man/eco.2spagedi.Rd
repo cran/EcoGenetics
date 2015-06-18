@@ -50,6 +50,7 @@ When distance classes are required, they can be constructed by combining
 the parameters "int", "smin", "smax", "nclass", "seqvec" and "size", as
 described in the function \code{\link{eco.lagweight}}.
 A distance matrix can also be included using the "distmat" parameter.
+Missing data must be coded as a single "0" in the G data frame.
 }
 \examples{
 \dontrun{

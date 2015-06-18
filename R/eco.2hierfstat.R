@@ -1,7 +1,8 @@
-# Converting an ecogen genetic data frame into a hierfstat data frame
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
+# June 17, 2015 
+
+
+# Converting an ecogen genetic data frame into a hierfstat data frame
 
 setGeneric("eco.2hierfstat", 
            function(eco, pop = NULL) {
@@ -51,7 +52,11 @@ setGeneric("eco.2hierfstat",
                datahier <- as.data.frame(datahier)
                datahier[, 1] <- as.factor(datahier[, 1])
              }
-             rownames(datahier) <- rownames(eco$G)
-             datahier
              
+               rownames(datahier) <- rownames(eco$G)
+               colnames(datahier)[1] <- "Pop"
+               colnames(datahier)[-1] <- colnames(eco$G)
+             
+               datahier
+                 
            })

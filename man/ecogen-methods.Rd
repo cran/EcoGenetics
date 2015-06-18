@@ -6,7 +6,6 @@
 \alias{$,ecogen-method}
 \alias{$<-,ecogen,character,ANY-method}
 \alias{$<-,ecogen-method}
-\alias{[,ecogen,integer,missing,ANY-method}
 \alias{[,ecogen,integer,missing-method}
 \alias{is,ecogen-method}
 \alias{is.ecogen}
@@ -24,7 +23,7 @@
 
 is.ecogen(x)
 
-\S4method{[}{ecogen,integer,missing,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{ecogen,integer,missing}(x, i, j, ..., drop = FALSE)
 }
 \description{
 show method

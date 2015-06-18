@@ -1,7 +1,9 @@
-# checking weights
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+# check.con internal
+
 
 int.check.con <- function(con) {
 	
@@ -27,7 +29,7 @@ int.check.con <- function(con) {
 }
 
 
-# checking if columns are in numeric format in matrix/ data frame objects
+# int.check.numeric
 
 int.check.numeric <- function(mat) {
   

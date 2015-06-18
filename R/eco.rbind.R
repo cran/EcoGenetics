@@ -1,13 +1,20 @@
-# Combining the rows of two ecogen objects
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
+# June 17, 2015 
+
+
+# Combining the rows of two ecogen objects
 
 setGeneric("eco.rbind", 
            function(e1, e2)  {
              
+             nom <- c(rownames(e1$G), rownames(e2$G))
              
+             if(any(duplicated(nom))) {
+               stop("duplicated row names are not allowed")
+             }
+                 
              z <- ecogen(G = rbind(e1$G, e2$G))
+             
              
              if(all(dim(z$G)) != 0) {
                type<-as.factor(as.vector(as.matrix(z$G)))
@@ -35,7 +42,7 @@ setGeneric("eco.rbind",
              z$GENIND$type <- tempo$type
              
              z$XY <- rbind(e1$XY, e2$XY)
-             z$P <- rbind(e1$P, e2$P)     
+             z$P <- rbind(e1$P, e2$P)   
              z$E <- rbind(e1$E, e2$E)
              z$S <- rbind(e1$S, e2$S)
              z$C <- rbind(e1$C, e2$C)

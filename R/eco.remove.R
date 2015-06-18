@@ -1,8 +1,9 @@
-# Creating an updated ecogen object by removing
-# results of the slot @OUT
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
+# June 17, 2015 
+
+
+# Creating an updated ecogen object by removing
+# results of the slot @@OUT
 
 setGeneric("eco.remove", 
            

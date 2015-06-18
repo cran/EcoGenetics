@@ -55,7 +55,7 @@ rownames(ex4) <- LETTERS[1:10]
 ex4
 recoded <- aue.char2num(ex4, ndig = 3)
 
-# Example with a vector, following the last example:
+# Example with a vector, following the latter example:
 ex1 <- as.data.frame(ex1)
 ex1
 aue.char2num(ex1)

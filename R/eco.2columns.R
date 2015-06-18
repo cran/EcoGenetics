@@ -1,8 +1,9 @@
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# June 17, 2015 
+
+
 # Converting a diploid ecogen genetic data frame with two alleles per column
 # into a data frame with one allele per column
-
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
 
 setGeneric("eco.2columns", 
            function(eco, ndig) {

@@ -1,7 +1,9 @@
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# June 17, 2015 
+
+
 # Combining the columns of two ecogen object
 
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
 
 setGeneric("eco.cbind", 
            function(e1, e2, ..., 

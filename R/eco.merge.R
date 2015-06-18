@@ -1,8 +1,8 @@
-# Merging two ecogen objects. Ordering the rows of an ecogen 
-# object according to the rows of another
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
+# June 17, 2015 
+
+
+# Merging two ecogen objects. Ordering the rows of an ecogen 
 
 setGeneric("eco.merge",
            function(e1, e2, ...) {

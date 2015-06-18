@@ -1,13 +1,15 @@
-# Moran's I, Geary's C and bivariate Moran's Ixy correlograms
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
+# June 17, 2015 
+
+
+# Moran's I, Geary's C and bivariate Moran's I correlograms
 
 setGeneric("eco.correlog", 
            function(Z, XY, Y = NULL, 
                     int = NULL,
                     smin = 0,
-                    smax = NULL, nclass = NULL,
+                    smax = NULL, 
+                    nclass = NULL,
                     size = NULL,
                     seqvec = NULL,
                     method = c("I", "C", "CC"),
@@ -34,7 +36,7 @@ setGeneric("eco.correlog",
              test <- match.arg(test)  
              bin <- match.arg(bin)
              
-             
+      
              
              Z.class <- class(Z)
              if(Z.class != "numeric" & Z.class != "integer" &  Z.class != "matrix" & Z.class != "data.frame") {
@@ -117,15 +119,15 @@ setGeneric("eco.correlog",
              
              lista<-list()
              listaw <- eco.lagweight(XY, 
-                                     int = int, 
-                                     smin = smin,
-                                     smax = smax, 
-                                     nclass = nclass,
-                                     size = size,
-                                     seqvec = seqvec,
-                                     row.sd = row.sd,
-                                     bin = bin,
-                                     cummulative = cummulative)
+                                    int = int, 
+                                    smin = smin,
+                                    smax = smax, 
+                                    nclass = nclass,
+                                    size = size,
+                                    seqvec = seqvec,
+                                    row.sd = row.sd,
+                                    bin = bin,
+                                    cummulative = cummulative)
              
              lag <- listaw@W
              breaks<- listaw@BREAKS
@@ -141,7 +143,7 @@ setGeneric("eco.correlog",
              #bootstrap case
              if(test == "bootstrap") {
                
-               tabla <- data.frame(matrix(, length(d.min), 4))
+               tabla <- data.frame(matrix(, length(d.min), 5))
                tabla[, 1] <- classint
                colnames(tabla) <- c("d.mean", "obs", "lwr", "uppr", "size")
                rownames(tabla) <- paste("d=", d.min, "-", d.max, sep = "")
@@ -167,7 +169,7 @@ setGeneric("eco.correlog",
                    lista[[j]][i, 2] <- est$observation
                    lista[[j]][i, 3:4] <- est$quantile
                  }
-                 lista[[j]][, 4] <- cardinal
+                 lista[[j]][, 5] <- cardinal
                  
                  #when zero is included, use cor.test for d = 0
                  if(include.zero) {
@@ -188,7 +190,7 @@ setGeneric("eco.correlog",
                
                tabla <- data.frame(matrix(0, length(d.min), 4))
                tabla[, 1] <- classint
-               colnames(tabla) <- c("d.mean", "obs", "pval", "size")
+               colnames(tabla) <- c("d.mean", "obs", "p.val", "size")
                rownames(tabla) <- paste("d=", d.min, "-", d.max, sep = "")
                lista <- replicate(nvar, tabla, simplify = FALSE)
                names(lista) <- colnames(Z)
@@ -247,7 +249,7 @@ setGeneric("eco.correlog",
              
              
              salida <- new("eco.correlog")
-             
+
              
              if(method == "I") {
                outname <- "Moran's I"
@@ -277,3 +279,4 @@ setGeneric("eco.correlog",
              salida
              
            })
+

@@ -1,7 +1,8 @@
-# Creating input data for Geneland with an ecogen object
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+# Creating input data for Geneland with an ecogen object
 
 setGeneric("eco.2geneland", 
            function(eco, ndig) {

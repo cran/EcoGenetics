@@ -1,7 +1,8 @@
-# Theil-sen regression for a raster time series
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+# Theil-sen regression for a raster time series
 
 setGeneric("eco.theilsen", 
            function(stacked, date, 

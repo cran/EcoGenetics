@@ -1,13 +1,14 @@
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# June 17, 2015 
+
+
 # Fitting Multiple Linear Regression models by stepwise AIC selection and
 # Multiple Classification and Regression Trees via party
-
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
 
 setGeneric("eco.lmtree", 
            function(df1, df2, 
                     analysis = c("mlm", "mctree"), mod.class = "+", 
-                    fact = NULL, ...)   {
+                    fact = NULL, ...) 	{
              
              
              analysis <- match.arg(analysis)

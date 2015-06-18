@@ -1,7 +1,8 @@
-# Geary internal
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+# Geary internal
 
 int.geary <- function(Z, con, nsim,
                       alternative, test = "permutation", 

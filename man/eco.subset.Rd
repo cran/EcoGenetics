@@ -9,9 +9,9 @@ eco.subset(eco, fact, grp, missing = c(0, "NA", "MEAN"), ...)
 \arguments{
 \item{eco}{Object of class "ecogen".}
 
-\item{fact}{The name of the S slot column with the groups for the analysis.}
+\item{fact}{The name of the S slot column with labels assigning individuals to groups.}
 
-\item{grp}{The group in the column x in which te partition will be performed.}
+\item{grp}{Label for the subset of individuals, contained in fact.}
 
 \item{missing}{Missing Argument passed to \code{\link[adegenet]{df2genind}}
 This can take three values as described in the latter ("0", "NA" or "MEAN").
@@ -26,7 +26,7 @@ Subsetting an ecogen object by group
 \dontrun{
 
 data(eco.test)
-eco<-eco.subset(eco,"structure", 1)
+eco<-eco.subset(eco,"pop", 1)
 }
 }
 \author{

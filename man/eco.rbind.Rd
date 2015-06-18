@@ -18,7 +18,23 @@ Combining the rows of two ecogen objects
 \dontrun{
 
 data(eco.test)
-eco2<-eco.rbind(eco,eco)
+
+# crating a copy of "eco"
+eco.n <- eco
+
+# duplicated row names are not allowed by eco.rbind.
+# creating new row names for eco.n
+names.eco <- rownames(eco$XY)
+names.eco <- paste(names.eco, ".n", sep = "")
+rownames(eco.n$XY) <- names.eco
+rownames(eco.n$P) <- names.eco
+rownames(eco.n$G) <- names.eco
+rownames(eco.n$E) <- names.eco
+rownames(eco.n$S) <- names.eco
+
+# binding by row eco and eco.n
+eco2<-eco.rbind(eco, eco.n)
+
 }
 }
 \author{

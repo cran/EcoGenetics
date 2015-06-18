@@ -1,7 +1,8 @@
-# Global spatial analysis
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
+# June 17, 2015 
+
+
+# Global spatial analysis
 
 setGeneric("eco.gsa",
            function(Z, Y = NULL, con, 
@@ -27,14 +28,14 @@ setGeneric("eco.gsa",
              
              Z.class <- class(Z)
              if(method != "JC") {
-               if(Z.class == "matrix" | Z.class == "data.frame") {
-                 c.Z <- apply(Z, 2, class)
-                 if(any(c.Z != "integer") & any(c.Z != "numeric")) {
-                   stop(paste("Non numeric data.", method, "requires numeric data"))
-                 }
-               } else if(Z.class != "numeric" & Z.class != "integer") {
+             if(Z.class == "matrix" | Z.class == "data.frame") {
+               c.Z <- apply(Z, 2, class)
+               if(any(c.Z != "integer") & any(c.Z != "numeric")) {
                  stop(paste("Non numeric data.", method, "requires numeric data"))
                }
+             } else if(Z.class != "numeric" & Z.class != "integer") {
+               stop(paste("Non numeric data.", method, "requires numeric data"))
+             }
              } else {
                if(Z.class == "matrix" | Z.class == "data.frame") {
                  c.Z <- apply(Z, 2, class)
@@ -42,12 +43,12 @@ setGeneric("eco.gsa",
                    warning(paste("Non-factor data present. Elements in variables will be 
                                  treated as factor levels"))
                  }
-                 } else if(Z.class != "numeric" & Z.class != "integer" & Z.class != "factor" & Z.class != "character") {
-                   stop("unknown data class")
+               } else if(Z.class != "numeric" & Z.class != "integer" & Z.class != "factor" & Z.class != "character") {
+                 stop("unknown data class")
                }
              }
-             
-             
+               
+              
              if(!is.null(Y)) {
                Y.class <- class(Y)
                if(Y.class != "numeric" & Y.class != "integer" & Y.class != "vector") {
@@ -113,11 +114,11 @@ setGeneric("eco.gsa",
                salida@ALTER <- res$alter
                salida@NSIM <- res$nsim
              }
-             
-             
+
+               
              if(multiple) {
                #multiple tests
-               
+            
                res <- list()
                
                #test
@@ -128,23 +129,24 @@ setGeneric("eco.gsa",
                  
                }
                if(method != "JC") {
-                 res <- int.multitable(res)
-                 salida@METHOD <- name
-                 salida@NSIM <- nsim
-                 salida@ADJUST <- adjust
-                 salida@MULTI <- res$results
-               }
-             }
-             
-             #rearranging JC
-             if(method == "JC") {
+               res <- int.multitable(res)
                salida@METHOD <- name
                salida@NSIM <- nsim
                salida@ADJUST <- adjust
-               salida@MULTI <- res$results[,1:4]
+               salida@MULTI <- res$results
+               }
              }
+                 
+                 #rearranging JC
+                 if(method == "JC") {
+                   salida@METHOD <- name
+                   salida@NSIM <- nsim
+                   salida@ADJUST <- adjust
+                   salida@MULTI <- res$results[,1:4]
+                 }
              
              salida
              })
+            
 
 

@@ -43,7 +43,8 @@ eco.rankplot(input, XY, xlabel = NULL, ylabel = NULL, title = NULL,
 \item{...}{Additional elements to the generic.}
 
 \item{significant}{should be colored only the individuals with significant
-result?. This argument can be used with \code{\link{eco.lsa}} results.}
+result?. This argument can be used with \code{\link{eco.lsa}} results.
+Default TRUE}
 
 \item{ns}{color for non significant individuals, when significant = TRUE.
 This argument can be used with \code{\link{eco.lsa}} results.}

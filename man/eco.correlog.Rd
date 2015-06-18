@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.correlog.R
 \name{eco.correlog}
 \alias{eco.correlog}
-\title{Moran's I, Geary's C and bivariate Moran's Ixy correlograms}
+\title{Moran's I, Geary's C and bivariate Moran's I correlograms}
 \usage{
 eco.correlog(Z, XY, Y = NULL, int = NULL, smin = 0, smax = NULL,
   nclass = NULL, size = NULL, seqvec = NULL, method = c("I", "C", "CC"),
@@ -97,7 +97,10 @@ with the following slots:
 @PADJUST P-values adjust method for permutation tests
 }
 \description{
-Moran's I, Geary's C and bivariate Moran's Ixy correlograms
+This program computes Moran's, Geary's and bivariate Moran's correlograms,
+for single or multiple variables, with P-values or bootstrap confidence intervals.
+The program allows high flexibility for the construction of intervals. For detailed
+information about the range partition methods see \code{\link{eco.lagweight}}
 }
 \examples{
 \dontrun{
@@ -105,32 +108,74 @@ Moran's I, Geary's C and bivariate Moran's Ixy correlograms
 data(eco.test)
 require(ggplot2)
 
-# Moran's I correlogram
+# ---Moran's I correlogram---
 
-# single test
+## single test with phenotypic traits
 moran <- eco.correlog(Z=eco$P[,1], XY = eco$XY, method = "I",
 smax=10, size=1000)
 plot(moran)
 
-# multiple tests
+## multiple tests with phenotypic traits
 moran2 <- eco.correlog(Z=eco$P, XY = eco$XY, method = "I",
 smax=10, size=1000)
-plot(moran2, var ="P2")
-plot(moran2, var ="P3")
+
+plot(moran2, var ="P2") ## single plots
+plot(moran2, var ="P3") ## single plots
+
+graf <- plot(moran2, meanplot = TRUE)            ## multiple plot with mean correlogram
+                                                 ## and jackknifed confidence intervals.
+
+ plot(graf[[1]])
+ plot(graf[[2]])
 
 # correlogram plots support the use of ggplot2 syntax
 moranplot <- plot(moran2, var ="P3") + theme_bw() + theme(legend.position="none")
 moranplot
 
+moranplot2 <- graf[[2]] + theme_bw() + theme(legend.position="none")
+moranplot2
 
-# Geary's C correlogram
+
+# single test with genotypic traits
+
+# eco$GENIND$tab is a matrix with the genetic data of "eco"
+# as frequencies for each allele in each individual. Each allele
+# can be analyzed as single traits.
+# see "tab" in the genind help (?genind) of the adegenet package.
+head(eco$GENIND$tab)      # head of the matrix
+moran <- eco.correlog(Z=eco$GENIND$tab[,1], XY = eco$XY, method = "I",
+smax=10, size=1000)                # analyzing allele 1
+plot(moran)
+
+# multiple tests with genotypic traits
+moran2 <- eco.correlog(Z=eco$GENIND$tab, XY = eco$XY, method = "I",
+smax=10, size=1000, nsim=99)    # nsim was set to 10 only for speed in the example.
+
+graf <- plot(moran2, meanplot = TRUE)              ## multiple plot with mean
+                                                   ## correlogram and jackknifed
+                                                   ## confidence intervals.
+
+moran3 <- eco.correlog(Z=eco$GENIND$tab, XY = eco$XY, method = "I",
+smax=10, size=1000, nsim=99)                       ## the same example, but with
+                                                   ## nsim = 99.
+
+plot(moran3, meanplot = TRUE, significant = TRUE)  ## plot for alleles with at least
+                                                   ## one significant value after
+                                                   ## Bonferroni-Holm sequential P correction
+                                                   ## (set adjust "none" for no family-wise
+                                                   ## P correction in "eco.correlog")
+
+#-------------------------------------------------------------------------------------#
+
+# ---Geary's C correlogram---
 
 geary <- eco.correlog(Z=eco$P[,1], XY = eco$XY, method = "C",
 smax=10, size=1000)
 plot(geary)
 
+#-------------------------------------------------------------------------------------#
 
-# Moran's Ixy cross-correlogram
+# ---Moran's Ixy cross-correlogram---
 
 cross <- eco.correlog(Z=eco$P[,1], XY = eco$XY, Y = eco$E[, 1],
 method = "CC", int= 2, smax=15)

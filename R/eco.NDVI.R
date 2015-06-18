@@ -1,8 +1,9 @@
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# June 17, 2015 
+
+
 # Generating atmospherically corrected NDVI and MSAVI2 images for 
 # temporal series of Landsat 5 and 7
-
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
 
 setGeneric("eco.NDVI", 
            function(tab, 

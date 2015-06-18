@@ -1,7 +1,8 @@
-# Moran internal
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+# Moran internal
 
 int.moran <- function(Z, con, nsim,
                       alternative, 

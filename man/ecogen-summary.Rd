@@ -6,18 +6,15 @@
 \alias{summary,ecogen-method}
 \title{Summary for ecogen objects}
 \usage{
-\S4method{summary}{ecogen}(object, x = NULL)
+\S4method{summary}{ecogen}(object, x.in = NULL)
 }
 \arguments{
 \item{object}{Object of class "ecogen".}
 
-\item{x}{The name of the S slot column with the grouping factor
+\item{x.in}{The name of the S slot column with the grouping factor
 when a summary taking in account groups is required.}
 }
 \value{
-Redundancy analysis for the P data frame in function of G
-(constraining data frame)  and E (unconstraining data frame).
-
 Mean and sd table for the P data frame.
 
 Genetic analysis for the G data frame via hierfstat. This analysis
@@ -37,8 +34,5 @@ summary(eco, "structure")
 }
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
-\seealso{
-\code{\link{rda}} \code{\link[hierfstat]{basic.stats}}
 }
 

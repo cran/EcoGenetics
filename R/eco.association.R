@@ -1,8 +1,9 @@
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# June 17, 2015 
+
+
 # Chi-square and Fisher's exact test for association of loci and alleles 
 # with a factor
-
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
 
 setGeneric("eco.association",  
            function(eco,
@@ -21,10 +22,10 @@ setGeneric("eco.association",
              method <- match.arg(method)
              
              
-             
-             cat(paste("\n","Method: ", method,"\n",
-                       "P-adjust method: ", adjust, "\n\n"))
-             
+               
+               cat(paste("\n","Method: ", method,"\n",
+                         "P-adjust method: ", adjust, "\n\n"))
+           
              fact <- match(x, colnames(eco@S), nomatch = 0)
              fact <- fact[fact != 0]
              if(length(fact) == 0) {
@@ -52,7 +53,7 @@ setGeneric("eco.association",
                                    }),
                       chi <- apply(marcadores, 2,  
                                    function(u){
-                                     fisher.test(u,   grp, simulate.p.value = T,
+                                     fisher.test(u, 	grp, simulate.p.value = T,
                                                  B = nrep)
                                    }))
                

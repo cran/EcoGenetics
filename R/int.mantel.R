@@ -1,7 +1,8 @@
-# Mantel and partial Mantel tests, internal
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+# Mantel and partial Mantel tests, internal.
 
 int.mantel <- function(d1, d2, dc, nsim, 
                        test, alternative = "auto", 
@@ -79,3 +80,4 @@ int.mantel <- function(d1, d2, dc, nsim,
   
   res
 }
+  

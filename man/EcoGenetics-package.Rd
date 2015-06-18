@@ -13,8 +13,8 @@ This package allows users to analyze phenotypic, genotypic and environmental dat
  \tabular{ll}{
  Package: \tab EcoGenetics\cr
  Type: \tab Package\cr
- Version: \tab 1.2.0\cr
- Date: \tab 2015-05-11\cr
+ Version: \tab 1.2.0-1\cr
+ Date: \tab 2015-06-17\cr
  License: \tab GPL (>=2) \cr
  }
  
@@ -25,6 +25,8 @@ This package allows users to analyze phenotypic, genotypic and environmental dat
 
 
 Ecological genetics research requires the integration of data originated in different sources. The object class "ecogen" has been designed for handling multidimensional data. Its basic structure is the following:
+
+- A \strong{XY} slot, storing a data frame with geographic coordinates.  
 
 - A \strong{P} slot, storing a phenotypic data frame.  
 
@@ -42,7 +44,7 @@ individuals.
 - An \strong{OUT} slot, containing a list for the storage of the results.
 
 
-The construction of a new "ecogen" object is made with the homonymous function.This object class allows the importation from different genetic formats (codominant-dominant data of class "data.frame", "DNAbin" and "allignment"):
+The construction of a new "ecogen" object is made with the homonymous function. This object class allows the importation from different genetic formats (codominant-dominant data of class "data.frame", "DNAbin" and "allignment"):
 
 \emph{library("EcoGenetics")}
 
@@ -92,9 +94,9 @@ Continuing with the first example, the following available methods can be used w
 \emph{eco.subS <- eco.subset(eco,"pop", 1)}
 
 
-\bold{# 4. binding by row-method}
+\bold{# 4. binding by row-method (duplicated row names not allowed)}
 
-\emph{eco.r <- eco.rbind(eco, eco1)}
+\emph{eco.r <- eco.rbind(eco, eco.n)}
 
 \bold{# 5. binding by column-method}
 
@@ -154,7 +156,7 @@ The \strong{general spatial module} computes global (Moran's I, Mantel test, etc
 
  Leandro Roser, Juan Vilardi, Beatriz Saidman and Laura Ferreyra
  
- Maintainer: Leandro Roser <leandroroser@ege.fcen.uba.ar>
+ Maintainer: Leandro Roser <learoser@gmail.com>
 }
 
 \references{
@@ -168,6 +170,8 @@ Chander G., B. Markham, and D. Helder. 2009. Summary of current radiometric cali
 Chavez P. 1989. Radiometric calibration of Landsat Thematic Mapper multispectral images. Photogrammetric Engineering and Remote Sensing, 55: 1285-1294.
 
 Chavez P. 1996. Image-based atmospheric corrections-revisited and improved. Photogrammetric engineering and remote sensing, 62: 1025-1035.
+
+Double M., R. Peakall, N. Beck, and Y. Cockburn. 2005. Dispersal, philopatry, and infidelity: dissecting local genetic structure in superb fairy-wrens (Malurs cyaneus). Evolution 59: 625-635.
 
 Dray S., and A., Dufour. 2007. The ade4 package: implementing the duality diagram for ecologists. Journal of statistical software, 22: 1-20.
  
@@ -185,9 +189,13 @@ Guillot G., F. Mortier and A. Estoup. 2005. GENELAND: a computer package for lan
  
 Jombart T. 2008. adegenet: a R package for the multivariate analysis of genetic markers. Bioinformatics, 24: 1403-1405.
 
+Kalisz S., J. Nason, F.M. Handazawa, and S. Tonsor. 2001. Spatial population genetic structure in Trillium grandiflorum:  the roles of dispersal, mating, history, and selection.  Evolution 55: 1560-1568.
+
 Legendre P., and L. Legendre. 2012. Numerical ecology. Third English edition .Elsevier Science, Amsterdam, Netherlands.
 
 Lichstein J., T. Simons, S. Shriner, and K. Franzreb. 2002. Spatial autocorrelation and autoregressive models in ecology. Ecological monographs, 72: 445-463.
+
+Loiselle B., V. Sork, J. Nason, and C. Graham. 1995. Spatial genetic structure of a tropical understory shrub, Psychotria officinalis (Rubiaceae). American Journal of Botany 1420-1425.
 
 Moran P. 1950. Notes on continuous stochastic phenomena. Biometrika, 17-23.
 
@@ -214,6 +222,9 @@ Song C., C. Woodcock, K. Seto, M. Lenney and S. Macomber. 2001. Classification a
 Sturges H. 1926. The choice of a class interval. Journal of the American Statistical Association, 21: 65-66.
 
 Tucker C. 1979. Red and photographic infrared linear combinations for monitoring vegetation. Remote sensing of Environment, 8: 127-150.
+
+Vekemans, X., and O. Hardy. 2004. New insights from fine-scale spatial genetic structure analyses in plant populations. Molecular Ecology, 
+13: 921-935.
 
 Wu. 1986. Jackknife, bootstrap and other resampling methods in regression analysis. the Annals of Statistics, 1261-1295.
  
@@ -336,8 +347,8 @@ adjust = "none")
 getis.ak
 
 ### to plot the results, the function "eco.lsa" calls "eco.rankplot"
-(see ?eco.rankplot) when test = "permutation" and "eco.forestplot"
-(see ?eco.forestplot) when test = "bootstrap"
+### (see ?eco.rankplot) when test = "permutation" and "eco.forestplot"
+### (see ?eco.forestplot) when test = "bootstrap"
 
 p <- plot(getis.ak)   ###  rankplot graph
 p                     ###  points with colors of the color-scale:
@@ -401,8 +412,14 @@ plot(moran)
 ### multiple tests
 moran2 <- eco.correlog(Z=eco$P, XY = eco$XY, method = "I",
 smax=10, size=1000)
-plot(moran2, var ="P2")
-plot(moran2, var ="P3")
+plot(moran2, var ="P2") ## single plots
+plot(moran2, var ="P3") ## single plots
+
+graf <- plot(moran2, meanplot = TRUE)  ## multiple plot with mean correlogram
+                                       ## and jackknifed confidence intervals.
+
+plot(graf[[1]])
+plot(graf[[2]])
 
 ### correlogram plots support the use of ggplot2 syntax
 moranplot <- plot(moran2, var ="P3") + theme_bw() + theme(legend.position="none")

@@ -1,7 +1,8 @@
-# Join-count statistic, internal
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+# Join-count statistic, internal.
 
 int.joincount <- function(Z, con, ncod, nsim,
                           alternative, test = "permutation", 
@@ -67,7 +68,7 @@ int.joincount <- function(Z, con, ncod, nsim,
   
   res <- list("analysis" = "Join-count", 
               "nsim" = nsim,
-              "results" = ran)
+               "results" = ran)
   
   res
   

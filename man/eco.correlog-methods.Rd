@@ -10,7 +10,8 @@
 \S4method{plot}{eco.correlog,ANY}(x, var = NULL, xlabel = NULL,
   ylabel = NULL, title = NULL, legend = TRUE, background = c("grey",
   "white"), errorbar = FALSE, intervals = TRUE, significant = FALSE,
-  xlim = NULL, ylim = NULL, axis.size = 14, title.size = 16)
+  xlim = NULL, ylim = NULL, axis.size = 14, title.size = 16,
+  meanplot = TRUE, nsim = 999)
 
 \S4method{show}{eco.correlog}(object)
 }

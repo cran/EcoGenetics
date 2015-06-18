@@ -1,7 +1,8 @@
-# Ordering the rows of the data frames contained in an ecogen object
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
+# June 17, 2015 
+
+
+# Ordering the rows of the data frames contained in an ecogen object
 
 setGeneric("eco.order", 
            function(eco) {
@@ -80,7 +81,7 @@ setGeneric("eco.order",
              eco@C <- data.frame(eco@C[temporalC$posit, ])
              colnames(eco@C) <- c.names
              rownames(eco@C) <- r.names
-             
+          
              eco
              
            })

@@ -1,9 +1,11 @@
-######################
-#### SHOW METHODS ####
-######################
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
+# June 17, 2015 
+
+
+###############################################################################
+#                             SHOW METHODS
+################################################################################
+
 
 # show eco.gsa
 
@@ -20,9 +22,9 @@ setMethod("show", "eco.gsa", function(object) {
       cat("  Correlation coefficent used ->", cormethod, "\n")
     }
     cat(
-      paste("  Number of simulations ->", object@NSIM), "\n",
-      paste(" P-values correction method ->", object@ADJUST), "\n\n",
-      paste(" Results:"), "\n\n")
+        paste("  Number of simulations ->", object@NSIM), "\n",
+        paste(" P-values correction method ->", object@ADJUST), "\n\n",
+        paste(" Results:"), "\n\n")
     print(object@MULTI)
     cat("\n")
     
@@ -35,11 +37,11 @@ setMethod("show", "eco.gsa", function(object) {
       cat("  Correlation coefficent used ->", cormethod, "\n")
     }
     cat(
-      paste("  Number of simulations ->", object@NSIM), "\n",
-      paste(" Alternative ->", object@ALTER), "\n", 
-      paste(" P-value ->", object@PVAL), "\n", 
-      paste(" Observed value ->", object@OBS), "\n",
-      paste(" Expected value ->", object@EXP), "\n")
+        paste("  Number of simulations ->", object@NSIM), "\n",
+        paste(" Alternative ->", object@ALTER), "\n", 
+        paste(" P-value ->", object@PVAL), "\n", 
+        paste(" Observed value ->", object@OBS), "\n",
+        paste(" Expected value ->", object@EXP), "\n")
     cat("\n")
   }
 })
@@ -76,37 +78,37 @@ setMethod("show", "eco.correlog", function(object) {
   method <- (object@METHOD)[1]
   cormethod <- (object@METHOD)[2]
   
-  if(length(randtest != 0)) {
-    if(randtest == "permutation") {
-      cat("\n", 
-          "############################","\n",
-          paste(" ", method), "\n", 
-          "############################","\n\n")
-      if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-        cat("Correlation coefficent used ->", cormethod, "\n")
-      }
-      cat(paste(" Number of simulations ->", object@NSIM), "\n",
-          paste(" Random test ->", object@TEST), "\n",
-          paste(" P-adjust method ->", object@PADJUST), "\n\n", 
-          paste(" Results:","\n\n"))
-      print(object@OUT)
-      cat("\n")
-      
-    } else if (randtest == "bootstrap") {
-      
-      cat("\n", 
-          "############################","\n",
-          paste(" ", method), "\n", 
-          "############################","\n\n")
-      if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-        cat("Correlation coefficent used ->", cormethod, "\n")
-      }
-      cat(paste(" Number of simulations ->", object@NSIM), "\n",
-          paste(" Random test ->", object@TEST), "\n",
-          paste(" Results:","\n\n"))
-      print(object@OUT)
-      cat("\n")
+  if(length(randtest != 0) & randtest != "none") {
+  if(randtest == "permutation") {
+    cat("\n", 
+        "############################","\n",
+        paste(" ", method), "\n", 
+        "############################","\n\n")
+    if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
+      cat("Correlation coefficent used ->", cormethod, "\n")
     }
+    cat(paste(" Number of simulations ->", object@NSIM), "\n",
+        paste(" Random test ->", object@TEST), "\n",
+        paste(" P-adjust method ->", object@PADJUST), "\n\n", 
+        paste(" Results:","\n\n"))
+    print(object@OUT)
+    cat("\n")
+ 
+     } else if (randtest == "bootstrap") {
+ 
+  cat("\n", 
+      "############################","\n",
+      paste(" ", method), "\n", 
+      "############################","\n\n")
+       if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
+         cat("Correlation coefficent used ->", cormethod, "\n")
+       }
+       cat(paste(" Number of simulations ->", object@NSIM), "\n",
+      paste(" Random test ->", object@TEST), "\n",
+      paste(" Results:","\n\n"))
+  print(object@OUT)
+       cat("\n")
+     }
   } else {
     cat("\n", 
         "############################","\n",
@@ -120,7 +122,7 @@ setMethod("show", "eco.correlog", function(object) {
     cat("\n")
   }
   
-})
+  })
 
 
 #################################
@@ -195,7 +197,7 @@ setMethod("show", "eco.lagweight", function(object)  {
 
 # show eco.mlm
 
-setMethod("show",   "eco.mlm", function(object) {
+setMethod("show", 	"eco.mlm", function(object) {
   
   cat("\n\n", paste(" @MLM:", "multiple model results"), "\n", 
       paste(" @SUMMARY.MLM:", "summary of the results"), "\n", 
@@ -223,7 +225,11 @@ setMethod("show", 	"eco.mctree", function(object) {
 #                             SUMMARY METHODS
 ################################################################################
 
-# summary eco.lmtree 
+
+
+#################################
+
+# Summary for eco.lmtree output
 
 setMethod("summary", 	"eco.mlm", 	function(object) {
   
@@ -300,7 +306,7 @@ setMethod("summary", 	"eco.mlm", 	function(object) {
 
 #################################
 
-# summary eco.mctree
+#  summary,eco.mctree-method
 
 setMethod("summary", 	"eco.mctree", 	function(object) {
   
@@ -323,5 +329,32 @@ setMethod("summary", 	"eco.mctree", 	function(object) {
   }
   
 })
+
+
+####Show eco.IBD #####################################################
+
+setMethod("show", "eco.IBD", function(object) {
+  
+  randtest <- (object@TEST)[1]
+  metodo <- (object@METHOD)[2]
+  
+  cat("\n", 
+      "###############","\n",
+      " Fij analysis", "\n", 
+      "###############","\n\n",
+      paste(" Method ->", metodo), "\n",
+      paste(" Number of simulations ->", object@NSIM), "\n")
+      if(randtest == "permutation") {
+      cat(paste("  P adjust method ->", object@PADJUST), "\n\n")
+      } 
+      if(metodo == "local") {
+      cat(paste(" Conditional ->", (object@TEST)[2]), "\n\n")
+        } 
+      cat(
+      "  Available information: ", "\n",
+      paste(" @SP ->", "SP analysis"), "\n", 
+      paste(" @OUT ->", "table with results"),"\n\n")
+})
+
 
 

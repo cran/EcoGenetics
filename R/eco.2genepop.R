@@ -1,25 +1,27 @@
+# Leandro Roser leandroroser@ege.fcen.uba.ar
+# June 17, 2015 
+
+
 # Exporting an ecogen genetic data frame into Genepop format
 
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015 
-
 setGeneric("eco.2genepop", 
-           function(eco, grp = NULL, ndig, name = "infile.genepop.txt") {
+           function(eco, grp = NULL, ndig, 
+                    name = "infile.genepop.txt") {
              
              
              grupo <- eco$S
              if(!is.null(grp)) {
-               fact <- match(grp, colnames(eco$S), nomatch = )
-               fact <- fact[!fact == 0]
-               if(length(fact) == 0) {
-                 stop("incorrect factor name")
-               }
-               dat0 <- cbind(eco$S[, fact], eco$G)
+             fact <- match(grp, colnames(eco$S), nomatch = -999)
+             if(fact == -999) {
+               stop("incorrect factor name")
+             }
+             structures <- as.factor(as.numeric(eco$S[, fact])) #recoding levels
+             dat0 <- cbind(structures, eco$G)
              } else {
                dat0 <- cbind(rep(1, nrow(eco$XY)), eco$G)
              }
              
-             
+            
              dat0 <- as.matrix(dat0)
              rownames(dat0) <- rownames(eco$G)
              
@@ -27,7 +29,8 @@ setGeneric("eco.2genepop",
                dat0[is.na(dat0)] <- 0
              }
              
-             datos <- data.frame(matrix(nrow = nrow(dat0), ncol = ncol(dat0) - 1))
+             datos <- data.frame(matrix(nrow = nrow(dat0), 
+                                        ncol = ncol(dat0) - 1))
              
              n1 <- eco$GENIND$type
              n2 <- eco$GENIND$ploidy
@@ -38,7 +41,9 @@ setGeneric("eco.2genepop",
                  stop("incorrect ndig value")
                }
                a <- substr(dat0[, -1], 1, ndig)
-               b<-substr(dat0[,-1],ndig+1,2*ndig)
+               b<-substr(dat0[,-1],ndig+1, 2*ndig)
+               a[a == " "] <- 0
+               b[b == " "] <- 0
                
              } else if((n1 == "PA") | (n2 > 1)) { 
                a <- as.matrix(eco$G)
@@ -62,7 +67,9 @@ setGeneric("eco.2genepop",
              
              if((n1 == "codom") && (n2 != 1)) {
                a[a == "00"] <- "000"
+               a[a == "0"] <- "000"
                b[b == "00"] <- "000"
+               a[a == "0"] <- "000"
                a <- paste(a, b, sep = "")
              }
              
@@ -81,6 +88,7 @@ setGeneric("eco.2genepop",
                lista[[i]] <- rbind(grp, lista[[i]])
                matriz <- rbind(matriz, lista[[i]])
              }
+             matriz <- rbind(matriz, rep("", ncol(matriz)))
              
              matriz[, 1] <- as.character(matriz[, 1])
              nombres <- rep("", (ncol(dat0)) ^ 2)
@@ -88,8 +96,8 @@ setGeneric("eco.2genepop",
              nombres[, 1] <- c("Data exported from EcoGenetics", colnames(dat0[, -1]))
              colnames(nombres) <- colnames(matriz)
              matriz <- rbind(as.matrix(nombres), matriz) 
-             
+
              write.table(matriz, name, row.names = FALSE,
                          col.names = FALSE, quote = FALSE)
-             
+             	
            })

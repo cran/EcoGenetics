@@ -38,11 +38,15 @@ in the selected data frame, among the levels of a factor of the slot "S".
 \examples{
 \dontrun{
 
-data(eco.test)
-wil <- eco.pairtest(eco = eco, df = "P", x = "structure")
-wil <- eco.pairtest(eco = eco,df = "E", x = "structure")
-wil <- eco.pairtest(eco = eco, df = "P", x = "structure", only.p = FALSE)
-wil <- eco.pairtest(eco = eco,df = "P", x = "structure", test = "tukey")
+data(eco3)
+wil <- eco.pairtest(eco = eco3, df = "P", x = "structure")
+wil
+wil <- eco.pairtest(eco = eco3,df = "E", x = "structure")
+wil
+wil <- eco.pairtest(eco = eco3, df = "P", x = "structure", only.p = FALSE)
+wil
+wil <- eco.pairtest(eco = eco3,df = "P", x = "structure", test = "tukey")
+wil
 }
 }
 \author{

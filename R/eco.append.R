@@ -1,8 +1,9 @@
-# Creating an updated ecogen object by adding 
-# results to the slot @OUT
-
 # Leandro Roser leandroroser@ege.fcen.uba.ar
-# May 11, 2015
+# June 17, 2015 
+
+
+# Creating an updated ecogen object by adding 
+# results to the slot @@OUT
 
 setGeneric("eco.append", function(eco, ...) {
   
@@ -12,7 +13,7 @@ setGeneric("eco.append", function(eco, ...) {
   res.names <- res.names[-c(1:2)]
   
   if(class(eco) != "ecogen") {
-    stop("eco is not an ecogen object")
+  	stop("eco is not an ecogen object")
   }
   Z <- eco
   nob <- length(Z$OUT)

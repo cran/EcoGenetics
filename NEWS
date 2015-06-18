@@ -1,4 +1,16 @@
 
+EcoGenetics 1.2.0-1 (Release date: 2015-06-18)
+==============
+	
+	Changes:
+
+ * New functions: eco.malecot (beta version), eco.kin.loiselle, eco.genepop2df, aue.idig.
+ * New plot method for correlogram analysis of multiple variables.
+ * Corrections in examples.
+ * Bug correction in ecogen subsetting for presence-ausence molecular markers, "DNAbin" and "alignment" objects.
+ * Minor changes in dependences.
+
+
 EcoGenetics 1.2.0 (Release date: 2015-05-11)
 ==============
 	

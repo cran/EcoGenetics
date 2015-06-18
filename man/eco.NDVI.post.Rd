@@ -39,8 +39,6 @@ require(raster)
 
 data(tab)
 data(eco3)
-set.seed(6)
-
 temp <- list()
 
 # we create 4 simulated rasters for the data included in the object tab:
