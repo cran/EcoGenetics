@@ -1,9 +1,23 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# Clearing the working environment, maintaining only the specified objects
-
+#' Clearing the working environment, maintaining only the specified objects
+#' 
+#' @description This function removes all the elements of the working environment,
+#' with the exception of those included in the argument of the function. 
+#' Hidden elements can also be removed by setting all = TRUE.
+#' @param ... Objects to retain.
+#' @param all Remove also hidden elements? Default FALSE.
+#' @examples
+#' 
+#' \dontrun{
+#' 
+#' data(eco.test)
+#' ls()
+#' eco.clear(eco)
+#' ls()
+#' 
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @export
 
 eco.clear <- function(..., all = FALSE) {
   

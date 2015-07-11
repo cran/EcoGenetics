@@ -1,15 +1,33 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# Subsetting an ecogen object by group
+#' Subsetting an ecogen object by group
+#' 
+#' @param eco Object of class "ecogen". 
+#' @param fact The name of the S slot column with labels assigning individuals to groups.
+#' @param grp Label for the subset of individuals, contained in fact. 
+#' @param missing Missing data argument This can take three values ("0", "NA" or "MEAN"),
+#' as described in  \code{\link{ecogen}}.
+#' Missing elements are treated as zeros in the default option.
+#' 
+#' @examples
+#' \dontrun{
+#' data(eco3)
+#' eco3
+#' eco.sub <-eco.subset(eco3,"structure", 1) 
+#' eco.sub
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' 
+#' @export
 
 setGeneric("eco.subset",
 					 
-					 function(eco, fact, grp, missing = c(0, "NA",  "MEAN"), ...)  {
+					 function(eco, 
+                    fact, 
+                    grp, 
+                    missing = c("0", "NA",  "MEAN"))  {
   
-  grupo <- eco$S
-  x <- match(fact, colnames(eco$S), nomatch = 0)
+  grupo <- eco@S
+  x <- match(fact, colnames(eco@S), nomatch = 0)
   x <- x[!x == 0]
   
   missing <- match.arg(missing)
@@ -26,30 +44,36 @@ setGeneric("eco.subset",
   
   grupo <- which(grupo[, x] == grp)
   z <- ecogen()
-  z$P <- eco$P[grupo, ]
-  z$G <- eco$G[grupo, ]
-  z$E <- eco$E[grupo, ]
-  z$XY <- eco$XY[grupo, ]
+  z@P <- eco@P[grupo, ]
+  z@G <- eco@G[grupo, ]
+  z@A <- eco@A[grupo, ]
+  z@E <- eco@E[grupo, ]
+  z@XY <- eco@XY[grupo, ]
   
-  z$S <- as.data.frame(eco$S[grupo, ])
+  z@S <- as.data.frame(eco@S[grupo, ])
   #all S columns of z as factors, removing unused levels
-  if(dim(z$S)[1] != 0) {
-    for(i in 1:(ncol(z$S))) {
-      z$S[, i] <- factor(z$S[, i])
+  if(dim(z@S)[1] != 0) {
+    for(i in 1:(ncol(z@S))) {
+      z@S[, i] <- factor(z@S[, i])
     }
   }
   
-  z$GENIND <- df2genind(eco$G[grupo, ], missing = missing, ...)
+  temp <- int.df2genind(eco@G[grupo, ], 
+                        missing = missing,
+                        ncod = eco@INT@ncod,
+                        ploidy = eco@INT@ploidy,
+                        type = eco@INT@type)
   
-  colnames(z$S) <- colnames(eco$S)
+z@A <- as.data.frame(temp@tab)
+z@INT <- int.genind2gendata(temp)
+z@G <- as.data.frame(int.genind2df(temp))
   
-  z$C <- eco$C[grupo, ]
-  z$OUT <- list()
+  colnames(z@S) <- colnames(eco@S)
   
-  attr(z, "format") <- attr(eco, "format")
-  attr(z, "type") <-  attr(eco, "type")
-  attr(z, "missing") <- attr(eco, "missing")
-  attr(z, "ploidy") <- attr(eco, "ploidy")
+  z@C <- eco@C[grupo, ]
+  z@OUT <- list()
   
   z
+  
 })
+

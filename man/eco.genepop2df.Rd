@@ -13,18 +13,16 @@ eco.genepop2df(genefile = NULL)
 A list with the objects G (genetic matrix) and S (structures matrix).
 }
 \description{
-This function converts a Genepop file into an object with a genetic matrix (G)
-and a structures matrix (S).
+This function converts a Genepop file into an object
+with a genetic matrix (G) and a structures matrix (S).
 }
 \examples{
 \dontrun{
-
 # ingpop, file with Genepop format in the folder "/extdata" of the package
 
 ecopath <- paste(path.package("EcoGenetics"), "/extdata/ingpop", sep = "")
 ingpop <- eco.genepop2df(ecopath)
 ingpop
-
 }
 }
 \author{

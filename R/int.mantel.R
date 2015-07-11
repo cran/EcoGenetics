@@ -1,8 +1,19 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
+#' Mantel and partial Mantel tests, internal.
+#' 
+#' @param d1 distance matrix.
+#' @param d2 distance matrix.
+#' @param dc conditional distance matrix (optional).
+#' @param nsim Number of Monte-Carlo simulations. 
+#' @param test If test = "bootstrap", the program generates a bootstrap 
+#' resampling and the associated confidence intervals.
+#' If test = "permutation" a permutation test is made and the P-values 
+#' are computed. 
+#' @param alternative The alternative hypothesis. If "auto" is selected (default) the
+#' program determines the alternative hypothesis.
+#' Other options are: "two.sided", "greater" and "less".	 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
 
-
-# Mantel and partial Mantel tests, internal.
 
 int.mantel <- function(d1, d2, dc, nsim, 
                        test, alternative = "auto", 

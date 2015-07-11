@@ -1,8 +1,55 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
+#' Rankplot graphs
+#' 
+#' @description This function generates a plot for a numeric or
+#' factor variable. A data frame/matrix with XY coordinates is required.
+#' The X and Y axes in the plot correspond 
+#' to the rank of the X and Y coordinates, respectively. 
+#' 
+#' @param XY Data frame or matrix with X-Y coordinates.
+#' @param input Numeric/factor variable.
+#' @param xlabel Optional label for x axis.
+#' @param ylabel Optional label for y axis.
+#' @param title Optional title label.
+#' @param background color of the background ("grey" or "white")-
+#' @param legendlabel Optional legend label.
+#' @param significant should be colored only the individuals with significant 
+#' result?. This argument can be used with \code{\link{eco.lsa}} results. 
+#' Default TRUE
+#' @param ns color for non significant individuals, when significant = TRUE.
+#' This argument can be used with \code{\link{eco.lsa}} results.
+#' @param ... Additional elements to the generic.
+#' 
+#' @examples
+#' \dontrun{
+#' data(eco3)
+#' 
+#' # The data set eco3 has  50 points in two sites, 
+#' # but they are not visible in a usual X-Y plot 
+#' due to the small distance among them
+#' 
+#' var <- eco3[["P"]][,1]
+#' plot(eco3[["XY"]], col = var)
+#' x <- sample(1:100, 30)
+#' y <- sample(1:100, 30)
+#' 
+#' # in a rankplot graph, the inter-individual distances are
+#' # reduced to a single scale
+#' rankeco3 <- eco.rankplot(var, eco3[["XY"]])
+#' rankeco3
+#' 
+#' # the rankplot method support the use of ggplot2 syntax
+#' rankeco3 <- rankeco3 + theme_bw() + theme(legend.position="none")
+#' rankeco3
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' 
+#' @rdname rankplot-methods
+#' 
+#' @aliases eco.rankplot,genetic-method
+#' 
+#' @exportMethod eco.rankplot
 
-
-# Rankplot graphs
 
 setGeneric("eco.rankplot", function(input, 
 																		XY, 
@@ -15,8 +62,10 @@ setGeneric("eco.rankplot", function(input,
 	standardGeneric("eco.rankplot")
 })
 
-
-# eco.rankplot,eco.lsa-method
+#-------------------------------------------------------------------#
+#' @rdname rankplot-methods
+#' @aliases eco.rankplot,eco.lsa-method
+#' @exportMethod eco.rankplot
 
 setMethod("eco.rankplot", 
 					c("eco.lsa", 
@@ -124,8 +173,11 @@ setMethod("eco.rankplot",
 	rankplot
 })
 
+#-------------------------------------------------------------------#
+#' @rdname rankplot-methods
+#' @aliases eco.rankplot,numeric-method
+#' @exportMethod eco.rankplot
 
-# eco.rankplot,numeric-method
 
 #plot with a numeric variable for colours vs XY
 
@@ -200,8 +252,10 @@ setMethod("eco.rankplot",
 						
 					})
 
-
-# rankplot-methods
+#-------------------------------------------------------------------#
+#' @rdname rankplot-methods
+#' @aliases eco.rankplot,factor-method
+#' @exportMethod eco.rankplot
 
 #plot with a factor for colours vs XY
 
@@ -214,7 +268,8 @@ setMethod("eco.rankplot",
 									 xlabel,
 									 ylabel,
 									 title,
-									 legendlabel) {
+									 legendlabel,
+									 background = c("grey", "white")) {
 						
 						theme <- match.arg(background)
 						if(theme == "grey") {

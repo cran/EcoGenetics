@@ -1,9 +1,38 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# Chi-square and Fisher's exact test for association of loci and alleles 
-# with a factor
+#' Chi-square and Fisher's exact test for association of loci and alleles 
+#' with a factor
+#' 
+#' @param eco Object of class "ecogen".
+#' @param assoc "between" if the association test should be performed between
+#' a factor and a loci, or "within" if the association test should be performed
+#' between a factor and alleles within loci. For haploid data,
+#' use option "within".
+#' @param x The name of the S slot column with the groups for the association
+#' test.
+#' @param method Test method ("chisq.test" or "fisher.test").
+#' Default is "fisher.test".
+#' @param nrep Number of repetitions for the permutation test.
+#' @param adjust Correction method of P-values for multiple tests, 
+#' passed to \code{\link[stats]{p.adjust}}. Default is "none" (no correction).
+#' @param ndig Number of digits coding each alleles 
+#' (e.g. 2: xx, or 3: xxx) when assoc is "within".
+#' @seealso \code{\link[stats]{chisq.test}} \code{\link[stats]{fisher.test}}
+#' \code{\link[stats]{fisher.test}}
+#' 
+#' @examples
+#' 
+#' \dontrun{
+#' 
+#' data(eco.test)
+#' eco.association(eco, "within", "pop")
+#' eco.association(eco, "within", "pop", adjust="fdr")
+#' eco.association(eco, "within", "pop", method = "chisq.test")
+#' eco.association(eco, "between", "pop", ndig = 1)
+#' eco.association(eco, "between", "pop", method = "chisq.test", ndig = 1)
+#' 
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @export 
 
 setGeneric("eco.association",  
            function(eco,
@@ -42,7 +71,7 @@ setGeneric("eco.association",
                if(length(nom) == 0) {
                  stop(paste("invalid", method))
                }
-               marcadores <- eco@GENIND$tab
+               marcadores <- eco@A
                marcadores[marcadores == 1.0] <- 2
                marcadores[marcadores == 0.5] <- 1
                ifelse(method == "chisq.test", 

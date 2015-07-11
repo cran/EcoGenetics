@@ -1,8 +1,10 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
+#' d-Jackknife estimation.
+#' @param x vector with simulations or matrix with variables in columns, simulations in rows.
+#' @param fun function to apply
+#' @param d how many elements to leave out. For "leave one out",  d= 1 (default)
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
 
-
-# d-Jackknife estimation.
 
 int.jackknife <- function(x, fun, d = 1, alpha = 0.05) {  
                                      

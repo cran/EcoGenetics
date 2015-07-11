@@ -4,22 +4,24 @@
 \alias{eco.2geneland}
 \title{Creating input data for Geneland with an ecogen object}
 \usage{
-eco.2geneland(eco, ndig)
+eco.2geneland(eco, ncod = NULL, ploidy = 2)
 }
 \arguments{
 \item{eco}{Object of class "ecogen".}
 
-\item{ndig}{Number of digits coding each allele (e.g. 1: x, 2: xx or
-3: xxx) when data is diploid.}
+\item{ncod}{Number of digits coding each allele
+(e.g., 1: x, 2: xx, 3: xxx, etc.).}
+
+\item{ploidy}{Ploidy of the data.}
 }
 \value{
-XY.txt  Matrix with coordinates.
+XY.txt Matrix with coordinates.
 
-NAMES.txt  Matrix with row names.
+NAMES.txt Matrix with row names.
 
-P.txt  Matrix with phenotypic data.
+P.txt Matrix with phenotypic data.
 
-G.txt  Matrix with genotypic data.
+G.txt Matrix with genotypic data.
 }
 \description{
 This function creates four data frames in the working
@@ -31,6 +33,7 @@ in Geneland.
 
 data(eco.test)
 eco.2geneland(eco, 1)
+
 }
 }
 \author{

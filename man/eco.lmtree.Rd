@@ -36,22 +36,31 @@ analysis performed is "mctree".}
 When the analysis selected is "mlm", the output object
 has three main slots:
 
-@MLM: the results of the model
+> MLM: the results of the model
 
-@SUMMARY.MLM the summary for each variable returned by the \code{\link{lm}}
+> SUMMARY.MLM the summary for each variable returned by the \code{\link{lm}}
 function
 
-@ANOVA.MLM with the ANOVAs results.
+> ANOVA.MLM with the ANOVAs results.
 
 
 When the analysis selected is "mctree", the output object
 has also three main slots:
 
-@TREES: Trees returned by the multiple \code{\link[party]{ctree}} analysis.
+> TREES: Trees returned by the multiple \code{\link[party]{ctree}} analysis.
 
-@PREDICTIONS: Predictions of the analysis.
+> PREDICTIONS: Predictions of the analysis.
 
-@FREQUENCIES: Number of individuals predicted in each node.
+> FREQUENCIES: Number of individuals predicted in each node.
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below
 }
 \description{
 This program fits for each dependent variable, a Multiple Linear
@@ -66,26 +75,50 @@ returns the plots of those trees with significant splits.
 \examples{
 \dontrun{
 
-data(eco.test)
-mod <- eco.lmtree(df1 = eco$P, df2 = eco$E,
-analysis = "mlm")                                # mlm aditive model
+data(eco2)
+
+# mlm additive model
+mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]], analysis = "mlm")
 mod
 summary(mod)
 
-mod <- eco.lmtree(df1 = eco$P, df2 = eco$E,
-analysis = "mctree", fact = eco$S$structure)     # mctree aditive model
-mod@FREQUENCIES
+# mctree additive model
+mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]],
+analysis = "mctree", fact = eco[["S"]]$pop)
+
+
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
+
+# the slots are accessed with the generic format
+# (ecoslot. + name of the slot + name of the object).
+# See help("EcoGenetics accessors")
+
 summary(mod)
 
+ecoslot.FREQUENCIES(mod)        # slot FREQUENCIES
+
+# frequency table with counts of individuals in populations x terminal nodes
+tabfreq <- do.call(cbind, ecoslot.FREQUENCIES(mod))
+namestab <- lapply(ecoslot.FREQUENCIES(mod), ncol)
+namestab <- lapply(namestab, rep)
+namestab <- rep(names(namestab), namestab)
+colnames(tabfreq) <- namestab
+tabfreq
+
+# mlm custom model
 mymod <- "E1+E2*E3"
-mod <- eco.lmtree(df1 = eco$P, df2 = eco$E,
-analysis = "mlm", mod.class = mymod)             # mlm custom model
+mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]], analysis = "mlm", mod.class = mymod)
 summary(mod)
 
-mod <- eco.lmtree(df1 = eco$P, df2 = eco$E,
-analysis = "mctree", mod.class = mymod,
-fact = eco$S$structure)                          # mctree custom model
+# mctree custom model
+mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]],
+analysis = "mctree", mod.class = mymod, fact = eco[["S"]]$pop)
+
+
 summary(mod)
+
 }
 }
 \author{

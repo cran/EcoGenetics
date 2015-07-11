@@ -37,7 +37,6 @@ is needed for processing the information.
 }
 \examples{
 \dontrun{
-
 require(raster)
 
 data(tab)
@@ -64,7 +63,6 @@ eco.NDVI(tab, "COST", "NDVI", "LT5")
 
 example <- raster("NDVICOST20040719.tif")
 image(example)
-
 }
 }
 \author{

@@ -45,19 +45,28 @@ passed to \code{\link[stats]{p.adjust}}. Defalut is "none" (no correction).}
 \value{
 The program returns an object of class "eco.lsa" with the following slots:
 
-@OUT results
+> OUT results
 
-@METHOD method (coefficent) used in the analysis
+> METHOD method (coefficent) used in the analysis
 
-@TEST test method used (bootstrap, permutation)
+> TEST test method used (bootstrap, permutation)
 
-@NSIM number of simulations
+> NSIM number of simulations
 
-@PADJUST P-values adjust method for permutation tests
+> PADJUST P-values adjust method for permutation tests
 
-@COND conditional randomization (logical)
+> COND conditional randomization (logical)
 
-@XY input coordinates
+> XY input coordinates
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below
 }
 \description{
 This program computes Getis-Ord G and G*, and LISA's (local
@@ -69,10 +78,12 @@ the data Z, with P-values or bootstrap confidence intervals.
 
 data(eco.test)
 
-# ---Getis-Ord's G*---
+#####################
+# GETIS-ORD'S G*
+#####################
 
-con<- eco.weight(eco$XY, method = "knearest",  k = 4, self = TRUE) # self = TRUE for G*
-getis.ak <- eco.lsa(eco$P[, 1], con, method = "G*", nsim = 99, adjust = "none")
+con<- eco.weight(eco[["XY"]], method = "knearest",  k = 4, self = TRUE) # self = TRUE for G*
+getis.ak <- eco.lsa(eco[["P"]][, 1], con, method = "G*", nsim = 99, adjust = "none")
 getis.ak
 
 ### to plot the results, the function "eco.lsa" calls "eco.rankplot"
@@ -84,61 +95,137 @@ p    #  points with colors of the color-scale:
 p <- plot(getis.ak, significant = FALSE)
 p    # all points have a color of the color-scale
 
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
+
+# the slots are accessed with the generic format
+# (ecoslot. + name of the slot + name of the object).
+# See help("EcoGenetics accessors")
+
+ecoslot.OUT(getis.ak)
+
 ## bootstrap example
-getis.akb <- eco.lsa(eco$P[, 1], con, method = "G*", nsim = 99, test = "bootstrap")
+getis.akb <- eco.lsa(eco[["P"]][, 1], con, method = "G*", nsim = 99, test = "bootstrap")
 p <- plot(getis.akb)      # forestplot graph
 p + ggplot2::theme_bw()   # the plot can be modified with ggplot2
                           # In this case, the background is modified  (white color)
 
-#-------------------------------------------------------------------------------------#
+#---------------------------------------------------------------------------#
 
-# ---Getis-Ord's G---
+#####################
+# GETIS-ORD'S G
+#####################
 
-con<- eco.weight(eco$XY, method = "knearest", k = 4)
+con <- eco.weight(eco[["XY"]], method = "knearest", k = 4)
 # self = FALSE for G
-getis <- eco.lsa(eco$P[, 1], con, method = "G", nsim = 99)
+getis <- eco.lsa(eco[["P"]][, 1], con, method = "G", nsim = 99)
 plot(getis)
 
-#-------------------------------------------------------------------------------------#
+#---------------------------------------------------------------------------#
 
-# ---local Moran's I---
+#####################
+# LOCAL MORAN'S I
+#####################
 
-# **test for phenotypic data**
+#-------------------------
+# TESTING PHENOTYPIC DATA-
+#-------------------------
 
-con <- eco.weight(eco$XY, method = "knearest",  k = 4, row.sd = TRUE)
+con <- eco.weight(eco[["XY"]], method = "knearest",  k = 4, row.sd = TRUE)
 # row standardized weights = TRUE
 
-localmoran <- eco.lsa(eco$P[, 1], con,
-method = "I", nsim = 99)                       # test for the first trait
+# test for the first trait of the data frame P
+localmoran <- eco.lsa(eco[["P"]][, 1], con, method = "I", nsim = 99)
 
 plot(localmoran)
 
-# ---------#
+# test for several variables
 
-# **test for genotypic data** (concept also valid for the other statistics)
+all.traits <- apply(eco[["P"]], 2, eco.lsa,  con, method = "I", nsim = 99)
 
-# eco$GENIND$tab is a matrix with the genetic data of "eco"
-# as frequencies for each allele in each individual. Each allele
-# can be analyzed as single traits.
-# see "tab" in the genind help (?genind) of the adegenet package.
+# Observed statistic and P-values tables (individuals x traits)
+stat.P <- sapply(all.traits, function(x) return(ecoslot.OUT(x)[,1]))
+pval.P <- sapply(all.traits, function(x) return(ecoslot.OUT(x)[,4]))
 
-head(eco$GENIND$tab)      # head of the matrix
+# Plot of the phenotypic spatial patterns
 
-con<- eco.weight(eco$XY, method = "knearest",  k = 4, row.sd = TRUE)
+par(mfrow = c(2,4))
+for(i in 1:8) {
+image(matrix(stat.P[,i], 15,15))
+}
+
+par(mfrow = c(2,4))
+for(i in 1:8) {
+image(matrix(pval.P[,i], 15,15))
+}
+
+
+#-------------------------
+# TESTING GENOTYPIC DATA-
+#-------------------------
+
+# eco[["A"]] is a matrix with the genetic data of "eco"
+# as frequencies for each allele in each individual.
+
+head(eco[["A"]])      # head of the matrix - 40 alleles
+
+con <- eco.weight(eco[["XY"]], method = "knearest",  k = 4, row.sd = TRUE)
 # row standardized weights = TRUE
 
-localmoran.geno <- eco.lsa(eco$GENIND$tab[, 2], con,
-method = "I", nsim = 99)  # test for the second allele
+# test for a single allele
+localmoran.geno <-  eco.lsa(eco[["A"]][, 32], con, method = "I", nsim = 99)
 
-plot(localmoran.geno)
+# test for several alleles -  40 alleles (it runs in less than 1 min
+# for 99 simulations per allele;  999 simulations takes ~ 11 s per allele,
+# less than 8 min in total.)
+all.alleles <- apply(eco[["A"]], 2, eco.lsa,  con, method = "I", nsim = 99)
 
-#-------------------------------------------------------------------------------------#
+# plot all alleles to get an overview of the spatial patterns
+lapply(all.alleles, plot)
 
-# ---local Geary's C---
+# Observed statistic and P-values tables (individuals x loci)
+stat.G <- sapply(all.alleles, function(x) return(ecoslot.OUT(x)[,1]))
+pval.G <- sapply(all.alleles, function(x) return(ecoslot.OUT(x)[,4]))
 
-con<- eco.weight(eco$XY, method = "knearest",  k = 4, row.sd = TRUE)
+# counting individuals with P < 0.05 for each allele (5 * 225 /100 ~  12 significant tests
+# by random)
+signif <- lapply(all.alleles, function(x) sum(ecoslot.OUT(x)[,4] < 0.05))
+signif <- unlist(signif)
+
+# filtering alleles, loci with > 12 significant individual tests
+
+A.local <- eco[["A"]][, signif > 12]     #filtered matrix
+stat.G.f <- stat.G[, signif > 12]
+pval.G.f <- pval.G[, signif > 12]
+
+# Plot of the genotypic spatial patterns
+
+# one plot possibility, using the EcoGenetics method <rankplot>
+all.local <- all.alleles[signif > 12]
+lapply(all.local, plot)
+
+# other plot possibility, using <image>
+par(mfrow = c(3,4))
+for(i in 1:12) {
+image(matrix(stat.G[,i], 15,15))
+}
+
+par(mfrow = c(3,4))
+for(i in 1:12) {
+image(matrix(pval.G[,i], 15,15))
+}
+
+
+#---------------------------------------------------------------------------#
+
+#####################
+# LOCAL GEARY'S C
+#####################
+
+con<- eco.weight(eco[["XY"]], method = "knearest",  k = 4, row.sd = TRUE)
 # row standardized weights = TRUE
-localgeary <- eco.lsa(eco$P[, 1], con, method = "C", nsim = 99, adjust = "none")
+localgeary <- eco.lsa(eco[["P"]][, 1], con, method = "C", nsim = 99, adjust = "none")
 plot(localgeary)
 
 }

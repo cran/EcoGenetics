@@ -2,27 +2,30 @@
 % Please edit documentation in R/eco.cbind.R
 \name{eco.cbind}
 \alias{eco.cbind}
-\title{Combining the columns of two ecogen object}
+\title{Combining the columns of ecogen object}
 \usage{
-eco.cbind(e1, e2, ..., missing = 0)
+eco.cbind(eco1, eco2, ..., missing = c("0", "MEAN", "NA"))
 }
 \arguments{
-\item{e1}{Object of class "ecogen".}
+\item{eco1}{Object of class "ecogen".}
 
-\item{e2}{Object of class "ecogen".}
+\item{eco2}{Object of class "ecogen".}
 
-\item{...}{Data frames to combine. Could be any combination of
-the following: P","G","E" and "C"; or "ALL" (default).
+\item{...}{Other "ecogen" objects to combine and the specification of
+the data frames to combine.
+Can be any of the following(s): P","G", "E", "S", "C", or "ALL" (default).
 If a "G" data frame is provided, the program also generates
-the GENIND slot coding the missing data as "0". The @XY slot
-is generated automatically if present.}
+the A slot coding the missing data as "0" in default option (see the
+argument "missing").
+The XY slot is generated automatically if present.}
 
-\item{missing}{Argument passed to \code{\link[adegenet]{df2genind}}.
-It can take three values as described in that program ("NA", 0 or "MEAN").
-Missing elements are treated as zero across alleles in the default option.}
+\item{missing}{Missing data manipulation.
+It can take three values ("0" ,"NA" or "MEAN"- i.e, the mean frequency
+of the corresponding allele).
+Missing elements are coded as 0 in the default option.}
 }
 \description{
-Combining the columns of two ecogen object
+Combining the columns of ecogen object
 }
 \examples{
 \dontrun{
@@ -32,6 +35,7 @@ eco.example <- eco.cbind(eco,eco,"ALL")
 eco.example
 eco.example2 <- eco.cbind(eco, eco,"P", "G", missing="NA")
 eco.example2
+
 }
 }
 \author{

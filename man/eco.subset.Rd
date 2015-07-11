@@ -4,7 +4,7 @@
 \alias{eco.subset}
 \title{Subsetting an ecogen object by group}
 \usage{
-eco.subset(eco, fact, grp, missing = c(0, "NA", "MEAN"), ...)
+eco.subset(eco, fact, grp, missing = c("0", "NA", "MEAN"))
 }
 \arguments{
 \item{eco}{Object of class "ecogen".}
@@ -13,20 +13,19 @@ eco.subset(eco, fact, grp, missing = c(0, "NA", "MEAN"), ...)
 
 \item{grp}{Label for the subset of individuals, contained in fact.}
 
-\item{missing}{Missing Argument passed to \code{\link[adegenet]{df2genind}}
-This can take three values as described in the latter ("0", "NA" or "MEAN").
+\item{missing}{Missing data argument This can take three values ("0", "NA" or "MEAN"),
+as described in  \code{\link{ecogen}}.
 Missing elements are treated as zeros in the default option.}
-
-\item{...}{Further arguments passed to \code{\link[adegenet]{df2genind}}.}
 }
 \description{
 Subsetting an ecogen object by group
 }
 \examples{
 \dontrun{
-
-data(eco.test)
-eco<-eco.subset(eco,"pop", 1)
+data(eco3)
+eco3
+eco.sub <-eco.subset(eco3,"structure", 1)
+eco.sub
 }
 }
 \author{

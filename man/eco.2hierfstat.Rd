@@ -9,7 +9,7 @@ eco.2hierfstat(eco, pop = NULL)
 \arguments{
 \item{eco}{Object of class "ecogen".}
 
-\item{pop}{The name of the @S slot column with the groups
+\item{pop}{The name of the S slot column with the groups
 for the hierfstat data frame.}
 }
 \description{
@@ -23,6 +23,7 @@ data(eco.test)
 hiereco <- eco.2hierfstat(eco, "pop")
 require("hierfstat")
 basic.stats(hiereco)
+
 }
 }
 \author{

@@ -1,13 +1,43 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# Kruskall - Wallis + Wilcoxon (Mann-Whitney U) and aov + Tukey-HSD tests 
-# for an ecogen object
+#' Kruskall - Wallis + Wilcoxon (Mann-Whitney U) and aov + Tukey-HSD tests 
+#' for an ecogen object
+#' 
+#' @details This program returns the Wilcoxon (Mann-Whitney U) or Tukey-HSD 
+#' statistics and p values for the multiple comparisons of the variables contained
+#' in the selected data frame, among the levels of a factor of the slot "S".
+#' 
+#' @param eco Object of class "ecogen".
+#' @param df The data frame for the analysis. Could be "P", "E" or "C".
+#' @param x The name of the S slot column with the groups for the analysis.
+#' @param test Test to perform ("wilcoxon", "tukey").
+#' @param  only.p  Should be only returned a matrix with P-values? 
+#' Default TRUE.
+#' @param adjust P-values correction method for multiple tests 
+#' passed to \code{\link[stats]{p.adjust}}. Defalut is "fdr".
+#' @param ... Additional arguments passed to \code{\link{wilcox.test}} 
+#' or  \code{\link{TukeyHSD}}.
+#' 
+#' @seealso \code{\link{wilcox.test}} \code{\link{TukeyHSD}}
+#' 
+#' @examples 
+#' \dontrun{
+#' data(eco3)
+#' wil <- eco.pairtest(eco = eco3, df = "P", x = "structure")
+#' wil
+#' wil <- eco.pairtest(eco = eco3,df = "E", x = "structure")
+#' wil
+#' wil <- eco.pairtest(eco = eco3, df = "P", x = "structure", only.p = FALSE)
+#' wil
+#' wil <- eco.pairtest(eco = eco3,df = "P", x = "structure", test = "tukey")
+#' wil
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' 
+#' @export
 
 setGeneric("eco.pairtest", 
 					 
-					 function(eco, df = c("P", "E","GENIND", "C"),
+					 function(eco, df = c("P", "E","A", "C"),
 					 				 x, test = c("wilcoxon", "tukey"),
 					 				 adjust = "fdr",
 					 				 only.p = TRUE, ...) {
@@ -26,13 +56,13 @@ setGeneric("eco.pairtest",
 	P <- match.arg(df)
 	
 	if(P == "P") {
-		P<-eco$P
+		P<-eco@P
 	} else if(P == "E") {
-		P<-eco$E
-	} else if(P == "GENIND") {
-		P<- eco$GENIND$tab
+		P<-eco@E
+	} else if(P == "A") {
+		P<- eco@A
 	} else if(P == "C") {
-		P<-eco$C
+		P<-eco@C
 	}
   
   if(test == "wilcoxon") {

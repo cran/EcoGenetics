@@ -1,103 +1,74 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
+#' Exporting an ecogen genetic data frame into Genepop format
+#' 
+#' @description This function converts the genetic 
+#' data of an ecogen object into a Genepop input file. 
+#' @param eco Object of class "ecogen".
+#' @param grp The name of the S slot column with groups in which the sample
+#' must be divided (e.g., populations). If groups are not given (grp = NULL),
+#' all individuals will be assigned to a single one.
+#' @param nout Number of digits in the output file
+#' @param name The name of the output file.
+#' @param sep Character separating alleles.
+#' @return A Genepop file in the working directory.
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' data(eco.test)
+#' eco.2genepop(eco, grp = "pop", name = "infile.genepop.txt")
+#' # an output file "infile.genepop.txt" is generated in the working directory
+#' 
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @export
 
-
-# Exporting an ecogen genetic data frame into Genepop format
 
 setGeneric("eco.2genepop", 
-           function(eco, grp = NULL, ndig, 
-                    name = "infile.genepop.txt") {
+           function(eco, name = "infile.genepop.txt",
+                    grp = NULL, nout = 3, sep = "") {
              
-             
-             grupo <- eco$S
-             if(!is.null(grp)) {
-             fact <- match(grp, colnames(eco$S), nomatch = -999)
-             if(fact == -999) {
-               stop("incorrect factor name")
+             nout <- ceiling(nout)
+             nout <- c(1,2,3)[c(1,2,3) %in% nout]
+             if(length(nout) != 1)  {
+               stop("nout must be 1, 2 or 3")
              }
-             structures <- as.factor(as.numeric(eco$S[, fact])) #recoding levels
-             dat0 <- cbind(structures, eco$G)
-             } else {
-               dat0 <- cbind(rep(1, nrow(eco$XY)), eco$G)
-             }
+             #check codes
+             ncod <- int.check.ncod(eco@G, ploidy = eco@INT@ploidy, sep = sep)
+             #check group consistency
+             structures <- int.check.group(eco@S, grp = grp, exp.l = nrow(eco@G))
+             structures <- as.factor(as.numeric(structures)) #recoding levels
              
-            
-             dat0 <- as.matrix(dat0)
-             rownames(dat0) <- rownames(eco$G)
              
-             if(sum(is.na(dat0)) != 0) {
-               dat0[is.na(dat0)] <- 0
-             }
+             X <- eco.format(eco@G, ncod = eco@INT@ncod, 
+                             nout = nout,
+                             ploidy = eco@INT@ploidy,
+                             fill.mode = "first")
              
-             datos <- data.frame(matrix(nrow = nrow(dat0), 
-                                        ncol = ncol(dat0) - 1))
-             
-             n1 <- eco$GENIND$type
-             n2 <- eco$GENIND$ploidy
-             
-             if((n1 == "codom") && (n2 != 1)) {
-               
-               if(is.na(ndig)) {
-                 stop("incorrect ndig value")
-               }
-               a <- substr(dat0[, -1], 1, ndig)
-               b<-substr(dat0[,-1],ndig+1, 2*ndig)
-               a[a == " "] <- 0
-               b[b == " "] <- 0
-               
-             } else if((n1 == "PA") | (n2 > 1)) { 
-               a <- as.matrix(eco$G)
-               a[is.na(a)] <- 0
-               
-             } else if (n2 == 1) {
-               a<-as.numeric(as.factor(as.matrix(eco$G)))
-               a<-matrix(a, ncol = ncol(eco$G), nrow = nrow(eco$G))
-               a[is.na(a)] <- 0
-             }
-             
-             if(ndig == 1) {
-               a <- paste("00", a, sep = "")
-               b <- paste("00", b, sep = "")
-               
-             } else if(ndig == 2) {
-               a <- paste("0", a, sep = "")
-               b <- paste("0", b, sep = "")
-               
-             }
-             
-             if((n1 == "codom") && (n2 != 1)) {
-               a[a == "00"] <- "000"
-               a[a == "0"] <- "000"
-               b[b == "00"] <- "000"
-               a[a == "0"] <- "000"
-               a <- paste(a, b, sep = "")
-             }
-             
-             a <- matrix(a, nrow = nrow(dat0), ncol = (ncol(dat0) - 1))
-             a <- cbind(rep(0, nrow(dat0)), a)
-             a[, 1] <- paste(rownames(dat0), ",")
+             X <- cbind(rep(0, nrow(X)), X)
+             X[, 1] <- paste(rownames(X), ",")
              
              lista <- list()
-             grp <- rep(" ", ncol(dat0))
+             grp <- rep(" ", ncol(eco@G) + 1)
              grp <- as.matrix(t(grp))
              grp[1] <- "POP"
-             maxf <- max(as.numeric(dat0[, 1]))
-             matriz <- matrix(nrow = 0, ncol = ncol(grp))
+             maxf <- max(levels(structures))
+             matriz <- matrix(nrow = 0, ncol = ncol(eco@G)+1)
              for(i in 1:maxf) {
-               lista[[i]] <- a[dat0[, 1] == i, ]
+               lista[[i]] <- X[structures == i, ]
                lista[[i]] <- rbind(grp, lista[[i]])
                matriz <- rbind(matriz, lista[[i]])
              }
              matriz <- rbind(matriz, rep("", ncol(matriz)))
              
              matriz[, 1] <- as.character(matriz[, 1])
-             nombres <- rep("", (ncol(dat0)) ^ 2)
-             nombres <- as.data.frame(matrix(nombres, ncol(dat0), ncol(dat0)))
-             nombres[, 1] <- c("Data exported from EcoGenetics", colnames(dat0[, -1]))
+             nombres <- rep("", (ncol(X)) ^ 2)
+             nombres <- as.data.frame(matrix(nombres, ncol(X), ncol(X)))
+             nombres[, 1] <- c("Data exported from EcoGenetics", colnames(X[, -1]))
              colnames(nombres) <- colnames(matriz)
              matriz <- rbind(as.matrix(nombres), matriz) 
-
+             
              write.table(matriz, name, row.names = FALSE,
                          col.names = FALSE, quote = FALSE)
-             	
+             
            })

@@ -1,8 +1,7 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# random test
+#' random test
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
 
 int.random.test <- function(repsim, obs, nsim, 
 												test = c("permutation", "bootstrap"), 

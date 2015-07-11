@@ -2,8 +2,7 @@
 % Please edit documentation in R/auxiliar.R
 \name{aue.image2df}
 \alias{aue.image2df}
-\title{Transforming a raster into a data frame
-with cartesian coordinates}
+\title{Transforming a raster into a data frame with cartesian coordinates}
 \usage{
 aue.image2df(mat)
 }
@@ -17,11 +16,12 @@ row number (y) and cell value (z) of each pixel in a raster.
 \examples{
 \dontrun{
 
-ras <- matrix(eco$P[,1],15,15)
+ras <- matrix(eco[["P"]][,1],15,15)
 image(ras)
 ras.row <- aue.image2df(ras)
 ras.row
 image(matrix(ras.row[,3], 15, 15))
+
 }
 }
 \author{

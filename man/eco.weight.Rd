@@ -43,26 +43,35 @@ meters with the function \code{\link[SoDA]{geoXY}}.}
 \value{
 An object of class eco.weight with the following slots:
 
-@W weights matrix
+> W weights matrix
 
-@XY input coordinates
+> XY input coordinates
 
-@METHOD weights construction method
+> METHOD weights construction method
 
-@PAR parameters used for the construction of weights
+> PAR parameters used for the construction of weights
 
-@PAR.VAL values of the parameters used for the construction of weights
+> PAR.VAL values of the parameters used for the construction of weights
 
-@ROW.SD row standardization (logical)
+> ROW.SD row standardization (logical)
 
-@SELF data self-included (logical)
+> SELF data self-included (logical)
 
-@NONZERO percentage of non-zero connections
+> NONZERO percentage of non-zero connections
 
-@NONZEROIND percentage of individuals
+> NONZEROIND percentage of individuals
 with non-zero connections
 
-@AVERAGE average number of connection per individual
+> AVERAGE average number of connection per individual
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below
 }
 \description{
 Spatial weights for individuals with coordinates XY
@@ -111,28 +120,42 @@ This distance requires the parameter p (default p = 1).
 data(eco.test)
 
 # "circle" method
-con <- eco.weight(eco$XY, method = "circle", d1 = 0, d2 = 2)
+con <- eco.weight(eco[["XY"]], method = "circle", d1 = 0, d2 = 2)
 con
 
 # "knearest" method
-con <- eco.weight(eco$XY, method = "knearest", k=3)
+con <- eco.weight(eco[["XY"]], method = "knearest", k=3)
 con
 
 # "inverse" method
-con <- eco.weight(eco$XY, method = "inverse")
+con <- eco.weight(eco[["XY"]], method = "inverse")
 con
 
 # "circle.inverse" method
-con <- eco.weight(eco$XY, method = "circle.inverse")
+con <- eco.weight(eco[["XY"]], method = "circle.inverse", d2 = 2)
 con
 
 # "exponential" method
-con <- eco.weight(eco$XY, method = "exponential")
+con <- eco.weight(eco[["XY"]], method = "exponential")
 con
 
 # "circle.exponential" method
-con <- eco.weight(eco$XY, method = "circle.exponential", d2 = 2)
+con <- eco.weight(eco[["XY"]], method = "circle.exponential", d2 = 2)
 con
+
+
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
+
+# the slots are accessed with the generic format
+# (ecoslot. + name of the slot + name of the object).
+# See help("EcoGenetics accessors")
+
+ecoslot.METHOD(con)        # slot METHOD
+ecoslot.PAR(con)           # slot PAR
+ecoslot.PAR.VAL(con)       # slot PAR.VAL
+
 }
 }
 \author{

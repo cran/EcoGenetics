@@ -11,7 +11,7 @@ eco.2spagedi(eco, pop = NULL, ndig, name = "infile.spagedi.txt", smin = 0,
 \arguments{
 \item{eco}{Object of class "ecogen".}
 
-\item{pop}{The name of the @S slot column with the groups
+\item{pop}{The name of the S slot column with the groups
 for the output data. The default option includes all the individuals into
 a single group.}
 
@@ -20,15 +20,15 @@ a single group.}
 
 \item{name}{The name of the output file.}
 
-\item{smin}{Minimum class distance in the units of the @XY slot data.}
+\item{smin}{Minimum class distance in the units of the XY slot data.}
 
-\item{smax}{Maximum class distance in the units of the @XY slot data.}
+\item{smax}{Maximum class distance in the units of the XY slot data.}
 
-\item{int}{Distance interval in the units of the @XY slot data.}
+\item{int}{Distance interval in the units of the XY slot data.}
 
 \item{nclass}{Number of classes.}
 
-\item{seqvec}{Vector with breaks in the units of the @XY slot data.}
+\item{seqvec}{Vector with breaks in the units of the XY slot data.}
 
 \item{size}{Number of individuals per class.}
 
@@ -50,13 +50,14 @@ When distance classes are required, they can be constructed by combining
 the parameters "int", "smin", "smax", "nclass", "seqvec" and "size", as
 described in the function \code{\link{eco.lagweight}}.
 A distance matrix can also be included using the "distmat" parameter.
-Missing data must be coded as a single "0" in the G data frame.
+Missing data must be coded as a single "NA" in the G data frame.
 }
 \examples{
 \dontrun{
 
 data(eco.test)
 eco.2spagedi(eco, "pop", ndig = 1,int=2, smax=6, name="infile.spagedi.txt")
+
 }
 }
 \author{

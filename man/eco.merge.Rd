@@ -14,7 +14,7 @@ eco.merge(e1, e2, ...)
 
 \item{...}{Data frames to merge. Could be any combination of
 the following: "XY",P","G","E" and "C", or "ALL". If a "G" data frame
-is provided, the program generates also the GENIND slot coding the missing
+is provided, the program generates also the INT slot coding the missing
 data as "0".}
 }
 \description{
@@ -33,13 +33,12 @@ that the user wishes to merge.
 }
 \examples{
 \dontrun{
-
 data(eco.test)
 eco
 eco1 <- eco
-eco1$XY <- eco$XY[sample(1:225), ]  #object with permuted rows
-eco$XY
-eco1$XY
+eco1[["XY"]] <- eco[["XY"]][sample(1:225), ]  #object with permuted rows
+eco[["XY"]]
+eco1[["XY"]]
 merged <- eco.merge(eco, eco1)
 merged
 }

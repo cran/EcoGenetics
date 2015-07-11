@@ -23,7 +23,7 @@ eco.rankplot(input, XY, xlabel = NULL, ylabel = NULL, title = NULL,
   ylabel, title, legendlabel, background = c("grey", "white"))
 
 \S4method{eco.rankplot}{factor,dataframeORmatrix,missing}(input, XY, xlabel,
-  ylabel, title, legendlabel)
+  ylabel, title, legendlabel, background = c("grey", "white"))
 }
 \arguments{
 \item{input}{Numeric/factor variable.}
@@ -57,20 +57,20 @@ to the rank of the X and Y coordinates, respectively.
 }
 \examples{
 \dontrun{
-
 data(eco3)
 
-# in two sites of the data eco3 are 50 points,
-# but they are not visible
-# in a usual X-Y plot due to the small distance among them
-var <- eco3$P[,1]
-plot(eco3$XY, col = var)
+# The data set eco3 has  50 points in two sites,
+# but they are not visible in a usual X-Y plot
+due to the small distance among them
+
+var <- eco3[["P"]][,1]
+plot(eco3[["XY"]], col = var)
 x <- sample(1:100, 30)
 y <- sample(1:100, 30)
 
-# in a rankplot the inter-individual distances are
+# in a rankplot graph, the inter-individual distances are
 # reduced to a single scale
-rankeco3 <- eco.rankplot(var, eco3$XY)
+rankeco3 <- eco.rankplot(var, eco3[["XY"]])
 rankeco3
 
 # the rankplot method support the use of ggplot2 syntax

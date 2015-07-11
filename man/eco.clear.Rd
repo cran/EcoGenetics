@@ -9,13 +9,12 @@ eco.clear(..., all = FALSE)
 \arguments{
 \item{...}{Objects to retain.}
 
-\item{all}{Remove also hidden elements? Default FALSE}
+\item{all}{Remove also hidden elements? Default FALSE.}
 }
 \description{
-This function removes from the working environment
-all the elements, with the exception of those included
-in the argument of the function. Hidden elements can also be removed
-by setting all = TRUE.
+This function removes all the elements of the working environment,
+with the exception of those included in the argument of the function.
+Hidden elements can also be removed by setting all = TRUE.
 }
 \examples{
 \dontrun{
@@ -24,6 +23,7 @@ data(eco.test)
 ls()
 eco.clear(eco)
 ls()
+
 }
 }
 \author{

@@ -26,7 +26,6 @@ created by Geneland. The program expects each subfolder
 }
 \examples{
 \dontrun{
-
 require("Geneland")
 data(eco.test)
 
@@ -38,7 +37,7 @@ path.1 <- getwd()
 path <- paste(path.1,"/test/", sep="")
 dir.create(path)
 setwd(path)
-eco.2geneland(eco, ndig = 1)
+eco.2geneland(eco, ploidy = 2)
 
 # Auxiliar function for running some repetitions with fixed K = 4.
 Each repetition is saved in the folder "test":

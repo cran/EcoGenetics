@@ -2,29 +2,83 @@
 % Please edit documentation in R/auxiliar.R
 \name{aue.sort}
 \alias{aue.sort}
-\title{Ordering cells in a data frame or matrix}
+\title{Ordering the content of cells in a matrix. Ordering alleles in a genetic matrix.}
 \usage{
-aue.sort(x, ndig)
+aue.sort(X, ncod = NULL, ploidy = 2, sep.loc = "", chk.plocod = TRUE,
+  ...)
 }
 \arguments{
-\item{x}{Matrix/data frame to order.}
+\item{X}{Any matrix with content to order.}
 
-\item{ndig}{Number of digits coding each allele (e.g. 2: xx, or 3: xxx).}
+\item{ncod}{Number of digits coding each allele
+(e.g., 1: x, 2: xx, 3: xxx, etc.). If NULL, ncode will we
+obtained from the ploidy and the maximum number of characters
+in the data cells.}
+
+\item{ploidy}{Ploidy of the data.}
+
+\item{sep.loc}{Character string separating alleles.}
+
+\item{chk.plocod}{Defalult TRUE. The function checks coherence
+in ploidy and number of digits coding alleles.}
+
+\item{...}{Additional arguments passed to \code{\link{order}}}
 }
 \description{
-This program returns a data fame with ordered cells.
-For example, in the case of a G data frame of an ecogen object,
-the program return a data frame with the cells
-of each individual \emph{i} and each loci \emph{j} in ascending order,
-i.e., a locus of type 51 is returned as 15.
+This program takes a matrix and orders
+the content of each cell. It was specially designed
+for genetic data, but can be used with any data
+that can be rearrenged by the function \code{\link{order}}.
+The arguments ploidy and ncode determine the mode of
+ordering the data.
+The cells corresponding to each individual \emph{i} and
+loci \emph{j} are ordered in ascending order in default option
+(it can be passed decreasing = TRUE as argument, if descending order is desired).
+For example, a locus with ploidy = 2 and ncod =1,  coded as 51,
+for an individual, will be recoded as 15. A locus with ploidy = 3
+and coded as 143645453, will be recoded as 143453645 (alleles 143, 454 and 645).
 }
 \examples{
 \dontrun{
 
-data(eco3)
-eco3$G                          # unordered data
-eco3$G <- aue.sort(eco3$G, 1)
-eco3$G                          # ordered data
+# Example 1----------------------
+
+geno <- c(12, 52, 62, 45, 54, 21)
+geno <- matrix(geno, 3, 2)
+
+# ordering the data
+aue.sort(geno, ploidy = 2)
+
+# decreasing sort order
+aue.sort(geno, ploidy = 2, decreasing = TRUE)
+
+
+# Example 2----------------------
+
+geno2 <- c(123456, 524556, 629359, 459459, 543950, 219405)
+geno2 <- matrix(geno2, 3, 2)
+
+# ordering the data as diploid
+aue.sort(geno2, ploidy = 2)  # the data is ordered using blocks of 3 characters
+
+# ordering the data as triploid
+aue.sort(geno2, ploidy = 3)  # the data is ordered using blocks of 2 characters
+
+# error: the ploidy and the number of characters are not congruent
+aue.sort(geno2, ploidy = 5)
+
+# error: the ploidy and the number of characters are not congruent
+aue.sort(geno2, ploidy = 5)
+
+
+# Example 3----------------------
+
+# any character data
+generic <- c("aldk", "kdbf", "ndnd", "ndkd")
+generic <- matrix(generic, 2, 2)
+aue.sort(generic, ploidy = 2)
+aue.sort(generic, ploidy = 4)
+
 }
 }
 \author{

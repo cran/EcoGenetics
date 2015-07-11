@@ -91,15 +91,15 @@ NOTE: THIS IS A BETA VERSION OF THE FUNCTION (UNDER DEVELOPMENT).
 For the global analysis, the program returns an object of class "eco.IBD"
 with the following slots:
 
-@OUT analysis output.
+> OUT analysis output.
 
 
 In the permutation test case contains:
 - d.mean: mean class distance;
 - d.log: mean logarithm of the class distance;
 - obs, exp, alter, p.val: observed, and expected value of the statistic
-under randomization, alternative, P value ;
-- mean.jack, sd.jack, Jack.CI.inf, Jack.CI.sup: jacknifed mean and SD,
+under randomization, alternative, P value;
+- mean.jack, sd.jack, Jack.CI.inf, Jack.CI.sup: jackknifed mean and SD,
 and confidence intervals for the statistic;
 - null.lwr, nul.uppr: lower and upper bound of the jackknife
  confidence interval for the statistic;
@@ -110,15 +110,15 @@ In the bootstrap test case contains:
 - d.mean: mean class distance;
 - d.log: mean logarithm of the class distance;
 - obs: observed value of the statistic;
-- mean.jack, sd.jack, Jack.CI.inf, Jack.CI.sup: jacknifed mean and SD,
+- mean.jack, sd.jack, Jack.CI.inf, Jack.CI.sup: jackknifed mean and SD,
 and confidence intervals for the statistic;
 - null.lwr, nul.uppr: lower and upper bound of the jackknife
  confidence interval for the statistic;
 - cardinal: number of individuals in each class;
 
-@IN analysis input data
+> IN analysis input data
 
-@SP Sp statistic results
+> SP Sp statistic results
 
 
 It contains:
@@ -139,28 +139,28 @@ for Sp);
 - cubic_model = cubic model for (kinship)ij ~ ln(dij) r
 esiduals vs ln(dij);
 
-@BEAKS breaks
+> BEAKS breaks
 
-@CARDINAL number of elements in each class
+> CARDINAL number of elements in each class
 
-@NAMES variables names
+> NAMES variables names
 
-@METHOD analysis method
+> METHOD analysis method
 
-@DISTMETHOD method used in the construction of breaks
+> DISTMETHOD method used in the construction of breaks
 
-@TEST test method used (bootstrap, permutation)
+> TEST test method used (bootstrap, permutation)
 
-@NSIM number of simulations
+> NSIM number of simulations
 
-@PADJUST P-values adjust method for permutation tests
+> PADJUST P-values adjust method for permutation tests
 
 ------
 
 For the local analysis, the program returns an object of class "eco.lsa"
 with the following slots:
 
-@OUT results
+> OUT results
 
 
 > In the permutation test case contains:
@@ -180,17 +180,26 @@ under randomization, alternative, P value;
  confidence interval for the statistic;
 - cardinal: number of individuals in each class;
 
-@METHOD method (coefficent) used in the analysis
+> METHOD method (coefficent) used in the analysis
 
-@TEST test method used (bootstrap, permutation)
+> TEST test method used (bootstrap, permutation)
 
-@NSIM number of simulations
+> NSIM number of simulations
 
-@PADJUST P-values adjust method for permutation tests
+> PADJUST P-values adjust method for permutation tests
 
-@COND conditional randomization (logical)
+> COND conditional randomization (logical)
 
-@XY input coordinates
+> XY input coordinates
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below.
 }
 \description{
 NOTE: THIS IS A BETA VERSION OF THE FUNCTION (UNDER DEVELOPMENT).
@@ -200,9 +209,9 @@ computes the Loiselle's Fij (Kalisz et al., 2001; Loiselle et al., 1995).
 }
 \details{
 The GLOBAL ANALYSIS mode, computes a multilocus correlogram, with a detailed
-summary (see the content of the @OUT slot  in the "return" section).
-It also computes (see details about the @SP slot in the "return" section):
-- the slope of the kinship individual values vs the logarithm of the distance,  (kinship)ij ~ ln(dij), with a jackknife confidence
+summary (see the content of the slot OUT  in the "return" section).
+It also computes (see details about the slot SP in the "return" section):
+- the slope of the kinship individual values vs the logarithm of the distance, (kinship)ij ~ ln(dij), with a jackknife confidence
 interval
 - a Mantel test for testing the association between  (kinship)ij
 and ln(dij)
@@ -219,7 +228,7 @@ for multiple corrections.
 \examples{
 \dontrun{
 
-#data(eco.test)
+data(eco.test)
 
 # ---global analysis---
 
@@ -231,7 +240,7 @@ plot(globaltest)    # Significant mean class coancestry classes at
                     # and family-wise P corrected values (red-blue
                     # points, indicated in the legend)
 
-# globaltest@SP contains:
+# ecoslot.SP(globaltest) contains:
 # - the slope (bhat) and values with confidence intervals
 #  of the regression reg = kinship ~ ln(distance_between_individuals)
 #- A Mantel test result for assesing the relation between
@@ -240,9 +249,9 @@ plot(globaltest)    # Significant mean class coancestry classes at
 #  ln(distance_between_individuals)
 #- the sp statistic and its confidence interval
 
-# globaltest@OUT contains:
+# ecoslot.OUT(globaltest) contains:
 # - In permutation case, the values of mean and log-mean distance
-#   classes; observed class value; expected+alternative+P value,
+#   classes; observed class value; expected + alternative + P value,
 #   the bootstrap null confidence intervals and
 #   jackknife statistics (jackknifed mean, jackknifed SD, and
 #                         CI for the class statistic)
@@ -252,7 +261,7 @@ plot(globaltest)    # Significant mean class coancestry classes at
 #   jackknife statistics (jackknifed mean, jackknifed SD, and
 #                         CI for the class statistic)
 
-#----------------------------------------------------------------#
+#----------------------------------------------------------#
 # ---local analysis---
 
 
@@ -285,12 +294,12 @@ plot(localktest, significant = FALSE)    # significant and non
                                          # signficant values
                                          # in blue-red scale
 
-# localktest@OUT and localdtest@OUT contain:
+# The slot OUT of localktest (ecoslot.OUT(localktest)) and localdtest
+# (ecoslot.OUT(localdtest)) contains:
 # - the mean distance per individual, observed value of the
-#   statistic, expected+alternative+P value+null hypotesis
+#   statistic, expected + alternative + P value + null hypotesis
 #   confidence intervals,  or boostrap confidence intervals in
 #   permutation or bootstrap cases, respectively.
-
 }
 }
 \author{

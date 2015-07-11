@@ -14,23 +14,24 @@ Ordering the rows of the data frames contained in an ecogen object
 }
 \details{
 This program generates an ecogen object with the rows of all
-the data frames ordered in reference to the row names of the @XY data frame.
+the data frames ordered in reference to the row names of the XY data frame.
 This is useful when the data frames are loaded into the ecogen object,
 but were not ordered previously. Also, this tool can be useful
 for reorder rows when is needed.
-First, the reference data frame in @XY will be in the desired row order.
+First, the reference data frame in the slot XY will be in the desired row order.
 This program then aligns all the data frames by coincidence of row names
-with those in @XY.
+with those in the slot XY.
 }
 \examples{
 \dontrun{
 
 data(eco.test)
 eco1 <- eco
-eco1$P <- eco$P[sample(1:173), ]  #object with shuffled rows
-eco1$E <- eco$E[sample(1:173), ]
+eco1[["P"]] <- eco[["P"]][sample(1:225), ]  #object with shuffled rows
+eco1[["E"]] <- eco[["E"]][sample(1:225), ]
 ordered <- eco.order(eco1)
-ordered$XY; ordered$P; ordered$E
+head(ordered[["P"]]); head(eco[["P"]])
+
 }
 }
 \author{

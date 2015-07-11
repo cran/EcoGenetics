@@ -25,11 +25,11 @@ Summary for eco.lmtree output
 \dontrun{
 
 data(eco.test)
-#' mod <- eco.lmtree(df1 = eco$P, df2 = eco$E,
+#' mod <- eco.lmtree(DF1 = eco$P, DF2 = eco$E,
 analysis = "mlm")
 summary(mod)                                    #summary for "mlm" analysis
 
-mod <- eco.lmtree(df1 = eco$P, df2 = eco$E,
+mod <- eco.lmtree(DF1 = eco$P, DF2 = eco$E,
 analysis = "mctree", fact = eco$S$structure)
 summary(mod)                                    #summary for "mctree" analysis
 

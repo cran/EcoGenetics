@@ -9,7 +9,7 @@ eco.2gstudio(eco, type = "separated", ...)
 \arguments{
 \item{eco}{Object of class "ecogen".}
 
-\item{type}{The type of data passed to the function locus (gstudio).
+\item{type}{The type of data passed to gstudio locus.
 Default is "separated" (data as microsatellites or individual haplotypes);
 "aflp" for presence - absence data.}
 
@@ -25,6 +25,7 @@ data of an ecogen object in a gstudio data frame.
 data(eco.test)
 gsteco <- eco.2gstudio(eco, "separated")
 gsteco
+
 }
 }
 \author{

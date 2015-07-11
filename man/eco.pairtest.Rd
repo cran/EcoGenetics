@@ -5,7 +5,7 @@
 \title{Kruskall - Wallis + Wilcoxon (Mann-Whitney U) and aov + Tukey-HSD tests
 for an ecogen object}
 \usage{
-eco.pairtest(eco, df = c("P", "E", "GENIND", "C"), x, test = c("wilcoxon",
+eco.pairtest(eco, df = c("P", "E", "A", "C"), x, test = c("wilcoxon",
   "tukey"), adjust = "fdr", only.p = TRUE, ...)
 }
 \arguments{
@@ -37,7 +37,6 @@ in the selected data frame, among the levels of a factor of the slot "S".
 }
 \examples{
 \dontrun{
-
 data(eco3)
 wil <- eco.pairtest(eco = eco3, df = "P", x = "structure")
 wil

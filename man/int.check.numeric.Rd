@@ -2,15 +2,18 @@
 % Please edit documentation in R/control.R
 \name{int.check.numeric}
 \alias{int.check.numeric}
-\title{int.check.numeric}
+\title{Check numeric format in a data frame}
 \usage{
 int.check.numeric(mat)
 }
 \arguments{
-\item{x}{matrix or data frame}
+\item{x}{Matrix or data frame.}
 }
 \description{
-int.check.numeric
+Check numeric format in a data frame
+}
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
 

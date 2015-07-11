@@ -1,8 +1,25 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
+#' breaks obtention
+#' 
+#' @param XY data frame or matrix with individual's position.
+#' @param int Distance interval in the units of the @@XY slot data.
+#' @param smin Minimum class distance in the units of the @@XY slot data.
+#' @param smax Maximum class distance in the units of the @@XY slot data.
+#' @param kmax Number of nearest neighbors.
+#' @param nclass Number of classes.
+#' @param seqvec Vector with breaks in the units of the @@XY slot data.
+#' @param size Number of individuals per class.
+#' @param bin Rule for constructing intervals when a partition parameter (int, 
+#' nclass or size) is not given. Default is Sturge's rule (Sturges, 1926). Other
+#' option is Freedman-Diaconis method (Freedman and Diaconis, 1981).
+#' @param latlon Are the coordinates in decimal degrees format? Defalut FALSE. If TRUE,
+#' the coordinates must be in a matrix/data frame with the longitude in the first
+#' column and latitude in the second. The position is projected onto a plane in
+#' meters with the function \code{\link[SoDA]{geoXY}}.
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' 
+#' @keywords internal
 
-
-# breaks obtention
 
 int.break <- function(XY, 
 											int = NULL, 
@@ -37,9 +54,9 @@ int.break <- function(XY,
 		  if(ncol(XY != 2)) {
 		    message("more than 3 columns in coordinates. The first two will we
 								taken as X-Y data for estimating distance intervals")
-		    XY <- XY[,1:2]
+		    XY <- XY[, 1:2]
 		  }
-			distancia <- dist(SoDA::geoXY(XY[,2], XY[,1], unit=1))
+			distancia <- dist(SoDA::geoXY(XY[, 2], XY[, 1], unit = 1))
 			}
 	
 

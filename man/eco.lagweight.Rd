@@ -48,27 +48,36 @@ meters with the function \code{\link[SoDA]{geoXY}}.}
 The program returns an object of class "eco.lagweight" with the following
 slots:
 
-@PAR parameters used for the construction of breaks
+> PAR parameters used for the construction of breaks
 
-@PAR.VAL values of the parameters used for the construction of breaks
+> PAR.VAL values of the parameters used for the construction of breaks
 
-@ROW.SD row standardization (logical)
+> ROW.SD row standardization (logical)
 
-@SELF data self-included (logical)
+> SELF data self-included (logical)
 
-@W weights list
+> W weights list
 
-@XY coordinates
+> XY coordinates
 
-@MEAN mean class distances
+> MEAN mean class distances
 
-@LOGMEAN mean of the class distances logarithm
+> LOGMEAN mean of the class distances logarithm
 
-@CARDINAL number of elements in each class
+> CARDINAL number of elements in each class
 
-@BREAKS breaks
+> BREAKS breaks
 
-@METHOD breaks construction method
+> METHOD breaks construction method
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below.
 }
 \description{
 This program returns a list of weights matrices (binary or
@@ -89,47 +98,55 @@ See the examples.
 }
 \examples{
 \dontrun{
-
 data(eco.test)
 
 # method sturges-smax: in this case, the program generates
 # classes using the Sturge's rule.
 # As smax and smin are undefined, the program uses the default
 # options (smin = 0, and smax = maximum inter-individual distance)
-classlist <- eco.lagweight(eco$XY)
+classlist <- eco.lagweight(eco[["XY"]])
 classlist
 
 # method sturges-smax: idem, but smax = 16
-classlist <- eco.lagweight(eco$XY, smax=16)
+classlist <- eco.lagweight(eco[["XY"]], smax=16)
 
 ## using smax <16 in this case generates empty classes,
 ## which is not allowed
 
 # method sturges-smax: idem, but smin = 3
-classlist <- eco.lagweight(eco$XY, smin = 3, smax = 15)
-classlist@BREAKS # information about breaks. Includes the upper and lower limits
+classlist <- eco.lagweight(eco[["XY"]], smin = 3, smax = 15)
+
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
+
+# the slots are accessed with the generic format
+# (ecoslot. + name of the slot + name of the object).
+# See help("EcoGenetics accessors")
+
+ecoslot.BREAKS(classlist) # information about breaks. It includes the upper and lower limits
 
 # method sturges-smax: complete range,
 # and cummulative = TRUE (instead of using
 # lower and upper limits for each class, only the upper is used in turn)
-classlist <- eco.lagweight(eco$XY, cummulative = TRUE)
+classlist <- eco.lagweight(eco[["XY"]], cummulative = TRUE)
 
 # method n.classes-smax: complete range partitioned in 4 classes
-classlist <- eco.lagweight(eco$XY, nclass = 4)
+classlist <- eco.lagweight(eco[["XY"]], nclass = 4)
 
 # method n.classes-smax: idem, but smax =  15
-classlist <- eco.lagweight(eco$XY, nclass = 4, smax = 15)
+classlist <- eco.lagweight(eco[["XY"]], nclass = 4, smax = 15)
 
 # method int-smax: the complete range partitioned each <int> units
 # of inter-individual distance
-classlist <- eco.lagweight(eco$XY, int = 2)
+classlist <- eco.lagweight(eco[["XY"]], int = 2)
 
 # method int-smax: idem, but smax = 15 and smin = 3
-classlist <- eco.lagweight(eco$XY, int = 2, smin = 3, smax = 15)
+classlist <- eco.lagweight(eco[["XY"]], int = 2, smin = 3, smax = 15)
 
 # method equal.size: n individuals in each class,
 # partitioning the complete range.
-classlist <- eco.lagweight(eco$XY, size = 1000)
+classlist <- eco.lagweight(eco[["XY"]], size = 1000)
 
 ## In the latter example, as an inter-individual distance
 ## appear more than one time (different individuals pairs,
@@ -138,20 +155,18 @@ classlist <- eco.lagweight(eco$XY, size = 1000)
 
 # method equal.size: n individuals in each class,
 # but smax = 15
-classlist <- eco.lagweight(eco$XY, size = 1000, smax = 15)
+classlist <- eco.lagweight(eco[["XY"]], size = 1000, smax = 15)
 
 # method kmax: sequence from k = 1 to k = n, in this case, n = 3
-classlist <- eco.lagweight(eco$XY, kmax = 3)
+classlist <- eco.lagweight(eco[["XY"]], kmax = 3)
 
 # method kmax: idem, but elements self-included
 # (i.e., the pairs i-i, for all individuals i, are included)
-classlist <- eco.lagweight(eco$XY, kmax = 3, self = TRUE)
+classlist <- eco.lagweight(eco[["XY"]], kmax = 3, self = TRUE)
 
 # method seqvec: a vector with the breaks is used
 vec <- seq(0, 10, 2)
-classlist <- eco.lagweight(eco$XY, seqvec = vec)
-
-
+classlist <- eco.lagweight(eco[["XY"]], seqvec = vec)
 }
 }
 \author{

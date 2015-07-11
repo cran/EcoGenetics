@@ -21,10 +21,11 @@ the result to the focal pixel.
 \examples{
 \dontrun{
 
-ras <- matrix(eco$P[,1],15,15)
+ras <- matrix(eco[["P"]][,1],15,15)
 image(ras)
 ras.mean <- aue.filter(ras, 3, mean)
 image(ras.mean)
+
 }
 }
 \author{

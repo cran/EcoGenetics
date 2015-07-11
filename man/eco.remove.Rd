@@ -2,8 +2,7 @@
 % Please edit documentation in R/eco.remove.R
 \name{eco.remove}
 \alias{eco.remove}
-\title{Creating an updated ecogen object by removing
-results of the slot @OUT}
+\title{Creating an updated ecogen object by removing results of the slot OUT}
 \usage{
 eco.remove(eco, ...)
 }
@@ -13,21 +12,27 @@ eco.remove(eco, ...)
 \item{...}{Objects to remove from eco, typed without quotations.}
 }
 \description{
-Creating an updated ecogen object by removing
-results of the slot @OUT
+Creating an updated ecogen object by removing results of the slot OUT
 }
 \examples{
 \dontrun{
 
 data(eco.test)
-variog <- eco.variogram(eco, eco@P$P1)
-eco <- eco.append(eco, variog)
+variog <- eco.variogram(eco[["P"]][, 1], eco[["XY"]])
+
+# Assignation of values can be made with the corresponding accessors,
+# using the generic notation of EcoGenetics
+# (<ecoslot.> + <name of the slot> + <name of the object>).
+# See help("EcoGenetics accessors")
+
+ecoslot.OUT(eco) <- variog
 we.are.numbers <- c(1:10)
 we.are.characters <- c("John Coltrane", "Charlie Parker")
-eco <- eco.append(eco, we.are.numbers, we.are.characters)
-eco
+ecoslot.OUT(eco) <- list(we.are.numbers, we.are.characters)
+ecoslot.OUT(eco)
 eco <- eco.remove(eco, we.are.numbers)
-eco
+ecoslot.OUT(eco)
+
 }
 }
 \author{

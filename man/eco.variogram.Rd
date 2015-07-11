@@ -41,15 +41,24 @@ meters with the function \code{\link[SoDA]{geoXY}}.}
 The program returns an object of class "eco.correlog"
 with the following slots:
 
-@OUT analysis output
+> OUT analysis output
 
-@IN analysis input data
+> IN analysis input data
 
-@BEAKS breaks
+> BEAKS breaks
 
-@CARDINAL number of elements in each class
+> CARDINAL number of elements in each class
 
-@DISTMETHOD method used in the construction of breaks
+> DISTMETHOD method used in the construction of breaks
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below
 }
 \description{
 This program computes the empirical variogram of a selected variable.
@@ -61,12 +70,24 @@ for each class.
 \dontrun{
 
 data(eco.test)
-variog <- eco.variogram(Z = eco$P[, 2],XY =  eco$XY)
+variog <- eco.variogram(Z = eco[["P"]][, 2],XY =  eco[["XY"]])
 plot(variog)
 
 # variogram plots support the use of ggplot2 syntax
 variogplot <- plot(variog) + theme_bw() + theme(legend.position="none")
 variogplot
+
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
+
+# the slots are accessed with the generic format
+# (ecoslot. + name of the slot + name of the object).
+# See help("EcoGenetics accessors")
+
+ecoslot.OUT(variog)        # slot OUT
+ecoslot.BREAKS(variog)     # slot BREAKS
+
 }
 }
 \author{

@@ -1,13 +1,30 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
+#' Converting an ecogen genetic data frame into a hierfstat data frame
+#' 
+#' @description This function converts the genetic 
+#' data of an ecogen object in a hierfstat data frame. 
+#' @param eco Object of class "ecogen".
+#' @param pop The name of the S slot column with the groups 
+#' for the hierfstat data frame.
+#' 
+#' @examples
+#' 
+#' \dontrun{
+#' 
+#' data(eco.test)
+#' hiereco <- eco.2hierfstat(eco, "pop")
+#' require("hierfstat")
+#' basic.stats(hiereco)
+#' 
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @export
 
-
-# Converting an ecogen genetic data frame into a hierfstat data frame
 
 setGeneric("eco.2hierfstat", 
            function(eco, pop = NULL) {
              
-             u <- eco$G
+             u <- eco@G
              
              grupo <- eco@S
              
@@ -53,9 +70,9 @@ setGeneric("eco.2hierfstat",
                datahier[, 1] <- as.factor(datahier[, 1])
              }
              
-               rownames(datahier) <- rownames(eco$G)
+               rownames(datahier) <- rownames(eco@G)
                colnames(datahier)[1] <- "Pop"
-               colnames(datahier)[-1] <- colnames(eco$G)
+               colnames(datahier)[-1] <- colnames(eco@G)
              
                datahier
                  

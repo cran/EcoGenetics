@@ -1,13 +1,47 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
 ##############################################################################
 #                             PLOT METHODS
 ##############################################################################
 
+#-------------------------------------------------------------------#
+#' Plot method for correlograms and variograms
 
-# Plot method for correlograms and variograms
+#' @param x Result of correlogram or variogram analysis.
+#' @param var Variable to plot for multiple analyses with \code{\link{eco.correlog}}
+#' (see examples).
+#' @seealso  \code{\link{eco.correlog}} \code{\link{eco.cormantel}}  \code{\link{eco.variogram}}
+#' 
+#' 
+#' @examples
+#' 
+#' \dontrun{
+#' 
+#' data(eco.test)
+#' 
+#' # single Moran's I correlogram analysis
+#' moran.example <- eco.correlog(Z=eco$P[,1], eco$XY, smax=10, size=1000)
+#' plot(moran.example)
+#' 
+#' # multiple Moran's I correlogram analysis
+#' moran.example2 <- eco.correlog(Z=eco$P, eco$XY, smax=10, size=1000)
+#' plot(moran.example2, var ="P2")
+#' plot(moran.example2, var ="P3")
+#' 
+#' corm <- eco.cormantel(M = dist(eco$P), size=1000,smax=7, XY = eco$XY,
+#' nsim = 99)
+#' plot(corm)
+#' 
+#' variog <- eco.variogram(Z = eco$P[, 2],XY =  eco$XY)
+#' plot(variog)
+#' }
+#' 
+#' @rdname eco.correlog-methods
+#' 
+#' @aliases plot,eco.correlog-method
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' 
+#' @exportMethod plot 
+
 
 setMethod("plot", "eco.correlog", function(x, var = NULL, 
 																				 xlabel = NULL, 
@@ -25,6 +59,9 @@ setMethod("plot", "eco.correlog", function(x, var = NULL,
                                          meanplot = TRUE,
                                          nsim = 999) {
 	
+  # tricky solution for global binding problems during check. Set the 
+  # variables as NULL
+  d.mean <- obs <- uppr <- lwr <- max.sd <- min.sd <- null.uppr <- null.lwr <- NULL
 	
 	if(length(x@OUT) == 1) {
 	  var2 <- 1
@@ -164,16 +201,16 @@ if(errorbar) {
 
 if(method == "Kinship" & intervals) {
   
-  z <- z +  ggplot2::geom_line(ggplot2::aes(x = d.mean, y = uppr), 
+  z <- z +  ggplot2::geom_line(ggplot2::aes(x = d.mean, y = null.uppr), 
                                directions = "hv", 
                                linetype = 2, 
                                colour = "red") +  
-    ggplot2::geom_line(ggplot2::aes(x = d.mean, y = lwr),
+    ggplot2::geom_line(ggplot2::aes(x = d.mean, y = null.lwr),
                        direction = "hv", 
                        linetype = 2, 
                        colour = "red") + 
-    ggplot2::geom_ribbon(ggplot2::aes(x = d.mean, ymin = lwr, 
-                                      ymax = uppr), 
+    ggplot2::geom_ribbon(ggplot2::aes(x = d.mean, ymin = null.lwr, 
+                                      ymax = null.uppr), 
                          fill = 90,
                          alpha = 0.05) 
 }
@@ -190,7 +227,7 @@ if(method == "Kinship" & intervals) {
 	}
 	
 	if(!legend) {
-		z <- z + theme(legend.position="none", axis.text = ggplot2::element_text(size = axis.size), 
+		z <- z + ggplot2::theme(legend.position="none", axis.text = ggplot2::element_text(size = axis.size), 
 									 axis.title = ggplot2::element_text(size = title.size, face = "bold"))
 	}
 
@@ -232,9 +269,12 @@ if(meanplot) {
  invisible(z)
 })
 
-#############################################################
 
-# plot eco.lsa
+#-------------------------------------------------------------------#
+#' plot eco.lsa
+#' @rdname eco.lsa-methods
+#' @aliases plot,eco.lsa-method
+#' @keywords internal
 
 setMethod("plot", "eco.lsa", function(x, ...) {
   if(x@TEST == "permutation") {
@@ -245,23 +285,32 @@ setMethod("plot", "eco.lsa", function(x, ...) {
 })
 
 
-#############################################################
+#-------------------------------------------------------------------#
+#' plot eco.IBD
+#' @keywords internal
+#' @rdname eco.IBD 
+#' @aliases plot,eco.IBD-method
 
-# plot eco.IBD
 
 setMethod("plot", "eco.IBD", function(x, ...) {
     callNextMethod(...)
 })
 
 
-############################################################
-
-# int.multiplot method. Graphical processing of multiple correlograms 
+#-------------------------------------------------------------------#
+#' int.multiplot method. Graphical processing of multiple correlograms 
+#' @rdname int.multiplot
+#' @keywords internal
 
 int.multiplot<- function(correlog, 
                          significant = TRUE,
                          plotit = TRUE,
                          ...) {
+  
+  
+  # tricky solution for global binding problems during check. Set the 
+  # variables as NULL
+  d.mean <- obs <- uppr <- lwr <- max.sd <- min.sd <- null.uppr <- null.lwr <- value <- variable <-  NULL
   
   data <-correlog@IN$Z
   N <- length(correlog@OUT)
@@ -318,9 +367,12 @@ int.multiplot<- function(correlog,
   
 }
 
-############################################################
 
-# plot int.multiplot
+#-------------------------------------------------------------------#
+#' plot int.multiplot
+#' @rdname int.multiplot
+#' @aliases plot,int.multiplot
+#' @keywords internal
 
 setMethod("plot", "int.multiplot", function(x, 
                                         xlabel = NULL, 
@@ -330,6 +382,10 @@ setMethod("plot", "int.multiplot", function(x,
                                         meanplot = TRUE,
                                         multiplot = TRUE) { 
   
+  
+  # tricky solution for global binding problems during check. Set the 
+  # variables as NULL
+  d.mean <- obs <- uppr <- lwr <- max.sd <- min.sd <- null.uppr <- null.lwr <- value <- variable <-  NULL
   
   datos <- data.frame(x$mean.correlogram[,1], x$correlogram.alleles)
   intervalos <- x$mean.correlogram

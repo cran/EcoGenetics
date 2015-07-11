@@ -1,12 +1,34 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# Obtention of the multilocus Loiselle's Fij matrix
+#' Obtention of the multilocus Loiselle's Fij matrix
+#' 
+#' @param eco Object of class ecogen.
+#' 
+#' 
+#' @examples
+#' 
+#' \dontrun{
+#' 
+#' data(eco.test)
+#' loiselle <- eco.kin.loiselle(eco)
+#' loiselle[1:5, 1:5]
+#' 
+#' }
+#' 
+#' @references
+#' Kalisz, S., J. Nason, F.M. Handazawa, and S. Tonsor. 2001. 
+#' Spatial population genetic structure in Trillium grandiflorum: 
+#' the roles of dispersal, mating, history, and selection. 
+#' Evolution 55: 1560-1568.
+#' 
+#' Loiselle, B., V. Sork, J. Nason, and C. Graham. 1995. 
+#' Spatial genetic structure of a tropical understory shrub, 
+#' Psychotria officinalis (Rubiaceae). 
+#' American Journal of Botany 1420-1425.
+#' 
+#' @export
 
 eco.kin.loiselle <- function(eco) {
-  geno <- eco$GENIND$tab
-  locus <- as.numeric(eco$GENIND$loc.fac)
+  geno <- eco@A
+  locus <- as.numeric(eco@INT@loc.fac)
   nloc <- max(locus)
   nal <- ncol(geno)
   N <- nrow(geno)
@@ -40,13 +62,13 @@ eco.kin.loiselle <- function(eco) {
   
   ###INFERIOR COEFFICENT###
   
-  denom<- sum(p.la * (1 - p.la))
+  denom <- sum(p.la * (1 - p.la))
   
   ###Fij COMPUTATION###
   Fij <- (numer / denom)
   diag(Fij) <- NA
-  rownames(Fij) <- rownames(eco$G)
-  colnames(Fij) <- rownames(eco$G)
+  rownames(Fij) <- rownames(eco@G)
+  colnames(Fij) <- rownames(eco@G)
   
   Fij
   

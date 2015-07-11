@@ -4,33 +4,36 @@
 \alias{eco.2genepop}
 \title{Exporting an ecogen genetic data frame into Genepop format}
 \usage{
-eco.2genepop(eco, grp = NULL, ndig, name = "infile.genepop.txt")
+eco.2genepop(eco, name = "infile.genepop.txt", grp = NULL, nout = 3,
+  sep = "")
 }
 \arguments{
 \item{eco}{Object of class "ecogen".}
 
-\item{grp}{The name of the @S slot column with groups in which the sample
+\item{name}{The name of the output file.}
+
+\item{grp}{The name of the S slot column with groups in which the sample
 must be divided (e.g., populations). If groups are not given (grp = NULL),
 all individuals will be assigned to a single one.}
 
-\item{ndig}{Number of digits coding each allele (1: x, 2: xx or
-3:xxx) when there is more than one allele per individual locus.}
+\item{nout}{Number of digits in the output file}
 
-\item{name}{The name of the output file.}
+\item{sep}{Character separating alleles.}
 }
 \value{
 A Genepop file in the working directory.
 }
 \description{
 This function converts the genetic
-data of an ecogen object in a Genepop input file.
+data of an ecogen object into a Genepop input file.
 }
 \examples{
 \dontrun{
 
 data(eco.test)
-eco.2genepop(eco, grp = "pop", ndig = 1, name = "infile.genepop.txt")
+eco.2genepop(eco, grp = "pop", name = "infile.genepop.txt")
 # an output file "infile.genepop.txt" is generated in the working directory
+
 }
 }
 \author{

@@ -16,9 +16,9 @@ eco.mctree-class
 
 \item{\code{FREQUENCIES}}{frequencies of individuals per class in nodes}
 
-\item{\code{df1}}{data frame}
+\item{\code{DF1}}{data frame}
 
-\item{\code{df2}}{data frame}
+\item{\code{DF2}}{data frame}
 }}
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}

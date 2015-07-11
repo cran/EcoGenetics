@@ -1,13 +1,23 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
 
 ###############################################################################
 #                             SHOW METHODS
 ################################################################################
 
+.printaccess <- function() {
+  cat("----------------------------------------------------------------------------\n")
+  cat(" Access to slots:",
+      "<ecoslot.> + <name of the slot> + <(name of the object)>","\n",
+      "See help(\"EcoGenetics accessors\")\n")
+  cat("----------------------------------------------------------------------------\n")
+  
+}
 
-# show eco.gsa
+#-------------------------------------------------------------------#
+#' show eco.gsa
+#' @keywords internal
+#' @rdname eco.gsa-methods
+#' @aliases show,eco.gsa-method
+
 
 setMethod("show", "eco.gsa", function(object) {
   method <- (object@METHOD)[1]
@@ -19,12 +29,13 @@ setMethod("show", "eco.gsa", function(object) {
         paste(" ", method), "\n", 
         "###########################","\n\n")
     if(method == "Mantel test" | method == "Partial Mantel test") {
-      cat("  Correlation coefficent used ->", cormethod, "\n")
+      cat("  >", "Correlation coefficent used:", 
+          gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
     }
     cat(
-        paste("  Number of simulations ->", object@NSIM), "\n",
-        paste(" P-values correction method ->", object@ADJUST), "\n\n",
-        paste(" Results:"), "\n\n")
+        paste("   >", "Number of simulations:", object@NSIM), "\n",
+        paste("  >", "P-values correction method:", object@ADJUST), "\n\n",
+        paste("  >", "Results:"), "\n\n")
     print(object@MULTI)
     cat("\n")
     
@@ -34,43 +45,52 @@ setMethod("show", "eco.gsa", function(object) {
         paste(" ", method), "\n", 
         "############################","\n\n")
     if(method == "Mantel test" | method == "Partial Mantel test") {
-      cat("  Correlation coefficent used ->", cormethod, "\n")
+      cat("  >", "Correlation coefficent used:", 
+          gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
     }
     cat(
-        paste("  Number of simulations ->", object@NSIM), "\n",
-        paste(" Alternative ->", object@ALTER), "\n", 
-        paste(" P-value ->", object@PVAL), "\n", 
-        paste(" Observed value ->", object@OBS), "\n",
-        paste(" Expected value ->", object@EXP), "\n")
+        paste("  >", "Number of simulations:", object@NSIM), "\n",
+        paste(" >", "Alternative:", object@ALTER), "\n", 
+        paste(" >", "P-value:", object@PVAL), "\n", 
+        paste(" >", "Observed value:", object@OBS), "\n",
+        paste(" >", "Expected value:", object@EXP), "\n")
     cat("\n")
   }
 })
 
 
-#################################
-
-# show eco.lsa
+#-------------------------------------------------------------------#
+#' show eco.lsa
+#' @keywords internal
+#' @rdname eco.autol-methods
+#' @aliases show,eco.autol-method
 
 setMethod("show", "eco.lsa", function(object)  {
   cat("\n", 
       "#########################","\n",
       paste(" ", object@METHOD), "\n", 
       "#########################","\n\n",
-      paste(" Test ->", object@TEST), "\n",
-      paste(" Number of simulations ->", object@NSIM), "\n",
-      paste(" Conditional ->", object@COND), "\n")
+      paste(" >", "Test:", object@TEST), "\n",
+      paste(" >", "Number of simulations:", object@NSIM), "\n",
+      paste(" >", "Conditional:", object@COND), "\n")
   if(object@TEST == "permutation") {
-    cat(paste("  P-adjust method ->", object@PADJ))
+    cat(paste("  >", "P-adjust method:", object@PADJ))
   }
   cat("\n\n", 
-      paste(" Results:"), "\n\n")
+      paste(" Results :"), "\n\n")
   print(object@OUT)
+  cat("\n Results table in", aue.access("OUT",  "name of this object"), "\n")
+  .printaccess()
   cat("\n")
 })
 
-#################################
 
-# show eco.correlog
+#-------------------------------------------------------------------#
+#' show eco.correlog
+#' @keywords internal
+#' @rdname eco.correlog-methods
+#' @aliases show,eco.correlog-method
+
 
 setMethod("show", "eco.correlog", function(object) {
   
@@ -85,13 +105,16 @@ setMethod("show", "eco.correlog", function(object) {
         paste(" ", method), "\n", 
         "############################","\n\n")
     if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-      cat("Correlation coefficent used ->", cormethod, "\n")
+      cat(" >", "Correlation coefficent used:", 
+      gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
     }
-    cat(paste(" Number of simulations ->", object@NSIM), "\n",
-        paste(" Random test ->", object@TEST), "\n",
-        paste(" P-adjust method ->", object@PADJUST), "\n\n", 
-        paste(" Results:","\n\n"))
+    cat(paste("  >", "Number of simulations:", object@NSIM), "\n",
+        paste(" >", "Random test:", object@TEST), "\n",
+        paste(" >", "P-adjust method:", object@PADJUST), "\n\n", 
+        paste(" >", "Results:","\n\n"))
     print(object@OUT)
+    cat("\n Results table(s) in", aue.access("OUT",  "name of this object"), "\n")
+    .printaccess()
     cat("\n")
  
      } else if (randtest == "bootstrap") {
@@ -101,33 +124,44 @@ setMethod("show", "eco.correlog", function(object) {
       paste(" ", method), "\n", 
       "############################","\n\n")
        if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-         cat("Correlation coefficent used ->", cormethod, "\n")
+         cat("Correlation coefficent used: ", 
+             gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
        }
-       cat(paste(" Number of simulations ->", object@NSIM), "\n",
-      paste(" Random test ->", object@TEST), "\n",
-      paste(" Results:","\n\n"))
+       cat(paste("   >", "Number of simulations: ", object@NSIM), "\n",
+      paste("  >", " Random test:", object@TEST), "\n",
+      paste("  >", " Results: ","\n\n"))
   print(object@OUT)
-       cat("\n")
+  cat("\n Results table(s) in", aue.access("OUT",  "name of this object"), "\n")
+  .printaccess()
+  cat("\n")
+  
      }
+  
   } else {
     cat("\n", 
         "############################","\n",
         paste(" ", method), "\n", 
         "############################","\n\n")
     if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-      cat("Correlation coefficent used ->", cormethod, "\n")
+      cat("Correlation coefficent used: ", 
+          gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE),  "\n")
     }
-    cat(paste(" Results:","\n\n"))
+    cat(paste(" Results: ","\n\n"))
     print(object@OUT)
+    cat("\n Results table(s) in", aue.access("OUT",  "name of this object"), "\n")
+    .printaccess()
     cat("\n")
+    
   }
   
   })
 
 
-#################################
-
-# show eco.weight
+#-------------------------------------------------------------------#
+#' show eco.weight
+#' @keywords internal
+#' @rdname eco.weight-methods
+#' @aliases show,eco.weight-method
 
 setMethod("show", "eco.weight", function(object)  {
   cat("\n", 
@@ -154,34 +188,46 @@ setMethod("show", "eco.weight", function(object)  {
   }
 })
 
-#################################
 
-# show eco.detrend
+#-------------------------------------------------------------------#
+#' show eco.detrend
+#' @keywords internal
+#' @rdname eco.detrend-methods
+#' @aliases show,eco.detrend-method
 
 setMethod("show", "eco.detrend", function(object)  {
+  
   cat("\n", 
       "###################","\n",
       paste(" ", "Data detrending"), "\n", 
       "###################","\n\n",
-      paste(" Polynomial degree ->", object@POLY.DEG), "\n",
-      paste(" Residuals - detrended data (@RES) ->"), "\n\n")
-  print(object@RES)
-  cat("\n\n", "Other data: 
-      @XY -> projected coordinates
-      @MODEL-> models
-      @ANALYSIS -> eco.mlm object with details", 
-      "\n\n")
+      paste(" >", "Polynomial degree ->", object@POLY.DEG), "\n",
+      paste(" >", aue.access("RES", "name of this object"), ": Residuals-detrended data:", "\n\n"))
+  print(head(object@RES))
+  if(nrow(object@RES)> 6L) {
+  cat(paste("(more data...)", "\n"))
+  }
+  cat("\n", "Other data:", "\n", 
+      " >", aue.access("RES", "name of this object"), ": projected coordinates", "\n",
+      " >", aue.access("XY", "name of this object"), ": models", "\n",
+      " >", aue.access("ANALYSIS", "name of this object"), ": eco.mlm object with details", "\n",
+      "\n")
+  .printaccess()
+  cat("\n")
 })
 
-#################################
 
-# show eco.lagweight
+#-------------------------------------------------------------------#
+#' show eco.lagweight
+#' @keywords internal
+#' @rdname eco.lagweight-methods
+#' @aliases show,eco.lagweight-method
 
 setMethod("show", "eco.lagweight", function(object)  {
   cat("\n", 
-      "#####################","\n",
-      paste("spatial weights list"), "\n", 
-      "#####################","\n\n",
+      "######################","\n",
+      paste(" spatial weights list"), "\n", 
+      "######################","\n\n",
       " Parameters ->", paste("(", object@PAR, " = ",  
                               round(object@PAR.VAL, 3), ")", sep =""), "\n",
       paste(" Row-standardization ->", object@ROW.SD), "\n",
@@ -193,31 +239,50 @@ setMethod("show", "eco.lagweight", function(object)  {
 })
 
 
-#################################
+#-------------------------------------------------------------------#
+#' show eco.mlm
+#' @keywords internal
+#' @rdname eco.lmtree-methods
+#' @aliases show,eco.mlm-method
 
-# show eco.mlm
 
-setMethod("show", 	"eco.mlm", function(object) {
+setMethod("show", "eco.mlm", function(object) {
+  cat("\n", 
+      "#########################","\n",
+      paste(" multiple linear model"), "\n", 
+      "#########################","\n\n")
   
-  cat("\n\n", paste(" @MLM:", "multiple model results"), "\n", 
-      paste(" @SUMMARY.MLM:", "summary of the results"), "\n", 
-      paste(" @ANOVA.MLM:", "analysis of variance tables"), "\n",
-      paste(" @PREDICTED:", "predicted values"), "\n",			
-      paste(" @RESIDUALS:", "residuals of the analysis"), "\n\n")
-})
+  cat(paste("  >", paste(aue.access("MLM",  "name of this object"), ":", sep = ""), "multiple model results"), "\n", 
+      paste(" >", paste(aue.access("SUMMARY.MLM",  "name of this object"), ":", sep = ""), "summary of the results"), "\n", 
+      paste(" >", paste(aue.access("ANOVA.MLM",  "name of this object"), ":", sep = ""), "analysis of variance tables"), "\n",
+      paste(" >", paste(aue.access("PREDICTED",  "name of this object"), ":", sep = ""), "predicted values"), "\n",			
+      paste(" >", paste(aue.access("RESIDUALS",  "name of this object"), ":", sep = ""), "residuals of the analysis"), "\n\n")
+  .printaccess()
+  cat("\n")
+  })
 
-#################################
 
-# show eco.mctree
+#-------------------------------------------------------------------#
+#' show eco.mctree
+#' @keywords internal
+#' @rdname eco.lmtree-methods
+#' @aliases show,eco.mctree-method
+
 
 setMethod("show", 	"eco.mctree", function(object) {
+  cat("\n", 
+      "#############################","\n",
+      paste(" multiple regression trees"), "\n", 
+      "#############################","\n\n")
   
-  cat("\n\n", paste(" @TREES:", "trees"), "\n", 
-      paste(" @CLASSPREDICT:", "predictions of the analysis"), "\n", 
-      paste(" @FREQUENCIES:", "number of individuals predicted in each node"), "\n",
-      paste(" @PREDICTED:", "predicted values"), "\n",			
-      paste(" @RESIDUALS:", "residuals of the analysis"), "\n\n")
-})
+  cat(paste("  >", paste(aue.access("TREES",  "name of this object"), ":", sep = ""), "trees"), "\n", 
+      paste(" >", paste(aue.access("CLASSPREDICT", "name of this object"), ":", sep = ""), "predictions of the analysis"), "\n", 
+      paste(" >", paste(aue.access("FREQUENCIES", "name of this object"), ":", sep = ""), "number of individuals \n\t\t\t predicted in each node"), "\n",
+      paste(" >", paste(aue.access("PREDICTED", "name of this object"), ":", sep = ""), "predicted values"), "\n",			
+      paste(" >", paste(aue.access("RESIDUALS", "name of this object"), ":", sep = ""), "residuals of the analysis"), "\n\n")
+  .printaccess()
+  cat("\n")
+  })
 
 
 
@@ -225,11 +290,32 @@ setMethod("show", 	"eco.mctree", function(object) {
 #                             SUMMARY METHODS
 ################################################################################
 
-
-
-#################################
-
-# Summary for eco.lmtree output
+#-------------------------------------------------------------------#
+#' Summary for eco.lmtree output
+#' @param object Output object of \code{\link{eco.lmtree}}.
+#' @return A Table with a summary of the analysis for "mlm" analysis, 
+#' the plot of the trees with significant splits for "mctree" analysis.
+#' @seealso \code{\link{eco.lmtree}}
+#' 
+#' @examples
+#' 
+#' \dontrun{
+#' 
+#' data(eco.test)
+#' #' mod <- eco.lmtree(DF1 = eco$P, DF2 = eco$E, 
+#' analysis = "mlm")                                    
+#' summary(mod)                                    #summary for "mlm" analysis
+#' 
+#' mod <- eco.lmtree(DF1 = eco$P, DF2 = eco$E,
+#' analysis = "mctree", fact = eco$S$structure)               
+#' summary(mod)                                    #summary for "mctree" analysis
+#' 
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @rdname eco.lmtree.mctree-summary
+#' @aliases summary,eco.lmtree-method
+#' @exportMethod summary
 
 setMethod("summary", 	"eco.mlm", 	function(object) {
   
@@ -250,10 +336,10 @@ setMethod("summary", 	"eco.mlm", 	function(object) {
     
     
     final <- as.data.frame(matrix(ncol = length(object@MLM), 
-                                  nrow = ncol(object@df2) + 1))
-    rownames(final) <- c("Corrected model", colnames(object@df2))
-    colnames(final) <- colnames(object@df1)
-    pvalor <- rep(0, ncol(object@df1))
+                                  nrow = ncol(object@DF2) + 1))
+    rownames(final) <- c("Corrected model", colnames(object@DF2))
+    colnames(final) <- colnames(object@DF1)
+    pvalor <- rep(0, ncol(object@DF1))
     
     for(i in 1:length(object@MLM)) { 
       pvalor[i] <- object@ANOVA.MLM[[i]][, 5][1]   
@@ -304,9 +390,11 @@ setMethod("summary", 	"eco.mlm", 	function(object) {
   
 })
 
-#################################
 
-#  summary,eco.mctree-method
+#-------------------------------------------------------------------#
+#' @rdname eco.lmtree.mctree-summary
+#' @aliases summary,eco.mctree-method
+#' @exportMethod summary
 
 setMethod("summary", 	"eco.mctree", 	function(object) {
   
@@ -331,7 +419,15 @@ setMethod("summary", 	"eco.mctree", 	function(object) {
 })
 
 
-####Show eco.IBD #####################################################
+#################################################
+
+#-------------------------------------------------------------------#
+#' show eco.IBD
+#' @keywords internal
+#' @rdname eco.IBD-methods
+#' @aliases show,eco.IBD-method
+#' @export
+
 
 setMethod("show", "eco.IBD", function(object) {
   
@@ -339,22 +435,25 @@ setMethod("show", "eco.IBD", function(object) {
   metodo <- (object@METHOD)[2]
   
   cat("\n", 
-      "###############","\n",
-      " Fij analysis", "\n", 
-      "###############","\n\n",
-      paste(" Method ->", metodo), "\n",
-      paste(" Number of simulations ->", object@NSIM), "\n")
+      "##################","\n",
+      " Kinship analysis", "\n", 
+      "##################","\n\n",
+      paste(" >","Method:", metodo), "\n",
+      paste(" >","Number of simulations:", object@NSIM), "\n")
       if(randtest == "permutation") {
-      cat(paste("  P adjust method ->", object@PADJUST), "\n\n")
+      cat(paste("  >","P adjust method:", object@PADJUST), "\n\n")
       } 
       if(metodo == "local") {
-      cat(paste(" Conditional ->", (object@TEST)[2]), "\n\n")
+      cat(paste(" >", "Conditional:", (object@TEST)[2]), "\n\n")
         } 
       cat(
       "  Available information: ", "\n",
-      paste(" @SP ->", "SP analysis"), "\n", 
-      paste(" @OUT ->", "table with results"),"\n\n")
+      paste(" >", paste(aue.access("SP", "name of this object"), ":", sep = ""), "SP analysis"), "\n", 
+      paste(" >", paste(aue.access("OUT", "name of this object"), ":", sep = ""), "table with results"),"\n")
+      cat("\n Results table in", aue.access("OUT",  "name of this object"), "\n")
+      .printaccess()
+      cat("\n")
 })
 
-
+#-------------------------------------------------------------------#
 

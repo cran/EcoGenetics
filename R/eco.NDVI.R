@@ -1,9 +1,80 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# Generating atmospherically corrected NDVI and MSAVI2 images for 
-# temporal series of Landsat 5 and 7
+#' Generating atmospherically corrected NDVI and MSAVI2 images for 
+#' temporal series of Landsat 5 and 7
+#' 
+#' @description This program generates atmospherically corrected images of
+#' NDVI and MSAVI2. The images of multiple dates can be processed in a single
+#' run. The bands 4 and 3 of each date (previously subsetted to
+#' the region of analysis) must be in the working directory. A table with information
+#' for each image as described in the parameter tab (see also the example) 
+#' is needed for processing the information.
+#' 
+#' @param tab data.frame with 7 columns: The date of the images
+#' (format: YYYY/MM/DD), the sun elevation (both values could be extracted
+#' from Landsat headers), the name of the band 4, the name of the band 3,
+#' the starting haze value of the band 4, the starting haze value of
+#' the band 3, and the name of the output file. Each row corresponds to
+#' an image of different date.
+#' @param correct Correction method ("COST", "DOS").
+#' @param method Vegetation index ("NDVI", "MSAVI2").
+#' @param landsat Satellite data source ("LT5" for Landsat 5, 
+#' "LT7.L" for Landsat 7 low gain and "LT7.H" for Landsat 7 high gain).
+#' @param datatype type of data, see \code{\link[raster]{dataType}}. 
+#' Default "FLT4S".
+#' 
+#' @examples
+#' \dontrun{
+#' require(raster)
+#' 
+#' data(tab)
+#' 
+#' temp <-list()
+#' 
+#' # we create 4 simulated rasters for the data included in the object tab:
+#' 
+#' for(i in 1:4) {
+#' temp[[i]] <- runif(19800, 0, 254)
+#' temp[[i]] <- matrix(temp[[i]], 180, 110)
+#' temp[[i]] <- raster(temp[[i]], crs="+proj=utm")
+#' extent(temp[[i]])<-c(3770000, 3950000, 6810000, 6920000)
+#' }
+#'
+#' writeRaster(temp[[1]], "20040719b4.tif", overwrite=T)
+#' writeRaster(temp[[2]], "20040719b3.tif", overwrite=T)
+#' writeRaster(temp[[3]], "20091106b4.tif", overwrite=T)
+#' writeRaster(temp[[4]], "20091106b3.tif", overwrite=T)
+#'
+#' # Computing NDVI images: 
+#' 
+#' eco.NDVI(tab, "COST", "NDVI", "LT5")
+#' 
+#' example <- raster("NDVICOST20040719.tif")
+#' image(example)
+#' }
+#' 
+#' @references 
+#' Chander G., B. Markham, and D. Helder. 2009. Summary of current radiometric calibration 
+#' coefficients for Landsat MSS, TM, ETM+, and EO-1 ALI sensors. Remote sensing of 
+#' environment, 113: 893-903. 
+#' 
+#' Chavez P. 1989. Radiometric calibration of Landsat Thematic Mapper multispectral images. 
+#' Photogrammetric Engineering and Remote Sensing, 55: 1285-1294.
+#' 
+#' Chavez P. 1996. Image-based atmospheric corrections-revisited and improved. 
+#' Photogrammetric engineering and remote sensing, 62: 1025-1035. 
+#' 
+#' Goslee S. 2011. Analyzing remote sensing data in R: the landsat package. 
+#' Journal of Statistical Software, 43: 1-25.
+#' 
+#' Song C., C. Woodcock, K. Seto, M. Lenney and S. Macomber. 2001. 
+#' Classification and change detection using Landsat TM data: when and how to correct 
+#' atmospheric effects?. Remote sensing of Environment, 75: 230-244.
+#' 
+#' Tucker C. 1979. Red and photographic infrared linear combinations for monitoring 
+#' vegetation. Remote sensing of Environment, 8: 127-150. 
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' 
+#' @export
 
 setGeneric("eco.NDVI", 
            function(tab, 

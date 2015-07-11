@@ -4,12 +4,16 @@
 \alias{eco.rbind}
 \title{Combining the rows of two ecogen objects}
 \usage{
-eco.rbind(e1, e2)
+eco.rbind(eco1, eco2, ..., check.col.names = TRUE)
 }
 \arguments{
-\item{e1}{Object of class "ecogen".}
+\item{eco1}{Object of class "ecogen".}
 
-\item{e2}{Object of class "ecogen".}
+\item{eco2}{Object of class "ecogen".}
+
+\item{...}{Other "ecogen" objects to combine.}
+
+\item{check.col.names}{Check for duplicated column names? Default TRUE.}
 }
 \description{
 Combining the rows of two ecogen objects
@@ -19,21 +23,17 @@ Combining the rows of two ecogen objects
 
 data(eco.test)
 
-# crating a copy of "eco"
-eco.n <- eco
-
 # duplicated row names are not allowed by eco.rbind.
-# creating new row names for eco.n
-names.eco <- rownames(eco$XY)
-names.eco <- paste(names.eco, ".n", sep = "")
-rownames(eco.n$XY) <- names.eco
-rownames(eco.n$P) <- names.eco
-rownames(eco.n$G) <- names.eco
-rownames(eco.n$E) <- names.eco
-rownames(eco.n$S) <- names.eco
 
-# binding by row eco and eco.n
-eco2<-eco.rbind(eco, eco.n)
+eco2 <- eco
+
+# row names not duplicated for P
+
+rownames(eco2[["P"]]) <-226:450
+
+eco.r <- eco.rbind(eco, eco2)
+
+eco.r
 
 }
 }

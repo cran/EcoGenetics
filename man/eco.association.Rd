@@ -44,6 +44,7 @@ eco.association(eco, "within", "pop", adjust="fdr")
 eco.association(eco, "within", "pop", method = "chisq.test")
 eco.association(eco, "between", "pop", ndig = 1)
 eco.association(eco, "between", "pop", method = "chisq.test", ndig = 1)
+
 }
 }
 \author{

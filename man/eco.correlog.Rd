@@ -76,25 +76,34 @@ meters with the function \code{\link[SoDA]{geoXY}}.}
 The program returns an object of class "eco.correlog"
 with the following slots:
 
-@OUT analysis output
+> OUT analysis output
 
-@IN analysis input data
+> IN analysis input data
 
-@BEAKS breaks
+> BEAKS breaks
 
-@CARDINAL number of elements in each class
+> CARDINAL number of elements in each class
 
-@NAMES variables names
+> NAMES variables names
 
-@METHOD analysis method
+> METHOD analysis method
 
-@DISTMETHOD method used in the construction of breaks
+> DISTMETHOD method used in the construction of breaks
 
-@TEST test method used (bootstrap, permutation)
+> TEST test method used (bootstrap, permutation)
 
-@NSIM number of simulations
+> NSIM number of simulations
 
-@PADJUST P-values adjust method for permutation tests
+> PADJUST P-values adjust method for permutation tests
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below.
 }
 \description{
 This program computes Moran's, Geary's and bivariate Moran's correlograms,
@@ -108,16 +117,17 @@ information about the range partition methods see \code{\link{eco.lagweight}}
 data(eco.test)
 require(ggplot2)
 
-# ---Moran's I correlogram---
+
+##########################
+# Moran's I correlogram
+##########################
 
 ## single test with phenotypic traits
-moran <- eco.correlog(Z=eco$P[,1], XY = eco$XY, method = "I",
-smax=10, size=1000)
+moran <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], method = "I", smax=10, size=1000)
 plot(moran)
 
 ## multiple tests with phenotypic traits
-moran2 <- eco.correlog(Z=eco$P, XY = eco$XY, method = "I",
-smax=10, size=1000)
+moran2 <- eco.correlog(Z=eco[["P"]], XY = eco[["XY"]], method = "I", smax=10, size=1000)
 
 plot(moran2, var ="P2") ## single plots
 plot(moran2, var ="P3") ## single plots
@@ -138,46 +148,63 @@ moranplot2
 
 # single test with genotypic traits
 
-# eco$GENIND$tab is a matrix with the genetic data of "eco"
+# eco[["A"]] is a matrix with the genetic data of "eco"
 # as frequencies for each allele in each individual. Each allele
 # can be analyzed as single traits.
-# see "tab" in the genind help (?genind) of the adegenet package.
-head(eco$GENIND$tab)      # head of the matrix
-moran <- eco.correlog(Z=eco$GENIND$tab[,1], XY = eco$XY, method = "I",
-smax=10, size=1000)                # analyzing allele 1
+
+head(eco[["A"]])      # head of the matrix
+
+# analyzing allele 1
+moran <- eco.correlog(Z=[["A"]][,1], XY = eco[["XY"]], method = "I", smax=10, size=1000)
 plot(moran)
 
-# multiple tests with genotypic traits
-moran2 <- eco.correlog(Z=eco$GENIND$tab, XY = eco$XY, method = "I",
-smax=10, size=1000, nsim=99)    # nsim was set to 10 only for speed in the example.
+
+# multiple tests with genotypic traits.
+# nsim is set to 10 only for speed in the example
+moran2 <- eco.correlog(Z = eco[["A"]], XY = eco[["XY"]], method = "I",smax=10, size=1000, nsim=99)
+
 
 graf <- plot(moran2, meanplot = TRUE)              ## multiple plot with mean
                                                    ## correlogram and jackknifed
                                                    ## confidence intervals.
 
-moran3 <- eco.correlog(Z=eco$GENIND$tab, XY = eco$XY, method = "I",
-smax=10, size=1000, nsim=99)                       ## the same example, but with
-                                                   ## nsim = 99.
+## the same example, but with nsim = 99.
+moran3 <- eco.correlog(Z = eco[["A"]], XY = eco[["XY"]], method = "I", smax=10, size=1000, nsim=99)
+
 
 plot(moran3, meanplot = TRUE, significant = TRUE)  ## plot for alleles with at least
                                                    ## one significant value after
                                                    ## Bonferroni-Holm sequential P correction
                                                    ## (set adjust "none" for no family-wise
                                                    ## P correction in "eco.correlog")
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
 
-#-------------------------------------------------------------------------------------#
+# the slots are accesed with the generic format
+# (ecoslot. + name of the slot + name of the object).
+# See help("EcoGenetics accessors")
 
-# ---Geary's C correlogram---
+ecoslot.OUT(moran)      # slot OUT
+ecoslot.BREAKS(moran)   # slot BREAKS
 
-geary <- eco.correlog(Z=eco$P[,1], XY = eco$XY, method = "C",
+#---------------------------------------------------------------------------#
+
+##########################
+# Geary's C correlogram
+##########################
+
+geary <- eco.correlog(Z = eco[["P"]][,1], XY = eco[["XY"]], method = "C",
 smax=10, size=1000)
 plot(geary)
 
-#-------------------------------------------------------------------------------------#
+#---------------------------------------------------------------------------#
 
-# ---Moran's Ixy cross-correlogram---
+##########################
+# Bivariate Moran's Ixy
+##########################
 
-cross <- eco.correlog(Z=eco$P[,1], XY = eco$XY, Y = eco$E[, 1],
+cross <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], Y = eco[["P"]][, 1],
 method = "CC", int= 2, smax=15)
 plot(cross)
 

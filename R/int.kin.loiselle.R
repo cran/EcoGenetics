@@ -1,12 +1,10 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
+#' obtetion of multilocus Loiselle's Fij matrix 
+#' @param eco Object of class ecogen. 
+#' @keywords internal
 
-
-# obtetion of multilocus Loiselle's Fij matrix 
-
-#depends of geno and locus
-#geno is: eco$GENIND$tab
-#locus is: as.numeric(eco$GENIND$loc.fac)
+# depends of geno and locus
+# geno is: eco@A
+# locus is: as.numeric(eco@INT@loc.fac)
 
 int.kin.loiselle <- function(geno, locus) {
 	

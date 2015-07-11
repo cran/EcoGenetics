@@ -1,8 +1,18 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# Moran internal
+#' Moran internal.
+#' 
+#' @param Z Vector, matrix or data frame.
+#' @param con Connection network.
+#' @param nsim Number of Monte-Carlo simulations. 
+#' @param alternative The alternative hypothesis. If "auto" is selected (default) the
+#' program determines the hypothesis by difference between the median of the simulations
+#' and the observed value. Other options are: "two.sided", "greater" and "less".
+#' if test == cross, for the first interval (d == 0) the p and CI are computed with cor.test.
+#' @param adjust.n Should be adjusted the number of individuals? (warning, this would
+#' change variances)
+#' @param plotit Should be generated a plot of the simulations?
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' 
+#' @keywords internal
 
 int.moran <- function(Z, con, nsim,
                       alternative, 

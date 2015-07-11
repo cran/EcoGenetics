@@ -68,25 +68,34 @@ meters with the function \code{\link[SoDA]{geoXY}}.}
 The program returns an object of class "eco.correlog"
 with the following slots:
 
-@OUT analysis output
+> OUT analysis output
 
-@IN input data of the analysis
+> IN input data of the analysis
 
-@BEAKS breaks
+> BEAKS breaks
 
-@CARDINAL number of elements in each class
+> CARDINAL number of elements in each class
 
-@NAMES variables names
+> NAMES variables names
 
-@METHOD analysis method
+> METHOD analysis method
 
-@DISTMETHOD method used in the construction of breaks
+> DISTMETHOD method used in the construction of breaks
 
-@TEST test method used (bootstrap, permutation)
+> TEST test method used (bootstrap, permutation)
 
-@NSIM number of simulations
+> NSIM number of simulations
 
-@PADJUST P-values adjust method for permutation tests
+> PADJUST P-values adjust method for permutation tests
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below.
 }
 \description{
 This program computes a Mantel correlogram for the data M,
@@ -99,22 +108,35 @@ or bootstrap confidence intervals.
 data(eco.test)
 require(ggplot2)
 
-corm <- eco.cormantel(M = dist(eco$P), size=1000,smax=7, XY = eco$XY,
+corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
 nsim = 99)
 plot(corm)
 
-corm <- eco.cormantel(M = dist(eco$P), size=1000,smax=7, XY = eco$XY,
+corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
 nsim = 99, test = "bootstrap")
 plot(corm)
 
 # partial Mantel correlogram
-corm <- eco.cormantel(M = dist(eco$P), MC = dist(eco$E),
-size=1000, smax=7, XY = eco$XY, nsim = 99)
+corm <- eco.cormantel(M = dist(eco[["P"]]), MC = dist(eco[["E"]]),
+size=1000, smax=7, XY = eco[["XY"]], nsim = 99)
 plot(corm)
 
 # correlogram plots support the use of ggplot2 syntax
 mantelplot <- plot(corm) + theme_bw() + theme(legend.position="none")
 mantelplot
+
+
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
+
+# the slots are accesed with the generic format
+# (ecoslot. + name of the slot + name of the object).
+# See help("EcoGenetics accessors")
+
+ecoslot.OUT(corm)        # slot OUT
+ecoslot.BREAKS(corm)     # slot BREAKS
+
 }
 }
 \author{

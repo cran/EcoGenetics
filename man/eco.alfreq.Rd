@@ -9,7 +9,7 @@ eco.alfreq(eco, grp = NULL)
 \arguments{
 \item{eco}{Object of class "ecogen".}
 
-\item{grp}{Optional factor (column of the @S slot) for plots by group.}
+\item{grp}{Optional factor (column of the S slot) for plots by group.}
 }
 \description{
 This program computes the frequency of each allele and plots
@@ -23,6 +23,7 @@ When a factor is given, the program plots a histogram for each group.
 data(eco.test)
 eco.alfreq(eco)
 eco.alfreq(eco, "pop")
+
 }
 }
 \author{

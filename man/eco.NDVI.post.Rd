@@ -34,7 +34,6 @@ mean and var by pixel over the temporal sequence. Default is "mean".
 }
 \examples{
 \dontrun{
-
 require(raster)
 
 data(tab)
@@ -68,9 +67,9 @@ plot(mean.ndvi)
 # Extraction of the mean NDVI for each point in the object eco and plot
 # of the data:
 
-ndvi <- extract(mean.ndvi, eco3$XY)
+ndvi <- extract(mean.ndvi, eco3[["XY"]])
 ndvi<- aue.rescale(ndvi)
-plot(eco3$XY[, 1], eco3$XY[, 2], col=rgb(ndvi, 0, 0),
+plot(eco3[["XY"]][, 1], eco3[["XY"]][, 2], col=rgb(ndvi, 0, 0),
 pch=15, main = "Mean NDVI", xlab = "X", ylab  = "Y")
 }
 }

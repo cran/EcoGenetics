@@ -23,11 +23,10 @@ is more efficient in managing memory.
 }
 \examples{
 \dontrun{
-
 require("raster")
-require("animation")
-temp <- list()
+set.seed(6)
 
+temp <- list()
 for(i in 1:100) {
 temp[[i]] <- runif(36,-1, 1)
 temp[[i]] <- matrix(temp[[i]], 6, 6)
@@ -36,12 +35,6 @@ temp[[i]] <- raster(temp[[i]])
 
 temp <- brick(temp)
 
-oopt <- ani.options(interval = 0.01)
-for (i in 1:ani.options("nmax")) {
-plot(temp[[i]])
-ani.pause()
-}
-ani.options(oopt)
 
 writeRaster(temp,"temporal.tif", overwrite=T)
 rm(temp)

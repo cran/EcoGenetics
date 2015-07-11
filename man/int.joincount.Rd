@@ -4,7 +4,7 @@
 \alias{int.joincount}
 \title{Join-count statistic, internal.}
 \usage{
-int.joincount(Z, con, ncod, nsim, alternative, test = "permutation",
+int.joincount(Z, con, ncod, ploidy, nsim, alternative, test = "permutation",
   adjust.n = FALSE, adjust)
 }
 \arguments{

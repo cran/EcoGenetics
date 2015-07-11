@@ -28,17 +28,26 @@ Other options are: "two.sided", "greater" and "less".}
 \value{
 An object of class "eco.gsa" with the following slots:
 
-@METHOD method used in the analysis
+> METHOD method used in the analysis
 
-@OBS observed value
+> OBS observed value
 
-@EXP expect value
+> EXP expect value
 
-@PVAL P-value
+> PVAL P-value
 
-@ALTER alternative hypotesis
+> ALTER alternative hypotesis
 
-@NSIM number of simulations
+> NSIM number of simulations
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below
 }
 \description{
 This program computes the Mantel test between the distance matrices
@@ -49,10 +58,22 @@ d1 and d2, conditioned on dc.
 \dontrun{
 
 data(eco.test)
-eco.mantel(d1 = dist(eco$P), d2 = dist(eco$E), nsim = 99)   # ordinary Mantel test
 
-eco.mantel(d1 = dist(eco$P), d2 = dist(eco$E),
-dc = dist(eco$XY), nsim = 99)                               # partial Mantel test
+eco.mantel(d1 = dist(eco[["P"]]), d2 = dist(eco[["E"]]), nsim = 99)   # ordinary Mantel test
+
+pm <- eco.mantel(d1 = dist(eco[["P"]]), d2 = dist(eco[["E"]]),
+dc = dist(eco[["XY"]]), nsim = 99)                               # partial Mantel test
+
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
+
+# the slots are accessed with the generic format
+# (ecoslot. + name of the slot + name of the object).
+# See help("EcoGenetics accessors")
+
+ecoslot.OBS(pm)     # slot OBS (observed value)
+ecoslot.PVAL(pm)    # slot PVAL (P-value)
 
 }
 }

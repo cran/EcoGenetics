@@ -14,8 +14,11 @@ Obtention of the multilocus Loiselle's Fij matrix
 }
 \examples{
 \dontrun{
+
 data(eco.test)
 loiselle <- eco.kin.loiselle(eco)
+loiselle[1:5, 1:5]
+
 }
 }
 \references{

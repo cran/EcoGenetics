@@ -29,16 +29,25 @@ meters with the function \code{\link[SoDA]{geoXY}}.}
 \value{
 An object of class "eco.detrend" with the following slots:
 
-@POLY.DEG polynomial degree used in the analysis
+> POLY.DEG polynomial degree used in the analysis
 
-@RES detrended data
+> RES detrended data
 
-@XY projected coordinates
+> XY projected coordinates
 
-@MODEL models selected with the Akaike criterion
+> MODEL models selected with the Akaike criterion
 
-@ANALYSIS object of class "eco.mlm" with
+> ANALYSIS object of class "eco.mlm" with
 the regression results for each variable
+
+
+\strong{ACCESS TO THE SLOTS}
+The content of the slots can be accessed
+with the corresponding accessors, using
+the generic notation of EcoGenetics
+(<ecoslot.> + <name of the slot> + <name of the object>).
+See help("EcoGenetics accessors") and the Examples
+section below.
 }
 \description{
 This program performs a Trend Surface Analysis
@@ -52,18 +61,31 @@ in which case will be projected with \code{\link[SoDA]{geoXY}}.
 data(eco2)
 
 # original data
-data1 <- matrix(eco2$P[,1], 30, 30)
+data1 <- matrix(eco2[["P"]][,1], 30, 30)
 image(data1)
 
 # original data + trend
-data2 <- matrix(eco2$P[,2], 30, 30)
+data2 <- matrix(eco2[["P"]][,2], 30, 30)
 image(data2)
 
 # data detrending
-data2.det <- eco.detrend(Z = eco2$P[,2], XY =  eco2$XY, degree =  1)
-data2.det <- data2.det@RES
-data2.det <- matrix(data2.det$df1, 30, 30)
+data2.det <- eco.detrend(Z = eco2[["P"]][,2], XY =  eco2[["XY"]], degree =  1)
+
+
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
+
+# the slots are accesed with the generic format
+# (ecoslot. + name of the slot + name of the object).
+# See help("EcoGenetics accessors")
+
+data2.det <- ecoslot.RES(data2.det)       # detrended data in slot RES
+
+data2.det <- matrix(data2.det[,1], 30, 30)
 image(data2.det)
+
+
 }
 }
 \references{

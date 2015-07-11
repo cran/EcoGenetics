@@ -1,8 +1,10 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# Table construction for multiple test result
+#' Table construction for multiple test result.
+#' 
+#' @param result Results of \code{\link{int.random.test}}.
+#' @param test Test class of the parameter "result" (permutation or bootstrap).
+##' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
 
 int.multitable <- function(result, 
 													 test = c("permutation", "bootstrap")) {

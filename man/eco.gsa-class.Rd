@@ -14,7 +14,7 @@ eco.gsa class
 
 \item{\code{OBS}}{observed value when a single variable is tested}
 
-\item{\code{EXP}}{expect value when a single variable is tested}
+\item{\code{EXP}}{expected value when a single variable is tested}
 
 \item{\code{PVAL}}{P-value when a single variable is tested}
 

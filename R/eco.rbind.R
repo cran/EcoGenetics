@@ -1,57 +1,138 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
-
-
-# Combining the rows of two ecogen objects
+#' Combining the rows of two ecogen objects
+#' 
+#' @param eco1 Object of class "ecogen".
+#' @param eco2 Object of class "ecogen".
+#' @param ... Other "ecogen" objects to combine. 
+#' @param check.col.names Check for duplicated column names? Default TRUE.
+#' @examples
+#' 
+#' \dontrun{
+#' 
+#' data(eco.test)
+#' 
+#' # duplicated row names are not allowed by eco.rbind.
+#'
+#' eco2 <- eco
+#' 
+#' # row names not duplicated for P
+#' 
+#' rownames(eco2[["P"]]) <-226:450
+#' 
+#' eco.r <- eco.rbind(eco, eco2)
+#' 
+#' eco.r
+#' 
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' 
+#' @export
 
 setGeneric("eco.rbind", 
-           function(e1, e2)  {
+           function(eco1, eco2, 
+                    ..., check.col.names = TRUE)  {
              
-             nom <- c(rownames(e1$G), rownames(e2$G))
              
-             if(any(duplicated(nom))) {
-               stop("duplicated row names are not allowed")
+             #-------ECOGEN OBJECTS OBTENTION---------------------------#
+             # unlist dots
+             u <- unlist(list(...))
+            
+             # ecogen objects
+             u.ecogen <- u[sapply(u, is.ecogen)]
+             # all ecogen objects
+             u.ecogen <- c(eco1, eco2, u.ecogen)
+             
+             # checkpoint -> all objects passed are of class ecogen
+             u.no_ecogen <- sapply(u.ecogen, function(x)!is.ecogen(x))
+             if(any(u.no_ecogen)) {
+               stop("non ecogen arguments passed to eco.rbind found")
              }
-                 
-             z <- ecogen(G = rbind(e1$G, e2$G))
+             
+             #------PROCESSING THE DATA----------------------------------#
+             
+             # create a list of ecogen objects as lists, removing the slots A and OUT
+             ecolist <- lapply(u.ecogen, function(x) as.int.list(x)[-c(4,8)])
              
              
-             if(all(dim(z$G)) != 0) {
-               type<-as.factor(as.vector(as.matrix(z$G)))
+             # checkpoint -> check column names
+             for(i in 1:6) {
+             #column names
+             cnames <- lapply(ecolist, function(x) colnames(x[[i]]))
+             cnames <- do.call(rbind, lapply(cnames, toupper))
+             # check null column names
+             cnames.null <- sapply(cnames, is.null)
+             if(any(cnames.null)) {
+               stop("null column names found")
+             }
+             # check different column names- no case sensitive
+             cnames <- apply(cnames, 2, unique)
+             # if non unique names, is generated a list
+             if(is.list(cnames)) {
+               stop("non unique column names found")
+             }
+             }
+             
+             # checkpoint -> check ploidy and ncod in the data
+             areG <- lapply(ecolist, function(x) dim(x[[3]]))
+             areG <- sapply(areG, function(x) x[[1]] * x[[2]])
+             
+             # at least two non empty data frames
+             if(sum(areG != 0) > 1) {
                
-               if(length(levels(type)) != 2) {
-                 if(e1$GENIND$ploidy == 1) {
-                   
-                   tempo <- df2genind(z$G, ploidy = 1)
-                   
-                 } else {
-                   tempo <- df2genind(z$G)
-                 } 
-               } else {
-                 tempo <- df2genind(z$G, type = "PA")
-               }
+             cuales <- which(areG != 0)
+             
+             #checkpoint -> ploidy
+             checkG.ploidy <- lapply(ecolist[cuales], function(x) x[[7]]@ploidy)
+             if(length(unique(unlist(checkG.ploidy))) != 1) {
+               stop("different ploidy levels found")
+             }
+             #checkpoint -> type
+             checkG.type <- lapply(ecolist[cuales], function(x) x[[7]]@type)
+             if(length(unique(unlist(checkG.type))) != 1) {
+               stop("different marker(s) type found")
+             }
+             #checkpoint -> ncod
+             checkG.ncod <- lapply(ecolist[cuales], function(x) x[[7]]@ncod)
+             if(length(unique(unlist(checkG.ploidy))) != 1) {
+               stop("different number of digits coding alleles found")
+             }
              }
              
-             z$GENIND$tab <- tempo$tab
-             z$GENIND$ind.names <- tempo$ind.names
-             z$GENIND$loc.names <- tempo$loc.names
-             z$GENIND$loc.nall <- tempo$loc.nall
-             z$GENIND$loc.fac <- tempo$loc.fac
-             z$GENIND$all.names <- tempo$all.names
-             z$GENIND$ploidy <- tempo$ploidy
-             z$GENIND$type <- tempo$type
+             #-------------------------------------------------------------------#
+             # bind rows: function that bind rows of ecogen objects as list.
+             # Duplicated row names present stops the fuction
+             bind.rows <- function(ecolist, i) {
+             names.x <- do.call(c, lapply(ecolist, function(y) rownames(y[[i]])))
              
-             z$XY <- rbind(e1$XY, e2$XY)
-             z$P <- rbind(e1$P, e2$P)   
-             z$E <- rbind(e1$E, e2$E)
-             z$S <- rbind(e1$S, e2$S)
-             z$C <- rbind(e1$C, e2$C)
-             z$OUT <- list()
+             # checkpoint -> duplicated row names not allowed
+             if(any(duplicated(names.x))) {
+               empty <- c("XY", "P", "G", "E", "S", "C")[i]
+               empty <- paste("<", empty, ">", sep = "")
+               message(paste("The", empty,
+                     "data frames have duplicated row names. 
+                      Duplicated row names are not allowed.
+                      This will generate an empty", empty,
+                     "slot."))
+               return(data.frame())
+             }
              
-             attr(z, "format") <- attr(e1, "format")
-             attr(z, "type") <-  attr(e1, "type")
-             attr(z, "missing") <- attr(e1, "missing")
-             attr(z, "ploidy") <- attr(e1, "ploidy")
-             
-             return(z)
+             out <- do.call(rbind, lapply(ecolist, function(y) y[[i]]))
+             rownames(out) <- names.x
+             out
+             }
+             #---------------------END BIND ROWS---------------------------------#
+            
+             # generating the output as list by a call to <bind.rows>
+             eco.out <- list()
+             for(i in 1:6) {
+             eco.out[[i]] <- bind.rows(ecolist, i)
+             }
+          
+             # generating the output as ecogen. Maybe will be faster fill each
+             # slot by hand. 
+             z <- ecogen(XY = eco.out[[1]], P = eco.out[[2]],
+                         G = eco.out[[3]], E = eco.out[[4]], 
+                         S = eco.out[[5]], C = eco.out[[6]])
+                         
+             z
            })

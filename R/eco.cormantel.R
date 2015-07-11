@@ -1,8 +1,125 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
+#' Mantel and partial Mantel correlograms
+#' 
+#' @description This program computes a Mantel correlogram for the data M, 
+#' or a partial Mantel correlogram for the data M conditioned on MC, with P-values 
+#' or bootstrap confidence intervals.
+#' @param M Distance or similarity matrix.
+#' @param XY Data frame or matrix with individual's positions (projected coordinates).
+#' @param MC Distance or similarity matrix (optional).
+#' @param int Distance interval in the units of XY.
+#' @param smin Minimum class distance in the units of XY.
+#' @param smax Maximum class distance in the units of XY.
+#' @param nclass Number of classes.
+#' @param seqvec Vector with breaks in the units of XY.
+#' @param size Number of individuals per class.
+#' @param bin Rule for constructing intervals when a partition parameter (int, 
+#' nclass or size) is not given. Default is Sturge's rule (Sturges, 1926). Other
+#' option is Freedman-Diaconis method (Freedman and Diaconis, 1981).
+#' @param nsim Number of Monte-Carlo simulations. 
+#' @param classM Are M and MC distance or similarity matrices?  Default option is classM = "dist" (distance).
+#' For similarity, classM = "simil". An incorrect option selected will generate an inverted plot.
+#' @param method Correlation method used for the construction of the statistic 
+#' ("pearson", "spearman" or "kendall"). Kendall's tau computation is slow.
+#' @param test If test = "bootstrap", the program generates a bootstrap 
+#' resampling and the associated confidence intervals.
+#' If test = "permutation" (default) a permutation test is made and the P-values 
+#' are computed. 
+#' @param alternative The alternative hypothesis. If "auto" is selected (default) the
+#' program determines the alternative hypothesis.
+#' Other options are: "two.sided", "greater" and "less".	 
+#' @param adjust Correction method of P-values for multiple tests, 
+#' passed to \code{\link[stats]{p.adjust}}. Defalut is "holm".
+#' @param sequential Should be performed a Holm-Bonberroni (Legendre and Legendre, 2012) 
+#' adjustment of P-values? Defalult TRUE.
+#' @param latlon Are the coordinates in decimal degrees format? Defalut FALSE. If TRUE,
+#' the coordinates must be in a matrix/data frame with the longitude in the first
+#' column and latitude in the second. The position is projected onto a plane in
+#' meters with the function \code{\link[SoDA]{geoXY}}.
+#' @param ... Additional arguments passed to \code{\link[stats]{cor}}. 
+#' @return The program returns an object of class "eco.correlog" 
+#' with the following slots:
+#' @return > OUT analysis output
+#' @return > IN input data of the analysis
+#' @return > BEAKS breaks
+#' @return > CARDINAL number of elements in each class
+#' @return > NAMES variables names
+#' @return > METHOD analysis method 
+#' @return > DISTMETHOD method used in the construction of breaks
+#' @return > TEST test method used (bootstrap, permutation)
+#' @return > NSIM number of simulations
+#' @return > PADJUST P-values adjust method for permutation tests
+#' 
+#' 
+#' \strong{ACCESS TO THE SLOTS}
+#' The content of the slots can be accessed 
+#' with the corresponding accessors, using
+#' the generic notation of EcoGenetics 
+#' (<ecoslot.> + <name of the slot> + <name of the object>).
+#' See help("EcoGenetics accessors") and the Examples
+#' section below.
+#' 
+#' @examples
+#' 
+#' \dontrun{
+#' 
+#' data(eco.test)
+#' require(ggplot2)
+#' 
+#' corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
+#' nsim = 99)
+#' plot(corm)
+#' 
+#' corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
+#' nsim = 99, test = "bootstrap")
+#' plot(corm)
+#' 
+#' # partial Mantel correlogram
+#' corm <- eco.cormantel(M = dist(eco[["P"]]), MC = dist(eco[["E"]]),
+#' size=1000, smax=7, XY = eco[["XY"]], nsim = 99)
+#' plot(corm)
+#' 
+#' # correlogram plots support the use of ggplot2 syntax
+#' mantelplot <- plot(corm) + theme_bw() + theme(legend.position="none")
+#' mantelplot
+#'
+#'
+#' #-----------------------
+#' # ACCESSORS USE EXAMPLE
+#' #-----------------------
+#' 
+#' # the slots are accesed with the generic format 
+#' # (ecoslot. + name of the slot + name of the object). 
+#' # See help("EcoGenetics accessors")
+#' 
+#' ecoslot.OUT(corm)        # slot OUT
+#' ecoslot.BREAKS(corm)     # slot BREAKS
+#' 
+#'}
+#'
+#' @references
+#' 
+#' Freedman D., and P. Diaconis. 1981. On the histogram as a density estimator: 
+#' L 2 theory. Probability theory and related fields, 57: 453-476.
+#'
+#' Legendre P., and L. Legendre. 2012. Numerical ecology. Third English edition.
+#' Elsevier Science, Amsterdam, Netherlands.
+#' 
+#' Oden N., and R. Sokal. 1986. Directional autocorrelation: an extension 
+#' of spatial correlograms to two dimensions. Systematic Zoology, 35:608-617
+#' 
+#' Sokal R. 1986. Spatial data analysis and historical processes. 
+#' In: E. Diday, Y. Escoufier, L. Lebart, J. Pages, Y. Schektman, and R. Tomassone,
+#' editors. Data analysis and informatics, IV. North-Holland, Amsterdam,
+#' The Netherlands, pp. 29-43.
+#' 
+#' Sturges  H. 1926. The choice of a class interval. Journal of the American 
+#' Statistical Association, 21: 65-66.
+#' 
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' 
+#' @export
 
-
-# Mantel and partial Mantel correlograms
 
 setGeneric("eco.cormantel", 
            function(M, XY, MC = NULL, int = NULL, smin = 0,

@@ -1,8 +1,26 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
+#' Importing a Genepop file
+#' 
+#' @description This function converts a Genepop file into an object 
+#' with a genetic matrix (G) and a structures matrix (S).
+#' 
+#' @param genefile Genepop file.
+#' 
+#' @return A list with the objects G (genetic matrix) and S (structures matrix).
+#'
+#' @examples 
+#' \dontrun{
+#' # ingpop, file with Genepop format in the folder "/extdata" of the package
+#' 
+#' ecopath <- paste(path.package("EcoGenetics"), "/extdata/ingpop", sep = "")
+#' ingpop <- eco.genepop2df(ecopath)
+#' ingpop
+#' }
+#' 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}, adapting code
+#' written by Emiel van Loon and Scott Davis
+#' 
+#' @export
 
-
-# Importing a Genepop file
 
 eco.genepop2df <- function(genefile = NULL) {
 

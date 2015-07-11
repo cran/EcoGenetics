@@ -1,8 +1,22 @@
-# Leandro Roser leandroroser@ege.fcen.uba.ar
-# June 17, 2015 
 
+#' Cross correlation. Internal.
+#' @param Z vector, matrix or data frame.
+#' with variable/s (in matrix or data frame formats, variables in columns).
+#' @param Y Vector with the second variable for cross-correlograms construction.
+#' if Z has multiple variables, the program will compute the cross correlograms 
+#' between each and Y.
+#' @param con Connection network.
+#' @param nsim Number of Monte-Carlo simulations. 
+#' @param alternative The alternative hypothesis. If "auto" is selected (default) the
+#' program determines the hypothesis by difference between the median of the simulations
+#' and the observed value. Other options are: "two.sided", "greater" and "less".
+#' if test == cross, for the first interval (d== 0) the p and CI are computed with cor.test.
+#' @param adjust.n Should be adjusted the number of individuals? (warning, this would
+#' change variances)
+#' @param plotit Should be generated a plot of the simulations?
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
 
-# Cross correlation. Internal
 
 int.crosscor <- function(Z, Y, con, nsim,
                          alternative, test = "permutation", 
@@ -47,8 +61,7 @@ int.crosscor <- function(Z, Y, con, nsim,
   for(i in 1:nsim) {
     samp <- sample(N)
     repsim[i] <- crossfun(Mi[samp, samp])  #permutation is conditioned to the each dependent pair (z2,y2)
-  }					 		                           #OJO, USAR PESOS SIMETRICOS (DISTANCIA) PORQUE M NO LO ES
-  
+  }					 		                           #symmetric weights required!
   random.m <- int.random.test(repsim = repsim, obs = obs, 
                               test = test,
                               nsim = nsim,
