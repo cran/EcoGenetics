@@ -630,19 +630,19 @@ int.genind2df <- function(x, sep = "",                   #the product is a matri
       temp[-rem.rows, -rem.cols] <- res
       rownames(temp) <- restore.info[[4]]
       colnames(temp) <- restore.info[[5]]
-      return(as.data.frame(temp, stringsAsFactors = FALSE))
+      return(temp)
     } # only columns
     if(l.rc && !l.rr) {
       temp[, -rem.cols] <- res
       rownames(temp) <- restore.info[[4]]
       colnames(temp) <- restore.info[[5]]
-      return(as.data.frame(temp, stringsAsFactors = FALSE))
+      return(temp)
     } # only rows
     if(!l.rc && l.rr) {
       temp[-rem.rows, ] <- res
       rownames(temp) <- restore.info[[4]]
       colnames(temp) <- restore.info[[5]]
-      return(temp, stringsAsFactors = FALSE)
+      return(temp)
     }
   }
   
