@@ -1,14 +1,16 @@
-
 ###############################################################################
 #                             SHOW METHODS
 ################################################################################
 
+
+#' print access - message for show methods
+#' @keywords internal
+
 .printaccess <- function() {
-  cat("----------------------------------------------------------------------------\n")
-  cat(" Access to slots:",
-      "<ecoslot.> + <name of the slot> + <(name of the object)>","\n",
-      "See help(\"EcoGenetics accessors\")\n")
-  cat("----------------------------------------------------------------------------\n")
+  cat("\n -------------------------------------------------------------\n")
+  cat("  Slot access: <ecoslot.> + <slot name> + <(object x name)>","\n",
+      " See help(\"EcoGenetics accessors\")\n")
+  cat(" -------------------------------------------------------------\n")
   
 }
 
@@ -20,6 +22,9 @@
 
 
 setMethod("show", "eco.gsa", function(object) {
+  #op <- options()
+  #options(max.print = 100)
+  
   method <- (object@METHOD)[1]
   cormethod <- (object@METHOD)[2]
   
@@ -29,13 +34,13 @@ setMethod("show", "eco.gsa", function(object) {
         paste(" ", method), "\n", 
         "###########################","\n\n")
     if(method == "Mantel test" | method == "Partial Mantel test") {
-      cat("  >", "Correlation coefficent used:", 
+      cat("  >", "Correlation coefficent used --> ", 
           gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
     }
     cat(
-        paste("   >", "Number of simulations:", object@NSIM), "\n",
-        paste("  >", "P-values correction method:", object@ADJUST), "\n\n",
-        paste("  >", "Results:"), "\n\n")
+      paste("   >", "Number of simulations --> ", object@NSIM), "\n",
+      paste("  >", "P-values correction method --> ", object@ADJUST), "\n\n",
+      paste("  >", "Results --> "), "\n\n")
     print(object@MULTI)
     cat("\n")
     
@@ -45,17 +50,18 @@ setMethod("show", "eco.gsa", function(object) {
         paste(" ", method), "\n", 
         "############################","\n\n")
     if(method == "Mantel test" | method == "Partial Mantel test") {
-      cat("  >", "Correlation coefficent used:", 
+      cat("  >", "Correlation coefficent used --> ", 
           gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
     }
     cat(
-        paste("  >", "Number of simulations:", object@NSIM), "\n",
-        paste(" >", "Alternative:", object@ALTER), "\n", 
-        paste(" >", "P-value:", object@PVAL), "\n", 
-        paste(" >", "Observed value:", object@OBS), "\n",
-        paste(" >", "Expected value:", object@EXP), "\n")
+      paste("  >", "Number of simulations --> ", object@NSIM), "\n",
+      paste(" >", "Alternative --> ", object@ALTER), "\n", 
+      paste(" >", "P-value --> ", object@PVAL), "\n", 
+      paste(" >", "Observed value --> ", object@OBS), "\n",
+      paste(" >", "Expected value --> ", object@EXP), "\n")
     cat("\n")
   }
+  #options(op)
 })
 
 
@@ -63,27 +69,108 @@ setMethod("show", "eco.gsa", function(object) {
 #' show eco.lsa
 #' @keywords internal
 #' @rdname eco.autol-methods
-#' @aliases show,eco.autol-method
+#' @aliases show,eco.lsa-method
 
 setMethod("show", "eco.lsa", function(object)  {
+  #op <- options()
+  #options(max.print = 100)
+  
+  outmet <- c("G*", "G", "I", "C")
+  see.out <- c("Getis-Ord' G*", "Getis-Ord' G", "Local Moran's I", "Local Geart's C")
+  see.out <- see.out[match(object@METHOD, outmet)]
+  nsim <- object@NSIM
   cat("\n", 
       "#########################","\n",
-      paste(" ", object@METHOD), "\n", 
+      paste(" ", see.out), "\n", 
       "#########################","\n\n",
-      paste(" >", "Test:", object@TEST), "\n",
+      
+      if(nsim != 0) paste(" >", "Test --> ", object@TEST), "\n",
       paste(" >", "Number of simulations:", object@NSIM), "\n",
-      paste(" >", "Conditional:", object@COND), "\n")
-  if(object@TEST == "permutation") {
-    cat(paste("  >", "P-adjust method:", object@PADJ))
+      if(nsim != 0) paste(" >", "Conditional --> ", object@COND), "\n")
+  if(nsim != 0) {
+    if(object@TEST == "permutation") {
+    cat(paste("  >", "P-adjust method --> ", object@PADJ))
+    }
   }
+  
   cat("\n\n", 
-      paste(" Results :"), "\n\n")
+      paste(" Results  --> "), "\n\n")
   print(object@OUT)
-  cat("\n Results table in", aue.access("OUT",  "name of this object"), "\n")
+  cat("\n Results table in", aue.access("OUT",  "x"), "\n")
   .printaccess()
+  cat("\n")
+  #options(op)
+})
+
+#-------------------------------------------------------------------#
+#' show eco.listlsa
+#' @keywords internal
+#' @rdname eco.autol-methods
+#' @aliases show,eco.listlsa-method
+
+setMethod("show", "eco.listlsa", function(object)  {
+  outmet <- c("G*", "G", "I", "C")
+  see.out <- c("Getis-Ord' G*", "Getis-Ord' G", "Local Moran's I", "Local Geart's C")
+  see.out <- see.out[match(object[[1]]@METHOD, outmet)]
+  nsim <- object[[1]]@NSIM
+  cat("\n", 
+      "#######################################","\n",
+      paste(" ","multiple", see.out, "(as list)"), "\n", 
+      "#######################################","\n\n")
+      if(nsim != 0) {
+        cat(paste(" >", "Test --> ", object[[1]]@TEST), "\n")
+      cat (paste(" >", "Number of simulations --> ", object[[1]]@NSIM), "\n")
+      cat(paste(" >", "Conditional --> ", object[[1]]@COND), "\n")
+     if(object[[1]]@TEST == "permutation") {
+    cat(paste("  >", "P-adjust method --> ", object[[1]]@PADJ))
+    }
+  }
+  cat("\n\n\tlist of", length(object), "eco.lsa object(s). Access: object[[variable_number]]\n")
   cat("\n")
 })
 
+
+#-------------------------------------------------------------------#
+#' show eco.multilsa
+#' @keywords internal
+#' @rdname eco.autol-methods
+#' @aliases show,eco.multilsa-method
+
+setMethod("show", "eco.multilsa", function(object)  {
+  outmet <- c("G*", "G", "I", "C")
+  see.out <- c("Getis-Ord' G*", "Getis-Ord' G", "Local Moran's I", "Local Geart's C")
+  see.out <- see.out[match(object@METHOD, outmet)]
+  nsim <- object@NSIM
+  cat("\n", 
+      "###############################################","\n",
+      paste(" ","multiple", see.out, "(as eco.multilsa)"), "\n", 
+      "###############################################","\n\n")
+      if(nsim != 0) { 
+        cat(paste(" >", "Test --> ", object@TEST), "\n")
+        cat(paste(" >", "Number of simulations --> ", object@NSIM), "\n")
+        cat(paste(" >", "Conditional --> ", object@COND), "\n")
+        }
+  if(nsim != 0) {
+  if(object@TEST == "permutation") {
+    cat(paste("  >", "P-adjust method --> ", object@PADJ), "\n")
+  }
+  }
+  cat("\n\n\t\t\tResults as matrices of individuals x variables:\n\n")
+     cat(paste("  >", paste(aue.access("OBS",  "x"), " --> ", sep = ""), "observed values", "\n"))
+     if(nsim != 0) {
+      if(object@TEST == "permutation") {
+       cat(paste("  >", paste(aue.access("PVAL",  "x"), " --> ", sep = ""), "P-values",  "\n"))
+       cat(paste("  >", paste(aue.access("EXP",  "x"), " --> ", sep = ""), "expected values", "\n"))
+       cat(paste("  >", paste(aue.access("ALTER",  "x"), " --> ", sep = ""), 
+                 "alternative\n\t\t\t (0 = 'two sided', 1 = 'greater', 2 = 'less')", "\n"))
+}
+    cat(paste("  >", paste(aue.access("LWR",  "x"), " --> ", sep = ""),  "lwr CI bound for Ho", "\n"))
+    cat(paste("  >", paste(aue.access("UPPR",  "x"), " --> ", sep = ""), "uppr CI bound for Ho", "\n"))
+
+     }
+  .printaccess()
+  cat("\n")
+})
 
 #-------------------------------------------------------------------#
 #' show eco.correlog
@@ -93,68 +180,70 @@ setMethod("show", "eco.lsa", function(object)  {
 
 
 setMethod("show", "eco.correlog", function(object) {
+  #op <- options()
+  #options(max.print = 20)
   
   randtest <- object@TEST
   method <- (object@METHOD)[1]
   cormethod <- (object@METHOD)[2]
   
   if(length(randtest != 0) & randtest != "none") {
-  if(randtest == "permutation") {
-    cat("\n", 
-        "############################","\n",
-        paste(" ", method), "\n", 
-        "############################","\n\n")
-    if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-      cat(" >", "Correlation coefficent used:", 
-      gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
+    if(randtest == "permutation") {
+      cat("\n", 
+          "############################","\n",
+          paste(" ", method), "\n", 
+          "############################","\n\n")
+      if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
+        cat(" >", "Correlation coefficent used --> ", 
+            gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
+      }
+      cat(paste("  >", "Number of simulations --> ", object@NSIM), "\n",
+          paste(" >", "Random test --> ", object@TEST), "\n",
+          paste(" >", "P-adjust method --> ", object@PADJUST), "\n\n", 
+          paste(" >", " ecoslot.OUT(x): results --> ","\n\n"))
+      print(object@OUT)
+      cat("\n Results table(s) in", aue.access("OUT",  "x"), "\n")
+      .printaccess()
+      cat("\n")
+      
+    } else if (randtest == "bootstrap") {
+      
+      cat("\n", 
+          "############################","\n",
+          paste(" ", method), "\n", 
+          "############################","\n\n")
+      if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
+        cat("Correlation coefficent used --> ", 
+            gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
+      }
+      cat(paste("   >", "Number of simulations --> ", object@NSIM), "\n",
+          paste("  >", " Random test --> ", object@TEST), "\n",
+          paste("  >", " Results: ","\n\n"))
+      print(object@OUT)
+      cat("\n Results table(s) in", aue.access("OUT",  "x"), "\n")
+      .printaccess()
+      cat("\n")
+      
     }
-    cat(paste("  >", "Number of simulations:", object@NSIM), "\n",
-        paste(" >", "Random test:", object@TEST), "\n",
-        paste(" >", "P-adjust method:", object@PADJUST), "\n\n", 
-        paste(" >", "Results:","\n\n"))
-    print(object@OUT)
-    cat("\n Results table(s) in", aue.access("OUT",  "name of this object"), "\n")
-    .printaccess()
-    cat("\n")
- 
-     } else if (randtest == "bootstrap") {
- 
-  cat("\n", 
-      "############################","\n",
-      paste(" ", method), "\n", 
-      "############################","\n\n")
-       if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-         cat("Correlation coefficent used: ", 
-             gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
-       }
-       cat(paste("   >", "Number of simulations: ", object@NSIM), "\n",
-      paste("  >", " Random test:", object@TEST), "\n",
-      paste("  >", " Results: ","\n\n"))
-  print(object@OUT)
-  cat("\n Results table(s) in", aue.access("OUT",  "name of this object"), "\n")
-  .printaccess()
-  cat("\n")
-  
-     }
-  
+    
   } else {
     cat("\n", 
         "############################","\n",
         paste(" ", method), "\n", 
         "############################","\n\n")
     if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-      cat("Correlation coefficent used: ", 
+      cat("Correlation coefficent used --> ", 
           gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE),  "\n")
     }
-    cat(paste(" Results: ","\n\n"))
+    cat(paste(" Results --> ","\n\n"))
     print(object@OUT)
-    cat("\n Results table(s) in", aue.access("OUT",  "name of this object"), "\n")
+    cat("\n Results table(s) in", aue.access("OUT",  "x"), "\n")
     .printaccess()
     cat("\n")
     
   }
-  
-  })
+  #options(op)
+})
 
 
 #-------------------------------------------------------------------#
@@ -168,23 +257,25 @@ setMethod("show", "eco.weight", function(object)  {
       "###################","\n",
       paste(" spatial weights"), "\n", 
       "###################","\n\n",
-      paste(" Method ->", object@METHOD), "\n",
-      " Parameters ->", paste("(", object@PAR, " = ",  
+      paste(" Method  --> ", object@METHOD), "\n",
+      " Parameters --> ", paste("(", object@PAR, " = ",  
                               object@PAR.VAL, ")", sep =""), "\n",
-      paste(" Row-standardization ->", object@ROW.SD), "\n")
+      paste(" Row-standardization --> ", object@ROW.SD), "\n")
   if(object@METHOD == "circle" | object@METHOD == "knearest") {
-    cat(paste("  Self-included ->", object@SELF), "\n",
-        paste(" Number of individuals ->", nrow(object@XY)), "\n",
-        paste(" Non-zero (non-self) links ->", object@NONZERO, "%"), "\n",
-        paste(" Individuals with non-zero (non-self) links ->", 
+    cat(paste("  Self-included --> ", object@SELF), "\n",
+        paste(" Number of individuals --> ", nrow(object@XY)), "\n",
+        paste(" Non-zero (non-self) links --> ", object@NONZERO, "%"), "\n",
+        paste(" Individuals with non-zero (non-self) links --> ", 
               object@NONZEROIND, "%"), "\n",
-        paste(" Average (non-self) links per individual ->", object@AVG), "\n")
+        paste(" Average (non-self) links per individual --> ", object@AVG), "\n",
+        paste(" Average distance between connected individuals --> ", object@AVG.DIST), "\n\n")
   } else {
-    cat(paste("  Non-zero (non-self) links ->", object@NONZERO, "%"), "\n",
-        paste(" Number of individuals ->", nrow(object@XY)), "\n",
-        paste(" Individuals with non-zero (non-self) links ->", 
+    cat(paste("  Non-zero (non-self) links --> ", object@NONZERO, "%"), "\n",
+        paste(" Number of individuals --> ", nrow(object@XY)), "\n",
+        paste(" Individuals with non-zero (non-self) links --> ", 
               object@NONZEROIND, "%"), "\n",
-        paste(" Average (non-self) links per individual ->", object@AVG), "\n\n")
+        paste(" Average (non-self) links per individual --> ", object@AVG), "\n",
+        paste(" Average distance between connected individuals --> ", object@AVG.DIST), "\n\n")
   }
 })
 
@@ -194,26 +285,26 @@ setMethod("show", "eco.weight", function(object)  {
 #' @keywords internal
 #' @rdname eco.detrend-methods
 #' @aliases show,eco.detrend-method
-
+  
 setMethod("show", "eco.detrend", function(object)  {
+  #op <- options()
+  #options(max.print = 100)
   
   cat("\n", 
       "###################","\n",
       paste(" ", "Data detrending"), "\n", 
       "###################","\n\n",
-      paste(" >", "Polynomial degree ->", object@POLY.DEG), "\n",
-      paste(" >", aue.access("RES", "name of this object"), ": Residuals-detrended data:", "\n\n"))
-  print(head(object@RES))
-  if(nrow(object@RES)> 6L) {
-  cat(paste("(more data...)", "\n"))
-  }
+      paste(" >", "Polynomial degree --> ", object@POLY.DEG), "\n",
+      paste(" >", aue.access("RES", "x"), " --> Residuals-detrended data:", "\n\n"))
+  print.data.frame(object@RES, max.print = 100)
   cat("\n", "Other data:", "\n", 
-      " >", aue.access("RES", "name of this object"), ": projected coordinates", "\n",
-      " >", aue.access("XY", "name of this object"), ": models", "\n",
-      " >", aue.access("ANALYSIS", "name of this object"), ": eco.mlm object with details", "\n",
+      " >", aue.access("RES", "x"), " --> projected coordinates", "\n",
+      " >", aue.access("XY", "x"), " --> models", "\n",
+      " >", aue.access("ANALYSIS", "x"), " --> eco.mlm object with details", "\n",
       "\n")
   .printaccess()
   cat("\n")
+  #options(op)
 })
 
 
@@ -228,13 +319,13 @@ setMethod("show", "eco.lagweight", function(object)  {
       "######################","\n",
       paste(" spatial weights list"), "\n", 
       "######################","\n\n",
-      " Parameters ->", paste("(", object@PAR, " = ",  
+      " Parameters --> ", paste("(", object@PAR, " = ",  
                               round(object@PAR.VAL, 3), ")", sep =""), "\n",
       paste(" Row-standardization ->", object@ROW.SD), "\n",
-      paste(" Self-included ->", object@SELF), "\n",
-      paste(" Cummulative ->", object@CUMMUL), "\n",
-      paste(" Number of classes ->", length(object@MEAN)), "\n",
-      paste(" Method ->", object@METHOD), "\n\n")
+      paste(" Self-included --> ", object@SELF), "\n",
+      paste(" Cummulative --> ", object@CUMMUL), "\n",
+      paste(" Number of classes --> ", length(object@MEAN)), "\n",
+      paste(" Method --> ", object@METHOD), "\n\n")
   
 })
 
@@ -252,14 +343,14 @@ setMethod("show", "eco.mlm", function(object) {
       paste(" multiple linear model"), "\n", 
       "#########################","\n\n")
   
-  cat(paste("  >", paste(aue.access("MLM",  "name of this object"), ":", sep = ""), "multiple model results"), "\n", 
-      paste(" >", paste(aue.access("SUMMARY.MLM",  "name of this object"), ":", sep = ""), "summary of the results"), "\n", 
-      paste(" >", paste(aue.access("ANOVA.MLM",  "name of this object"), ":", sep = ""), "analysis of variance tables"), "\n",
-      paste(" >", paste(aue.access("PREDICTED",  "name of this object"), ":", sep = ""), "predicted values"), "\n",			
-      paste(" >", paste(aue.access("RESIDUALS",  "name of this object"), ":", sep = ""), "residuals of the analysis"), "\n\n")
+  cat(paste("  >", paste(aue.access("MLM",  "x"), " --> ", sep = ""), "multiple model results"), "\n", 
+      paste(" >", paste(aue.access("SUMMARY.MLM",  "x"), " --> ", sep = ""), "summary of the results"), "\n", 
+      paste(" >", paste(aue.access("ANOVA.MLM",  "x"), " --> ", sep = ""), "analysis of variance tables"), "\n",
+      paste(" >", paste(aue.access("PREDICTED",  "x"), " --> ", sep = ""), "predicted values"), "\n",  		
+      paste(" >", paste(aue.access("RESIDUALS",  "x"), " --> ", sep = ""), "residuals of the analysis"), "\n\n")
   .printaccess()
   cat("\n")
-  })
+})
 
 
 #-------------------------------------------------------------------#
@@ -275,14 +366,14 @@ setMethod("show", 	"eco.mctree", function(object) {
       paste(" multiple regression trees"), "\n", 
       "#############################","\n\n")
   
-  cat(paste("  >", paste(aue.access("TREES",  "name of this object"), ":", sep = ""), "trees"), "\n", 
-      paste(" >", paste(aue.access("CLASSPREDICT", "name of this object"), ":", sep = ""), "predictions of the analysis"), "\n", 
-      paste(" >", paste(aue.access("FREQUENCIES", "name of this object"), ":", sep = ""), "number of individuals \n\t\t\t predicted in each node"), "\n",
-      paste(" >", paste(aue.access("PREDICTED", "name of this object"), ":", sep = ""), "predicted values"), "\n",			
-      paste(" >", paste(aue.access("RESIDUALS", "name of this object"), ":", sep = ""), "residuals of the analysis"), "\n\n")
+  cat(paste("  >", paste(aue.access("TREES",  "x"), " --> ", sep = ""), "trees"), "\n", 
+      paste(" >", paste(aue.access("CLASSPREDICT", "x"), " --> ", sep = ""), "predictions of the analysis"), "\n", 
+      paste(" >", paste(aue.access("FREQUENCIES", "x"), " --> ", sep = ""), "number of individuals \n\t\t\t predicted in each node"), "\n",
+      paste(" >", paste(aue.access("PREDICTED", "x"), " --> ", sep = ""), "predicted values"), "\n",			
+      paste(" >", paste(aue.access("RESIDUALS", "x"), " --> ", sep = ""), "residuals of the analysis"), "\n\n")
   .printaccess()
   cat("\n")
-  })
+})
 
 
 
@@ -385,7 +476,7 @@ setMethod("summary", 	"eco.mlm", 	function(object) {
   
   cat("\n", "ANOVA's F statistics, degrees of freedom and P-VALUES", "\n\n")
   print(anova.pres(object@MLM))
-  cat("ns: non significative, *P<0.05, **P<0.01, ***P<0.001, ",
+  cat("ns: non significant, *P<0.05, **P<0.01, ***P<0.001, ",
       "- null model")
   
 })
@@ -438,22 +529,21 @@ setMethod("show", "eco.IBD", function(object) {
       "##################","\n",
       " Kinship analysis", "\n", 
       "##################","\n\n",
-      paste(" >","Method:", metodo), "\n",
-      paste(" >","Number of simulations:", object@NSIM), "\n")
-      if(randtest == "permutation") {
-      cat(paste("  >","P adjust method:", object@PADJUST), "\n\n")
-      } 
-      if(metodo == "local") {
-      cat(paste(" >", "Conditional:", (object@TEST)[2]), "\n\n")
-        } 
-      cat(
-      "  Available information: ", "\n",
-      paste(" >", paste(aue.access("SP", "name of this object"), ":", sep = ""), "SP analysis"), "\n", 
-      paste(" >", paste(aue.access("OUT", "name of this object"), ":", sep = ""), "table with results"),"\n")
-      cat("\n Results table in", aue.access("OUT",  "name of this object"), "\n")
-      .printaccess()
-      cat("\n")
+      paste(" >","Method --> ", metodo), "\n",
+      paste(" >","Number of simulations --> ", object@NSIM), "\n")
+  if(randtest == "permutation") {
+    cat(paste("  >","P adjust method --> ", object@PADJUST), "\n\n")
+  } 
+  if(metodo == "local") {
+    cat(paste(" >", "Conditional --> ", (object@TEST)[2]), "\n\n")
+  } 
+  cat(
+    "  Available information --> ", "\n",
+    paste(" >", paste(aue.access("SP", "x"), " --> ", sep = ""), "SP analysis"), "\n", 
+    paste(" >", paste(aue.access("OUT", "x"), " --> ", sep = ""), "table with results"),"\n")
+  cat("\n Results table in", aue.access("OUT",  "x"), "\n")
+  .printaccess()
+  cat("\n")
 })
 
 #-------------------------------------------------------------------#
-

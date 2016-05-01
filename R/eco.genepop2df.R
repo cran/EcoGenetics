@@ -23,7 +23,7 @@
 
 
 eco.genepop2df <- function(genefile = NULL) {
-
+  
   # read the file into memory
   con <- file(description = genefile, open = "rb")
   lines <- readLines(con)
@@ -71,10 +71,10 @@ eco.genepop2df <- function(genefile = NULL) {
     if( i == npop) {  
       endLine <- length(lines) - 1
       
-    } else {	
+    } else {  
       endLine <- popLocations[i+1] - 1
     }
- 
+    
     #parse individual line
     
     for(line in lines[beginLine:endLine]) {

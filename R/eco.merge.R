@@ -36,7 +36,7 @@
 
 setGeneric("eco.merge",
            function(e1, e2, ...) {
-                    
+             
              u <- unlist(list(...))
              vec <- c("P", "G", "E", "S", "C", "ALL")
              m <- vec %in% u
@@ -65,47 +65,53 @@ setGeneric("eco.merge",
                return(Z)
              }
              
-              
+             
              # fill XY,  P  and G data frames
              z@XY <- int.merge(e1@XY, e2@XY, z@XY, TRUE)
              z@P <- int.merge(e1@P, e2@P, z@P, m[1] == TRUE)
              z@G <- int.merge(e1@G, e2@G, z@G, m[2] == TRUE)
              
              # if G is not empty, fill A and INT slots
-               if(all(dim(z@G)) != 0) {
-                 if(e1@INT@ploidy != e2@INT@ploidy) {
-                   stop("error: different ploidy levels found")
-                 }
-                 
-                 if(e1@INT@type != e2@INT@type) {
-                   stop("error: different type of markers found")
-                 }
-                 
-                 tempo <- int.df2genind(z@G, 
-                                        missing = e1@INT@missing,
-                                        ncod = e1@INT@ncod,
-                                        ploidy = e1@INT@ploidy, 
-                                        type =  e1@INT@type)
-                 
+             if(all(dim(z@G)) != 0) {
+               if(e1@INT@ploidy != e2@INT@ploidy) {
+                 stop("error: different ploidy levels found")
+               }
+               
+               if(e1@INT@type != e2@INT@type) {
+                 stop("error: different type of markers found")
+               }
+               
+               tempo <- int.df2genind(z@G, 
+                                      missing = e1@INT@missing,
+                                      ncod = e1@INT@ncod,
+                                      ploidy = e1@INT@ploidy, 
+                                      type =  e1@INT@type)
+              
+               # slot A is marker type dependent
+               if(e1@INT@type == "codominant") {
                  z@A <- as.data.frame(tempo@tab)
-                 z@INT@loc.fac <- tempo@loc.fac
-                 z@INT@all.names <- tempo@all.names
-                 z@INT@ploidy <- tempo@ploidy
-                 z@INT@type <- tempo@type
-                 z@INT@NA.char <- tempo@NA.char
-                 z@INT@missing <- tempo@missing
-                 z@INT@removed.image <- tempo@removed.image
-                 
                } else {
                  z@A <- data.frame()
-                 z@INT <- new("int.gendata")
                }
-
-           # fill E, S and C data frames
-           z@E <- int.merge(e1@E, e2@E, z@E, m[3] == TRUE)
-           z@S <- int.merge(e1@S, e2@S, z@S, m[4] == TRUE)
-           z@C <- int.merge(e1@C, e2@C, z@C, m[5] == TRUE)
-           
-           z
-                         
+               
+               z@INT@loc.fac <- tempo@loc.fac
+               z@INT@all.names <- tempo@all.names
+               z@INT@ploidy <- tempo@ploidy
+               z@INT@type <- tempo@type
+               z@INT@NA.char <- tempo@NA.char
+               z@INT@missing <- tempo@missing
+               z@INT@removed.image <- tempo@removed.image
+               
+             } else {
+               z@A <- data.frame()
+               z@INT <- new("int.gendata")
+             }
+             
+             # fill E, S and C data frames
+             z@E <- int.merge(e1@E, e2@E, z@E, m[3] == TRUE)
+             z@S <- int.merge(e1@S, e2@S, z@S, m[4] == TRUE)
+             z@C <- int.merge(e1@C, e2@C, z@C, m[5] == TRUE)
+             
+             z
+             
            } )

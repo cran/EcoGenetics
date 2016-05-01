@@ -214,291 +214,243 @@
 #' 
 #' 
 #' @export 
-
-
-ecoslot.IN <- function(X) {
-  X@IN
-}
+#' 
+#' 
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.BREAK <- function(X) {
-  X@BREAK
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.CARDINAL <- function(X) {
-  X@CARDINAL
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.NAMES <- function(X) {
-  X@NAMES
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.METHOD <- function(X) {
-  X@METHOD
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.DISTMETHOD <- function(X) {
-  X@DISTMETHOD
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.TEST <- function(X) {
-  X@TEST
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.NSIM <- function(X) {
-  X@NSIM
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.PADJUST <- function(X) {
-  X@PADJUST
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.OBS<- function(X) {
-  X@OBS
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.EXP <- function(X) {
-  X@EXP
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.PVAL <- function(X) {
-  X@PVAL
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.ALTER <- function(X) {
-  X@ALTER
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.MULTI <- function(X) {
-  X@MULTI
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.XY <- function(X) {
-  X@XY
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.COND <- function(X) {
-  X@COND
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.PAR <- function(X) {
-  X@PAR
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.PAR.VAL <- function(X) {
-  X@PAR.VAL
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.ROW.SD <- function(X) {
-  X@ROW.SD
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.SELF <- function(X) {
-  X@SELF
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.SP <- function(X) {
-  X@SP
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.W <- function(X) {
-  X@W
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.NONZERO <- function(X) {
-  X@NONZERO
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.NONZEROIND <- function(X) {
-  X@NONZEROIND
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.AVERAGE <- function(X) {
-  X@AVERAGE
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.MEAN <- function(X) {
-  X@MEAN
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.LOGMEAN <- function(X) {
-  X@LOGMEAN
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.CARDINAL <- function(X) {
-  X@CARDINAL
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.BREAKS <- function(X) {
-  X@BREAKS
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.MLM <- function(X) {
-  X@MLM
-}
-
-#' @rdname EcoGenetics-accessors
-#' @export 
-
-ecoslot.SUMMARY.MLM <- function(X) {
-  X@SUMMARY.MLM
-}
+ecoslot.ALTER <- function(X) X@ALTER
 
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.ANOVA.MLM <- function(X) {
-  X@ANOVA.MLM
-}
+ecoslot.ANALYSIS <- function(X) X@ANALYSIS
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.ANOVA.MLM <- function(X)  X@ANOVA.MLM
 
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.DF1 <- function(X) {
-  X@DF1
-}
+ecoslot.AVERAGE <- function(X) X@AVERAGE
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.BREAKS <- function(X) X@BREAKS
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.CARDINAL <- function(X) X@CARDINAL
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.COND <- function(X) X@COND
 
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.DF2 <- function(X) {
-  X@DF2
-}
+ecoslot.CONNECTED <- function(X) X@CONNECTED
+
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.TREES <- function(X) {
-  X@TREES
-}
+ecoslot.DF1 <- function(X) X@DF1
+
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.PREDICTIONS <- function(X) {
-  X@PREDICTIONS
-}
+ecoslot.DF2 <- function(X) X@DF2
+
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.FREQUENCIES <- function(X) {
-  X@FREQUENCIES
-}
+ecoslot.DISTMETHOD <- function(X) X@DISTMETHOD
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.POLY.DEG <- function(X) {
-  X@POLY.DEG
-}
+ecoslot.EXP <- function(X) X@EXP
+
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.RES <- function(X) {
-  X@RES
-}
+ecoslot.FREQUENCIES <- function(X) X@FREQUENCIES
+
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.MODEL <- function(X) {
-  X@MODEL
-}
+ecoslot.IN <- function(X) X@IN
 
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-ecoslot.ANALYSIS <- function(X) {
-  X@ANALYSIS
-}
+ecoslot.LOGMEAN <- function(X) X@LOGMEAN
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.LWR <- function(X) X@LWR
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.MEAN <- function(X) X@MEAN
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.METHOD <- function(X) X@METHOD
+
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.MLM <- function(X) X@MLM
+
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.MODEL <- function(X) X@MODEL
+
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.MULTI <- function(X) X@MULTI
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.NAMES <- function(X) X@NAMES
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.NONZERO <- function(X) X@NONZERO
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.NONZEROIND <- function(X) X@NONZEROIND
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.NSIM <- function(X) X@NSIM
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.OBS<- function(X) X@OBS
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.OBS.RES<- function(X) X@OBS.RES
+
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.PADJUST <- function(X) X@PADJUST
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.PAR <- function(X) X@PAR
+
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.PAR.VAL <- function(X) X@PAR.VAL
+
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.POLY.DEG <- function(X) X@POLY.DEG
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.POP <- function(X) X@POP
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.PREDICTIONS <- function(X) X@PREDICTIONS
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.PVAL <- function(X) X@PVAL
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.RES <- function(X) X@RES
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.ROW.SD <- function(X)  X@ROW.SD
+
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.SELF <- function(X) X@SELF
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.SP <- function(X) X@SP
+
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.SUMMARY.MLM <- function(X) X@SUMMARY.MLM
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.TEST <- function(X) X@TEST
+
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.TREES <- function(X) X@TREES
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.UPPR <- function(X) X@UPPR
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.W <- function(X)  X@W
+
+#' @rdname EcoGenetics-accessors
+#' @export 
+
+ecoslot.XY <- function(X) X@XY
+

@@ -10,19 +10,18 @@
 #' are computed. 
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the alternative hypothesis.
-#' Other options are: "two.sided", "greater" and "less".	 
+#' Other options are: "two.sided", "greater" and "less".   
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @keywords internal
 
 
 int.mantel <- function(d1, d2, dc, nsim, 
                        test, alternative = "auto", 
-                       plotit = FALSE, method = "pearson", ...) {
+                       plotit = FALSE, method = "pearson", na.omit = FALSE, ...) {
   
   m1 <- as.vector(d1)
   m2 <- as.vector(d2)
   m3 <- as.vector(dc)
-  
   
   repsim <- vector()
   
@@ -91,4 +90,3 @@ int.mantel <- function(d1, d2, dc, nsim,
   
   res
 }
-  

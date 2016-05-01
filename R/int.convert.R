@@ -1,4 +1,3 @@
-
 #' INTERNAL CONVERSION TOOLS FOR GENETIC DATA
 #' @param X Input
 #' @param ncod Number of digits coding each allele
@@ -12,7 +11,7 @@
 #' and loci names during conversion.
 #' @param chk.plocod  Defalult TRUE. The function checks coherence 
 #' in ploidy and number of digits coding alleles for loci data during conversion.
-
+#' @keywords internal
 
 #--------------------------------------------------------------------#
 #-LOCUS MATRIX TO:
@@ -172,9 +171,9 @@ int.loc2loc <- function(X,
     X <- int.check.colnames(X)
     X <- int.check.rownames(X)
   }
-   
+  
   if(chk.plocod) {
-  ncod <- int.check.ncod(X, ploidy = ploidy, ncod = ncod)
+    ncod <- int.check.ncod(X, ploidy = ploidy, ncod = ncod)
   }
   
   # separate alleles with the character "sep.out" 
@@ -359,7 +358,7 @@ int.listal2list <- function(X,
                   tmp <- apply(x, 1, paste, sep = sep.out)
                   tmp <- gsub("(NA)+", NA, tmp)
                   tmp
-                  })
+                })
   out
   
 }

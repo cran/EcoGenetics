@@ -7,8 +7,12 @@
 
 setClassUnion("dataframeORmatrix",
 							c("data.frame", "matrix"))
+setClassUnion("matrixORnull",
+              c("matrix", "NULL"))
 setClassUnion("characterORnull",
 							c("character", "NULL"))
+setClassUnion("characterORlogical",
+              c("character", "logical"))
 setClassUnion("characterORmissing",
               c("character", "missing"))
 setClassUnion("listORnull", 
@@ -26,12 +30,14 @@ setClassUnion("intORnull",
 
 
 #------------------------------------------------------------------------------#
-#' Scaling a data frame or matrix to 0 - 1 range
+#' Scaling a data frame or matrix to [0, 1] or [-1, 1] ranges
 #' 
 #' @param dfm Data frame, matrix or vector to scale.
+#' @param method Scaling method: "zero.one" for scaling to [0, 1], "one-one" for scaling to [-1,1].
 #' @description This program scales each column of a data frame or a matrix 
-#' to 0-1 range, computing ((X)\emph{ij} - (Xmin)\emph{i}) / range((X)\emph{i}) 
-#' for each individual \emph{j} of the variable \emph{i}.
+#' to [0,1] range, computing ((X)\emph{ij} - (Xmin)\emph{i}) / range((X)\emph{i}) 
+#' for each individual \emph{j} of the variable \emph{i} or to [-1,1] range 
+#' computing  2 *((X)\emph{ij} - (Xmin)\emph{i}) / range((X)\emph{i}) -1
 #' @examples
 #' 
 #' \dontrun{
@@ -49,14 +55,44 @@ setClassUnion("intORnull",
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
 #' @export
 
-aue.rescale  <- function(dfm) {
+aue.rescale  <- function(dfm, method =c("zero.one", "one.one")) {
+  method <- match.arg(method)
   dfm <- as.data.frame(dfm)
+  
   col <- apply(dfm, 2, function(X) { 
+    if(method == "zero.one") {
     (X - min(X, na.rm = TRUE)) / diff(range(X, na.rm = TRUE))
+    } else if(method == "one.one") {
+    (2 * (X - min(X, na.rm = TRUE)) / diff(range(X, na.rm = TRUE))) - 1
+    }
   })
   return(col)
 }
 
+
+#' Phenotypic similarity for vector, matrix or data frame acoording to Ritland (1996)
+#' @param dfm Data frame, matrix or vector. If dfm is not a vector, the program
+#' returns a list of matrices.
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @export
+
+aue.phenosimil <- function(X) {
+  
+  ps<- function(y) {
+    y.norm <- y - mean(y)
+    y.norm <- outer(y.norm, y.norm, "*")
+    y.norm <- y.norm / var(y)
+    y.norm
+  }
+  
+  if(is.matrix(X) || is.data.frame(X)) {
+    out <- lapply(1:ncol(X), function(i) ps(X[, i]))
+    names(out) <- colnames(X)
+  } else if(is.vector(X)) {
+    out <- ps(X)
+  }
+  out
+}
 
 #------------------------------------------------------------------------------#
 #' Detection of metacharacters
@@ -333,7 +369,11 @@ aue.fqal <- function(eco, grp = NULL) {
   for(i in 1:nfact) {
     eco2 <- eco[which(eco@S[,cual] == i)]
     clases<- as.numeric(eco2@INT@loc.fac)
+    if(eco@INT@type == "codominant") {
     tabla <- eco2@A
+    } else {
+      tabla <- eco2@G
+    }
     tabla <- 2 * tabla
     frecuencia <- apply(tabla, 2, sum)
     alelos.locus <- tapply(frecuencia, clases, sum)
@@ -411,7 +451,7 @@ aue.circle <- function(mat, r, x0, y0, smooth = 100) {
 		yd <- round(r*sin(theta)) 
 		mat[x0 + xd, y0 + yd] <- 1
 	}
-	mat
+  as.matrix(mat)
 }
 
 
@@ -429,81 +469,68 @@ aue.point <- function(mat, r, x0, y0) {
 	ymat <- row(mat)
 	mat2 <- mat - mat
 	mat2[sqrt((xmat - x0)^2 + (ymat -y0)^2) <= r] <- 1
-	mat2
+	as.matrix(mat2)
 }
 
-
 #------------------------------------------------------------------------------#
-#' Solid diamond
+#' Solid ellipse
 #' @param mat Input raster matrix.
-#' @param r Radius of the square in pixels.
-#' @param x0 Square center- x position.
-#' @param y0 Square center- y position.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @param r Ellipse expansion factor. Default = 1
+#' @param a x radius (semimajor axis)
+#' @param b y radius (seminimor axis)
+#' @param x0 Ellipse center- x position.
+#' @param y0 Ellipse center- y position. 
+#' @param theta rotation angle in degrees.
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
 #' @keywords internal
 
-aue.diamond<- function(mat, r, x0, y0) {
-	xmat <- col(mat)
-	ymat <- row(mat)
-	mat2 <- mat - mat
-	mat2[abs(xmat-x0) + abs(ymat -y0) <= r] <- 1
-	mat2
+aue.ellipse <- function(mat, a = 1, b = 1, x0, y0, theta = 0) { 
+  
+  x.mat <- col(mat)
+  y.mat <- row(mat)
+  #degrees to radians
+  theta = theta * pi / 180
+  #rotate axis
+  x.rot <- x.mat*cos(theta) + y.mat*sin(theta)
+  y.rot <- -x.mat*sin(theta) + y.mat*cos(theta)
+  x0.rot <- x0*cos(theta) + y0*sin(theta)
+  y0.rot <- -x0*sin(theta) + y0*cos(theta)
+  #create image
+  mat2 <- mat - mat
+  mat2[sqrt((x.rot - x0.rot)^2/a^2 + (y.rot -y0.rot)^2/b^2) <= 1] <- 1
+  as.matrix(mat2)
 }
 
 
 #------------------------------------------------------------------------------#
 #' Solid square
 #' @param mat Input raster matrix.
-#' @param r Radius of the square in pixels.
+#' @param d Radius of the square in pixels.
 #' @param x0 Square center in the x direction.
 #' @param y0 Square center in the y direction.
+#' @param theta rotation angle in degrees.
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @keywords internal
  
-aue.square <- function(mat, d, x0, y0) {
+aue.square <- function(mat, d, x0, y0, theta = 0) {
 	xmat <- col(mat)
 	ymat <- row(mat)
+	
+	x.mat <- col(mat)
+	y.mat <- row(mat)
+	#degrees to radians
+	theta = theta * pi / 180
+	#rotate axis
+	x.rot <- x.mat*cos(theta) + y.mat*sin(theta)
+	y.rot <- -x.mat*sin(theta) + y.mat*cos(theta)
+	x0.rot <- x0*cos(theta) + y0*sin(theta)
+	y0.rot <- -x0*sin(theta) + y0*cos(theta)
+	
 	mat2 <- mat - mat
-	mat2[pmax(abs(xmat-x0), abs(ymat -y0)) <= d] <- 1
-	mat2
+	mat2[pmax(abs(x.rot-x0.rot), abs(y.rot -y0.rot)) <= d] <- 1
+	as.matrix(mat2)
 }
 
-
-### Other image manipulation functions
-#------------------------------------------------------------------------------#
-#' Local filter
-#' @description This program applies a function defined by the user, 
-#' into a circle of radius r around each pixel of a raster, assigning
-#' the result to the focal pixel.
-#' @param mat Input raster matrix.
-#' @param r Radius of the filter in pixels.
-#' @param fun Function to apply.
-#' @examples
-#' 
-#' \dontrun{
-#' 
-#' ras <- matrix(eco[["P"]][,1],15,15)
-#' image(ras)
-#' ras.mean <- aue.filter(ras, 3, mean)
-#' image(ras.mean)
-#' 
-#' }
-#' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
-#' @keywords internal
-#' @export
-
-aue.filter <- function(mat, r, fun) {
-  mresamp <- mat - mat
-  for(i in 1:nrow(mat)) {
-    for(j in 1:ncol(mat)) {
-      area <- aue.point(mresamp, r, i, j)
-      tot <- sum(area != 0)
-      mresamp[i, j] <- fun(mat * area)
-    }
-  }
-  t(mresamp)
-}
 
 
 #------------------------------------------------------------------------------#
@@ -519,7 +546,7 @@ aue.circle.w <- function(mat, x0, y0) {
   ymat <- row(mat)
   mat2 <- mat - mat
   mat2 <- sqrt((xmat - x0)^2 + (ymat -y0)^2)
-  mat2
+  as.matrix(mat2)
 }
 
 
@@ -529,7 +556,7 @@ aue.circle.w <- function(mat, x0, y0) {
 #' @description This function returns a data frame with the column number (x),
 #' row number (y) and cell value (z) of each pixel in a raster.
 #' @param mat Input raster matrix.
-#' 
+#' @param out output format: "data.frame" (default) or "matrix".
 #' @examples
 #' 
 #' \dontrun{
@@ -545,20 +572,185 @@ aue.circle.w <- function(mat, x0, y0) {
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @export
 
-aue.image2df <- function(mat) {
-	xdim <- nrow(mat)
-	ydim <- ncol(mat)
-	mat.twocol <- data.frame(matrix(0, xdim * ydim, 3))
-	colnames(mat.twocol) <- c("x", "y", "z")
-	count <- 1
-	for(j in 1:ydim) {
-		for(i in 1:xdim) {
-			mat.twocol[count, ] <- c(i, j, mat[i, j])
-			count <- count + 1
-		}
-	}
-	mat.twocol
+aue.image2df <- function(mat, origin = c("upperleft", "lowerleft"), out = c("data.frame", "matrix")) {
+  
+  if(class(mat) != "matrix") {
+  if(class(mat) == "data.frame") {
+  mat <- as.matrix(mat)
+  } else {
+    stop("the input must be of class <matrix> or <data.frame>")
+  }
+  }
+  origin <- match.arg(origin)
+  out <- match.arg(out)
+  xdim <- ncol(mat)
+  ydim <- nrow(mat)
+  
+  if(origin == "lowerleft") {
+  mat <- aue.rotate(mat, c(4,3,2,1))
+  }
+  
+  mat.twocol <- expand.grid(1:ydim, 1:xdim)[2:1]
+  
+  mat.twocol <- cbind(mat.twocol, as.vector(mat))
+  colnames(mat.twocol) <- c("x", "y", "z")
+  # faster version. Leandro Roser, july 2015
+  
+  if(out == "data.frame") {
+    mat.twocol <- data.frame(mat.twocol)
+  }
+  attr(mat.twocol, "origin") <- origin
+  
+  mat.twocol
+  
 }
 
 #------------------------------------------------------------------------------#
+#' Transforming a data frame into a raster
+#' 
+#' @description This is the inverse function of aue.image2df
+#' @param x output of aue.image2df
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @export
 
+aue.df2image <- function(x, origin = "upperleft") {
+  
+  out <- matrix(x[,3], ncol = max(x[,1]))
+  
+  if(!is.null(attr(x, "origin"))) {
+    if(attr(x, "origin") == "lowerleft") {
+      out <- aue.rotate(out, c(4,3,2,1))
+    }
+  }
+  if(origin == "lowerleft") {
+    out <- aue.rotate(out, c(4,3,2,1))
+  }
+  
+  out
+  
+}
+
+
+#------------------------------------------------------------------------------#
+#' Transforming an adyacency matrix into a local weight matrix for a point with coordinates (x0,y0)
+#' 
+#' @param x input graph
+#' @param x0 point row
+#' @param y0 point column
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
+
+aue.ad2wg <- function(x, x0, y0) {
+  
+  temp <- aue.image2df((x))
+  
+  #find (x0,y0) position
+  x <- x-x
+  x[x0,y0] <- 1
+  lugar <- which(x == 1)
+  
+  # create output
+  nind <- nrow(temp)
+  out <- matrix(0, nind, nind)
+  out[lugar,] <- temp[,3]
+  out
+}
+
+#------------------------------------------------------------------------------#
+#' Rotation of a matrix
+#' 
+#' @description The program flips the matrix in the desired direction, given as a vector with four 
+#' coordinates indicating the matrix corners (1 = upper left, 2= upper right, 3 = lower right, 4 = lower left).
+#' The position of the input matrix is c(1,2,3,4). For example, a transposition is c(1,4,3,2).
+#' @param x input matrix
+#' @param direction vector with four coordinates indicating the position of the matrix angles. 
+#' 1 = upper left, 2= upper right, 3 = lower right, 4 = lower left. 
+#' 
+#' @param y0 point column
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
+#' 
+
+aue.rotate <- function(x, direction = c(1,2,3,4)) {
+  direction <- deparse(substitute(direction))
+  direction <- gsub(" ", replacement = "", direction)
+  if(direction == "c(1,2,3,4)") {
+    out <- x
+  } else if(direction == "c(1,4,3,2)") {
+    out <- t(x)
+  } else if(direction == "c(4,3,2,1)") {
+    out <- x[nrow(x):1,]
+  } else if(direction == "c(2,1,4,3)") {
+    out <- x[, ncol(x):1]
+  } else if(direction == "c(3,4,1,2)") {
+    out <- x[nrow(x):1,ncol(x):1]
+  } else if(direction == "c(4,1,2,3)") {
+    out <- t(x[nrow(x):1,])
+  } else if(direction == "c(2,3,4,1)") {
+    out <- t(x[, ncol(x):1])
+  } else if(direction == "c(3,2,1,4)") {
+    out <- t(x[nrow(x):1, ncol(x):1])
+  } else if(direction == "c(3,2,1,4)") {
+    out <- t(x[nrow(x):1, ncol(x):1])
+  } else {
+    stop("invalid rotation")
+  }
+  out
+}
+
+
+#' Weight matrices based on different geometries
+#' 
+#' @description Spatial weights for individuals with XY coordinates
+#' @param XY Matrix/data frame with projected coordinates.
+#' @param geometry Gemetry for spatial weight matrix: "circle", "ellipse", "square", 
+#' "diamond"
+#' @param a x radius (semimajor axis)
+#' @param b y radius (seminimor axis)
+#' @param d figure distance.
+
+
+
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
+
+aue.geom.dist <- function(XY, geometry = c("ellipse", "square"),  d = 1,
+                          a = 1, b = 1, row.sd = FALSE, theta = 0) {
+  
+  X <- XY[,1]
+  Y <- XY[,2]
+  
+  #degrees to radians
+  theta <- theta * pi / 180
+  #rotate axis
+  X.rot <- X*cos(theta) + Y*sin(theta)
+  Y.rot <- -X*sin(theta) + Y*cos(theta)
+  
+  #create matrices#
+  geometry <- match.arg(geometry)
+  rowmat <- nrow(XY)
+  x0 <- matrix(X.rot, rowmat, rowmat)
+  y0 <- matrix(Y.rot, rowmat, rowmat)
+  x <- t(x0)
+  y <- t(y0)
+  
+  if(geometry == "ellipse") {
+    Z <- sqrt((x - x0)^2/a^2  + (y -y0)^2/b^2) 
+    Z[Z <= d] <- 1
+    Z[Z > d] <- 0
+    
+  } else if(geometry == "square") {
+    Z <- pmax(abs(x-x0), abs(y -y0)) 
+    Z[Z <= d] <- 1
+    Z[Z > d] <- 0
+    
+  }
+  
+  if(row.sd) {
+    Zsum <- apply(Z, 1, sum)
+    Z <- Z/Zsum
+  }
+  
+  Z
+}
+  

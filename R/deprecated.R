@@ -1,4 +1,9 @@
-# Functions deprecated in EcoGenetics version 1.2.0-2
+#' Functions deprecated in EcoGenetics version 1.2.0-2
+#' @export
+
+aue.filter <- function(...) {
+  stop("aue.filter is deprecated for Ecogenetics 1.2.0-2. Use eco.slide")
+}
 
 aue.idig <- function(...) {
   stop("aue.idig is deprecated for Ecogenetics 1.2.0-2. Use eco.format")

@@ -98,7 +98,7 @@ setGeneric("ecoslot.G<-", function(object, G.processed = TRUE, order.G = FALSE,
                                    missing = c("0", "NA", "MEAN"),
                                    NA.char = "NA", poly.level = 5,
                                    rm.empty.ind = FALSE, value) 
-                           standardGeneric("ecoslot.G<-"))
+  standardGeneric("ecoslot.G<-"))
 
 
 #' @rdname EcoGenetics-accessors
@@ -139,7 +139,13 @@ setReplaceMethod("ecoslot.G", "ecogen",
                                             poly.level = poly.level)
                      
                      # unfolding tempo
-                     object@A <- as.data.frame(tempo@tab)
+                     
+                     ## if marker type is "dominant", A is a pointer to G for assignments
+                     ## and extraction methods, and the slot is empty
+                     if(tempo@type == "codominant") {
+                       object@A <- as.data.frame(tempo@tab)
+                     }
+                   
                      object@INT <- int.genind2gendata(tempo)
                      
                      ncod <- tempo@ncod
@@ -187,7 +193,14 @@ setGeneric("ecoslot.A", function(X) standardGeneric("ecoslot.A"))
 #' @rdname EcoGenetics-accessors
 #' @exportMethod ecoslot.A
 
-setMethod("ecoslot.A", "ecogen", function(X) X@A)
+setMethod("ecoslot.A", "ecogen", function(X) {
+  # DOMINANT / CODOMINANT MARKER DEPENDENT
+  if(X@INT@type == "codominant") {
+    return(X@A)
+  } else {
+    return(NULL)
+  }
+})
 
 
 setGeneric("ecoslot.A<-", function(object, value) standardGeneric("ecoslot.A<-"))
@@ -198,8 +211,8 @@ setGeneric("ecoslot.A<-", function(object, value) standardGeneric("ecoslot.A<-")
 
 setReplaceMethod("ecoslot.A", "ecogen", function(object, value) {
   message("<A> slots can not be directly replaced. The <A> slot content
-           is generated when a new data frame is assigned to 
-           the slot <G>")
+          is generated when a new (codominant) data frame is assigned to 
+          the slot <G>")
   object
 })
 
@@ -301,21 +314,21 @@ setMethod("ecoslot.OUT", "ecogen",
             
             if(length(u) == 0) {
               if(length(X@OUT) != 0) {
-              out.clas <- character()
-              
-              for(i in seq(along = X@OUT)) { 
-                out.clas[i] <- class(X@OUT[[i]])[1]
-              }
-              
-              out.names <- data.frame(names(X@OUT), 
-                                      rep("|", length(X@OUT)), 
-                                      out.clas)
-              colnames(out.names) <- c("OBJECTS","", "CLASSES")
-              cat("\n")
-              return( out.names)
+                out.clas <- character()
+                
+                for(i in seq(along = X@OUT)) { 
+                  out.clas[i] <- class(X@OUT[[i]])[1]
+                }
+                
+                out.names <- data.frame(names(X@OUT), 
+                                        rep("|", length(X@OUT)), 
+                                        out.clas)
+                colnames(out.names) <- c("OBJECTS","", "CLASSES")
+                cat("\n")
+                return( out.names)
               } else {
                 return("OUT is empty")
-            }
+              }
             }
             
             cual <- which(names(X@OUT) %in% u)
@@ -323,7 +336,7 @@ setMethod("ecoslot.OUT", "ecogen",
               return(logical(0))
             }
             out <- X@OUT[cual]
-          
+            
             out
           })
 
@@ -371,7 +384,7 @@ setReplaceMethod("ecoslot.OUT", "ecogen", function(object, value) {
   
   #-------------------------------#
   Z <- object
-
+  
   # fill OUT slot
   
   # original names 
@@ -403,5 +416,5 @@ setGeneric("int.ecoslot.INT<-", function(object, value) standardGeneric("int.eco
 setReplaceMethod("int.ecoslot.INT", "ecogen", function(object, value) { 
   slot(object, "INT") <- value
   object
-  })
+})
 #--------------------------------------------------------------------#

@@ -59,7 +59,7 @@ setMethod("[", c("ecogen", "numeric", "missing", "ANY"),
             
             
             # create an int.genind object if nrow(G) != 0
-            if(dim(x@G)[1] != 0) {
+            if(all(dim(x@G) != 0)) {
               tempo <- int.df2genind(x@G[i, , drop = FALSE], 
                                      missing = x@INT@missing,
                                      ploidy = x@INT@ploidy,
@@ -70,16 +70,34 @@ setMethod("[", c("ecogen", "numeric", "missing", "ANY"),
             }
             
             z <- new("ecogen")
-            z@XY <- x@XY[i, ,drop =FALSE]
-            z@P <- x@P[i, ,drop =FALSE]
+            
+            # if(all...) condition required because subsetting over matrices of 
+            # dimension 0 generates a matrix of dimension i x 0 (undesired)
+            if(all(dim(x@XY) != 0)) {
+            z@XY <- x@XY[i, , drop =FALSE]
+            }
+            if(all(dim(x@P) != 0)) {
+            z@P <- x@P[i, , drop =FALSE]
+            }
+            
+            if(all(dim(x@G) != 0)) {
             z@G <- as.data.frame(int.genind2df(tempo), 
                                  stringsAsFactors = FALSE)
-            z@A <- data.frame(tempo@tab)
+            }
             
-            z@E <- x@E[i, ,drop =FALSE]
+            # IF TYPE == DOMINANT -> A is empty
+            if(x@INT@type == "codominant") {
+            if(all(dim(x@A) != 0)) {
+            z@A <- data.frame(tempo@tab)
+            }
+            }
+            
+            if(all(dim(x@E) != 0)) {
+            z@E <- x@E[i, , drop =FALSE]
+            }
             
             #all S columns as factors
-            if(dim(x@S)[1] != 0) {
+            if(all(dim(x@S) != 0)) {
               Sout <- x@S[i, , drop = FALSE]
               for(n in 1:(ncol(Sout))) {
                 Sout[, n] <- factor(Sout[, n])
@@ -89,7 +107,9 @@ setMethod("[", c("ecogen", "numeric", "missing", "ANY"),
             }
             z@S <- Sout
             
-            z@C  <- x@C[i, ,drop =FALSE]
+            if(all(dim(x@C) != 0)) {
+            z@C  <- x@C[i, , drop =FALSE]
+            }
             z@OUT  <- list()
             z@INT <- int.genind2gendata(tempo)
             
@@ -118,7 +138,16 @@ setMethod("[[", c("ecogen","numeric", "missing"), function(x, i, j) {
   if(i == 1) return(x@XY)
   if(i == 2) return(x@P)
   if(i == 3) return(x@G)
-  if(i == 4) return(x@A)
+  
+  # if x is dominant, A return G
+  if(i == 4) {
+    if(x@INT@type == "codominant") {
+      return(x@A)
+    } else {
+      return(NULL)
+    }
+  }
+  
   if(i == 5) return(x@E)
   if(i == 6) return(x@S)
   if(i == 7) return(x@C)
@@ -140,7 +169,7 @@ setMethod("[[", c("ecogen","character", "missing"), function(x, i, j) {
   if(toupper(i) ==  "XY") return(ecoslot.XY(x))
   if(toupper(i) == "P") return(ecoslot.P(x))
   if(toupper(i) == "G") return(ecoslot.G(x))
-  if(toupper(i) == "A") return(ecoslot.A(x))
+  if(toupper(i) == "A") return(ecoslot.A(x)) # DOMINANCE / CODOMINANCE HANDLED WITH THE ACCESSOR
   if(toupper(i) == "E") return(ecoslot.E(x))
   if(toupper(i) == "S") return(ecoslot.S(x))
   if(toupper(i) == "C") return(ecoslot.C(x))
@@ -166,8 +195,16 @@ setMethod("[[", c("ecogen","character", "missing"), function(x, i, j) {
 setReplaceMethod("[[", c("ecogen","numeric", "missing"), function (x, i, j, ..., value) {
   if(i == 1) ecoslot.XY(x) <- value
   if(i == 2) ecoslot.P(x) <- value
-  if(i == 3) ecoslot.G(x, ...) <- value
-  if(i == 4) ecoslot.A(x) <- value
+  if(i == 3) ecoslot.G(x, ...) <- value  # if x is dominant, A return G
+   
+  if(i == 4) { # CODOMINANT / DOMINANT DEPENDENT
+      if(x@INT@type == "codominant") {
+        ecoslot.A(x) <- value
+      } else {
+        return(x)
+      }
+    } 
+  
   if(i == 5) ecoslot.E(x) <- value
   if(i == 6) ecoslot.S(x) <- value
   if(i == 7) ecoslot.C(x) <- value
@@ -190,7 +227,7 @@ setReplaceMethod("[[",c("ecogen","character", "missing"),  function (x, i, j,...
   if(toupper(i) == "XY") ecoslot.XY(x) <- value
   if(toupper(i) == "P") ecoslot.P(x) <- value
   if(toupper(i) == "G") ecoslot.G(x, ...) <- value
-  if(toupper(i) == "A") ecoslot.A(x) <- value
+  if(toupper(i) == "A") ecoslot.A(x) <- value # DOMINANCE / CODOMINANCE HANDLED WITH THE ACCESSOR
   if(toupper(i) == "E") ecoslot.E(x) <- value
   if(toupper(i) == "S") ecoslot.S(x) <- value
   if(toupper(i) == "C") ecoslot.C(x) <- value

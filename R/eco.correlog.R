@@ -29,6 +29,7 @@
 #' resampling and the associated confidence intervals of the null hypothesis.
 #'  If test = "permutation" (default) a permutation test is made and the P-values 
 #'  are computed. 	
+#' @param alpha Value for alpha. Default alpha = 0.05.
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the alternative hypothesis.
 #' Other options are: "two.sided", "greater" and "less".	
@@ -215,6 +216,7 @@ setGeneric("eco.correlog",
                     method = c("I", "C", "CC"),
                     nsim = 99,
                     test = c("permutation", "bootstrap"),
+                    alpha = 0.05,
                     alternative = c("auto", "two.sided", 
                                     "greater", "less"),
                     adjust = "holm",
@@ -340,6 +342,9 @@ setGeneric("eco.correlog",
              
              #output data frame/s construction
              
+             counter <- 1          
+             n.classes <- length(d.min)
+             
              #bootstrap case
              if(test == "bootstrap") {
                
@@ -354,11 +359,14 @@ setGeneric("eco.correlog",
                
                
                for(j in 1:nvar) {
+                 
                  var.test <- Z[, j]
                  
-                 for(i in 1:length(d.min))  {
-                   cat("\r", "Computing",  
-                       ceiling(i*100/length(d.min)), "%", "trait", j)
+                 for(i in 1:n.classes)  {
+                 
+                   cat(paste("\r", "simulations...computed",
+                             round(100 * i / n.classes), "%\t\t"))
+                   
                    lag2 <- lag[[i]]
                    est <- select_method(u = var.test, 
                                         con = lag2, 
@@ -381,7 +389,11 @@ setGeneric("eco.correlog",
                    lista[[j]][1, 3:4] <- cor.zero$conf.int
                    lista[[j]][1, 5] <- nrow(Z) 
                  }
+                 cat(paste("\r", "variable", counter, "--- total progress",
+                           round(100 * counter / nvar), "%    "))
+                 counter <- counter + 1
                  cat("\n")
+                
                }
                
                #permutation case
@@ -401,9 +413,12 @@ setGeneric("eco.correlog",
                for(j in 1:nvar) {
                  var.test <- Z[, j]
                  
-                 for(i in 1:length(d.min))  {
-                   cat("\r", "Computing",  
-                       ceiling(i*100/length(d.min)), "%", "trait", j)
+                 for(i in 1:n.classes)  {
+                   
+                   cat(paste("\r", "simulations...computed",
+                             round(100 * i / n.classes), "%\t\t"))
+  
+                   
                    lag2 <- lag[[i]]
                    est <- select_method(u = var.test, 
                                         con = lag2, 
@@ -438,10 +453,11 @@ setGeneric("eco.correlog",
                    lista[[j]][ , 3] <- p.adjust(lista[[j]][ , 3], 
                                                 method = adjust)
                  }
-                 
+                 cat(paste("\r", "variable", counter, "--- total progress",
+                           round(100 * counter / nvar), "%"))
+                 counter <- counter + 1
                  cat("\n")
                }
-               
              }
              
              
@@ -470,10 +486,8 @@ setGeneric("eco.correlog",
              salida@TEST <- test
              salida@NSIM <- nsim
              salida@PADJUST <- paste(adjust, "-sequential:", sequential)
-             
-             cat("\n")
-             cat("done!")
-             cat("\n\n")
+
+             cat("\ndone!\n\n")
              
              
              salida
