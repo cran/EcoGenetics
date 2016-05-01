@@ -1,3 +1,22 @@
+EcoGenetics 1.2.0-3 (Release date: 2015-07-xx)
+==============
+	
+	Changes:
+ 
+ * eco.lsa function is able now to perform a multivariate analysis over single variables. The output is an S4 object, who contains
+   matrices of individuals x variables. The multivariate capabilities incorporated in the packace (a multivariate support was added also 
+   for eco.correlog in EcoGenetics 1.2.0-1), provide a gereralized framework for the analysis of spatial autocorrelation in R.
+ * A new multivariate plot method is available ("eco.rasterplot"). This is a generalized method which allows to plot by group and 
+   using conditional filters. The method is applicated in the package for multivariate local spatial analysis. 
+ * correction in eco.lsa for supporting NAs presence.
+ * Enhanced examples for eco.lsa showing the multivariate functionality.
+ * Minor corrections in package style and code.
+ * The slot A of ecogen object was removed for dominant (presence- absence) markers, to avoid redundant data storage.
+   The "show" and other methods were adapted to this marker type case.
+ * Plot method available for connection networks.
+ * Deprected aue.filter and included as a case in eco.slidewindow.
+ 
+
 EcoGenetics 1.2.0-2 (Release date: 2015-07-11)
 ==============
 	
@@ -49,7 +68,7 @@ EcoGenetics 1.2.0 (Release date: 2015-05-11)
   Many functions of the version 1.1.0 were adapted to an improved S4 
   structure. Three main functions for autocorrelation analysis were
   generated: eco.gsa, eco.lsa and eco.correlog, replacing the deprecated
-  eco.moran, eco.geary, eco.joincount,  eco.localmoran, 
+  eco.moran, eco.geary, eco.joincount, eco.localmoran, 
   eco.getisord and eco.autocor.
   * New functions: eco.detrend, eco.2spagedi, aux.image2df, aux.filter. 
   New functionalities: partial Mantel test, partial Mantel correlograms,

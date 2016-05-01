@@ -57,14 +57,14 @@
 setGeneric("eco.theilsen", 
            function(stacked, date, 
                     adjust = "none") {
-                    
+             
              adjust <- match.arg(adjust)
              
              esperar <- function(i) {
                cat ("\r", ceiling(100 * i / steps), "% ",
                     "completed", sep = "")
              }
-              
+             
              cat("starting...", "\n\n")
              
              fun <- function(date, data)  {

@@ -1,6 +1,7 @@
 #' Global spatial analysis
 #' 
-#' @description This program computes Moran's I, Geary's C,  Bivariate Moran's I or
+#' @description 
+#' Univariate and multivariable global spatial analysis.This program computes Moran's I, Geary's C,  Bivariate Moran's I or
 #' Join-count statistics with P-values.
 #' 
 #' The program allows the analysis of a single variable or multiple variables. 
@@ -32,7 +33,7 @@
 #' @param nsim Number of Monte-Carlo simulations. 
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the alternative hypothesis.
-#' Other options are: "two.sided", "greater" and "less".	
+#' Other options are: "two.sided", "greater" and "less".  
 #' @param adjust Correction method of P-values for multiple tests, 
 #' passed to \code{\link[stats]{p.adjust}}. Defalut is "fdr".
 #' @param row.sd Logical. should be row standardized the matrix? Default FALSE 
@@ -192,14 +193,14 @@ setGeneric("eco.gsa",
              
              Z.class <- class(Z)
              if(method != "JC") {
-             if(Z.class == "matrix" | Z.class == "data.frame") {
-               c.Z <- apply(Z, 2, class)
-               if(any(c.Z != "integer") & any(c.Z != "numeric")) {
+               if(Z.class == "matrix" | Z.class == "data.frame") {
+                 c.Z <- apply(Z, 2, class)
+                 if(any(c.Z != "integer") & any(c.Z != "numeric")) {
+                   stop(paste("Non numeric data.", method, "requires numeric data"))
+                 }
+               } else if(Z.class != "numeric" & Z.class != "integer") {
                  stop(paste("Non numeric data.", method, "requires numeric data"))
                }
-             } else if(Z.class != "numeric" & Z.class != "integer") {
-               stop(paste("Non numeric data.", method, "requires numeric data"))
-             }
              } else {
                if(Z.class == "matrix" | Z.class == "data.frame") {
                  c.Z <- apply(Z, 2, class)
@@ -207,12 +208,12 @@ setGeneric("eco.gsa",
                    message(paste("Note: Non-factor data present. Elements in variables will be 
                                  treated as factor levels"))
                  }
-               } else if(Z.class != "numeric" & Z.class != "integer" & Z.class != "factor" & Z.class != "character") {
-                 stop("unknown data class")
+                 } else if(Z.class != "numeric" & Z.class != "integer" & Z.class != "factor" & Z.class != "character") {
+                   stop("unknown data class")
                }
              }
-               
-              
+             
+             
              if(!is.null(Y)) {
                Y.class <- class(Y)
                if(Y.class != "numeric" & Y.class != "integer" & Y.class != "vector") {
@@ -250,7 +251,7 @@ setGeneric("eco.gsa",
                  out <- int.crosscor(Z = u, Y = Y, plotit = plotit, ...)
                } else if(method == "JC") {
                  if(ploidy > 1) {
-                 u <- aue.sort(X = u, ncod = ncod, ploidy = ploidy)
+                   u <- aue.sort(X = u, ncod = ncod, ploidy = ploidy)
                  }
                  out <- int.joincount(Z = u, adjust = adjust, ...)
                }
@@ -280,11 +281,11 @@ setGeneric("eco.gsa",
                salida@ALTER <- res$alter
                salida@NSIM <- res$nsim
              }
-
-               
+             
+             
              if(multiple) {
                #multiple tests
-            
+               
                res <- list()
                
                #test
@@ -295,24 +296,23 @@ setGeneric("eco.gsa",
                  
                }
                if(method != "JC") {
-               res <- int.multitable(res)
+                 res <- int.multitable(res)
+                 salida@METHOD <- name
+                 salida@NSIM <- nsim
+                 salida@ADJUST <- adjust
+                 salida@MULTI <- res$results
+               }
+             }
+             
+             #rearranging JC
+             if(method == "JC") {
                salida@METHOD <- name
                salida@NSIM <- nsim
                salida@ADJUST <- adjust
-               salida@MULTI <- res$results
-               }
+               salida@MULTI <- res$results[,1:4]
              }
-                 
-                 #rearranging JC
-                 if(method == "JC") {
-                   salida@METHOD <- name
-                   salida@NSIM <- nsim
-                   salida@ADJUST <- adjust
-                   salida@MULTI <- res$results[,1:4]
-                 }
              
              salida
              })
-            
 
 

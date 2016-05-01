@@ -8,7 +8,7 @@
 #' @param test If test = "bootstrap", the program generates a bootstrap 
 #' resampling and the associated confidence intervals of the null hypothesis.
 #'  If test = "permutation" (default) a permutation test is made and the p value 
-#'  is calculated. 	 
+#'  is calculated.    
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the hypothesis by difference between the median of the simulations
 #' and the observed value. Other options are: "two.sided", "greater" and "less".
@@ -25,7 +25,7 @@
 int.joincount <- function(Z, con, ncod, ploidy, nsim,
                           alternative, test = "permutation", 
                           adjust.n = FALSE, adjust) {
-   
+  
   con <- int.check.con(con)
   con <- as.vector(con)
   
@@ -43,7 +43,7 @@ int.joincount <- function(Z, con, ncod, ploidy, nsim,
     outmat <- outer(input, input, FUN = "paste", sep = "")
     outmat <- as.matrix((aue.sort(outmat, ploidy = 2)))  #symmetric matrix
     outmat <- as.factor(outmat)
-
+    
     temp <- list()
     for(i in seq(along = levels(outmat))) {
       temp[[i]] <- as.integer(outmat == levels(outmat)[i])
@@ -74,7 +74,7 @@ int.joincount <- function(Z, con, ncod, ploidy, nsim,
   
   res <- list("analysis" = "Join-count", 
               "nsim" = nsim,
-               "results" = ran)
+              "results" = ran)
   
   res
   

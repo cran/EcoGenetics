@@ -35,7 +35,7 @@
 #'  are computed.   
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the alternative hypothesis.
-#' Other options are: "two.sided", "greater" and "less".	
+#' Other options are: "two.sided", "greater" and "less".  
 #' @param adjust P-values correction method for multiple tests 
 #' passed to \code{\link[stats]{p.adjust}}. Defalut is "holm".
 #' @param sequential Should be performed a Holm-Bonberroni (Legendre and Legendre, 2012) 
@@ -283,31 +283,31 @@
 # of "holm" if multiple correction results too extrict.
 
 eco.malecot <- function(eco, 
-                         method = c("global", "local"), 
-                         kinmatrix =NULL,
-                         int = NULL,
-                         smin = 0,
-                         smax = NULL,
-                         nclass = NULL,
-                         kmax = NULL,
-                         seqvec = NULL,
-                         size = NULL,
-                         type = c("knearest", "radialdist"),
-                         cubic = TRUE,
-                         testclass.b = TRUE,
-                         testmantel.b = TRUE,
-                         jackknife = TRUE,
-                         cummulative = FALSE,
-                         nsim = 99, 
-                         test = c("permutation", "bootstrap"), 
-                         alternative = c("auto","two.sided", 
-                                         "greater", "less"),
-                         sequential = TRUE, 
-                         conditional = c("AUTO", "TRUE", "FALSE"),
-                         bin = c("sturges", "FD"),
-                         row.sd = FALSE,
-                         adjust = "holm",
-                         latlon = FALSE) {
+                        method = c("global", "local"), 
+                        kinmatrix =NULL,
+                        int = NULL,
+                        smin = 0,
+                        smax = NULL,
+                        nclass = NULL,
+                        kmax = NULL,
+                        seqvec = NULL,
+                        size = NULL,
+                        type = c("knearest", "radialdist"),
+                        cubic = TRUE,
+                        testclass.b = TRUE,
+                        testmantel.b = TRUE,
+                        jackknife = TRUE,
+                        cummulative = FALSE,
+                        nsim = 99, 
+                        test = c("permutation", "bootstrap"), 
+                        alternative = c("auto","two.sided", 
+                                        "greater", "less"),
+                        sequential = TRUE, 
+                        conditional = c("AUTO", "TRUE", "FALSE"),
+                        bin = c("sturges", "FD"),
+                        row.sd = FALSE,
+                        adjust = "holm",
+                        latlon = FALSE) {
   
   XY <- eco@XY
   
@@ -336,15 +336,15 @@ eco.malecot <- function(eco,
   test <- match.arg(test)
   alternative <- match.arg(alternative)
   bin <- match.arg(bin)
-  geno <- eco@A
+  geno <- ecoslot.A(eco)
   loc.fac <- as.numeric(eco@INT@loc.fac)
   nloc <- max(loc.fac)
-  nind <- nrow(eco@A)
+  nind <- nrow(ecoslot.A(eco))
   crit <- abs(qt(0.975, nloc - 1)) #critical value for CI
   
   #kinship matrix
   if(is.null(kinmatrix)) {
-  kin <- int.kin.loiselle(geno, loc.fac)
+    kin <- int.kin.loiselle(geno, loc.fac)
   } else {
     kin <- as.matrix(kinmatrix)
     diag(kin) <- 0
@@ -379,7 +379,7 @@ eco.malecot <- function(eco,
     
     modelmatrix <- modelmatrix.comp@W
     nbins <- length(modelmatrix)
-      
+    
   } else if(method == "local") {
     
     sequential <- FALSE
@@ -576,7 +576,7 @@ eco.malecot <- function(eco,
     dmin <- min(breaks.kin)
     dmax <- max(breaks.kin)
     if(dmin == 0) {
-    dmin <- exp(-100)
+      dmin <- exp(-100)
     }
     restricted <- (dist.sp >= dmin & dist.sp <= dmax)
     logdist.sp <- logdistmat[restricted]
@@ -589,10 +589,10 @@ eco.malecot <- function(eco,
     
     ###cubic interpolation
     if(cubic) {
-    Fij.detrended <- modelo$residuals
-    cubica <- lm(Fij.detrended ~ poly(logdist.sp, degree = 3))
-    capture.output(cubica.final <- step(cubica, scope = list(lower = Fij.detrended ~ 1,
-                                                             upper = cubica)))
+      Fij.detrended <- modelo$residuals
+      cubica <- lm(Fij.detrended ~ poly(logdist.sp, degree = 3))
+      capture.output(cubica.final <- step(cubica, scope = list(lower = Fij.detrended ~ 1,
+                                                               upper = cubica)))
     }
     
     ####permutation test for b. Permutation over locations. 
@@ -622,107 +622,107 @@ eco.malecot <- function(eco,
     #--------------------MANTEL TEST FOR SP-------------------------------------#
     
     if(testmantel.b) {
-    mantelcells <- (row(logdistmat)>col(logdistmat)) & restricted
-    logdist.mantel <- logdistmat[mantelcells]
-    Fij.mantel <- kin[mantelcells]
-    obs <- cor(logdist.mantel, Fij.mantel)
-    
-    repsim <- numeric()
-    N <- nrow(logdistmat)
-    for(i in 1:nsim){
-      samp <- sample(N)
-      temp <- (kin[samp, samp])[mantelcells]
-      repsim[i] <- cor(logdist.mantel, temp)
-    }
-    
-    resmantel <- int.random.test(repsim = repsim, 
-                                 obs = obs,
-                                 nsim = nsim,
-                                 test = "permutation",
-                                 alternative = "auto")
-    mantel.obs <- resmantel$obs
-    mantel.pval <- resmantel$p.val
+      mantelcells <- (row(logdistmat)>col(logdistmat)) & restricted
+      logdist.mantel <- logdistmat[mantelcells]
+      Fij.mantel <- kin[mantelcells]
+      obs <- cor(logdist.mantel, Fij.mantel)
+      
+      repsim <- numeric()
+      N <- nrow(logdistmat)
+      for(i in 1:nsim){
+        samp <- sample(N)
+        temp <- (kin[samp, samp])[mantelcells]
+        repsim[i] <- cor(logdist.mantel, temp)
+      }
+      
+      resmantel <- int.random.test(repsim = repsim, 
+                                   obs = obs,
+                                   nsim = nsim,
+                                   test = "permutation",
+                                   alternative = "auto")
+      mantel.obs <- resmantel$obs
+      mantel.pval <- resmantel$p.val
     }
     
     ##################################################################
     if(jackknife) {
-    #jackknife over loci
-    obs.jack <- matrix(0, nrow = nloc, ncol = nbins)
-    
-    
-    #jackknifing kinship per class-----------#
-    cat("\n")
-    kin.loci <- list()
-    nrepet <- nloc * nbins
-    counter <- 1
-    for(i in 1: nloc) {
-      col.delete <- which(loc.fac == i)
-      loc.fac.jack <- as.numeric(as.factor(loc.fac[-col.delete]))  # renumber the factor from 1 to nloc-1
-      geno.jack <- geno[, -col.delete]
-      kin.jack <- int.kin.loiselle(geno.jack, loc.fac.jack)
-      kin.loci[[i]] <- kin.jack
-      for(j in 1:nbins) {
-        obs.jack[i, j] <- sum(kin.jack * modelmatrix[[j]]) / sum(modelmatrix[[j]])
-        cat("\r", paste("jackknife over loci...", 100 * round(counter / (nrepet), 1), "%"))
-        counter <- counter + 1
+      #jackknife over loci
+      obs.jack <- matrix(0, nrow = nloc, ncol = nbins)
+      
+      
+      #jackknifing kinship per class-----------#
+      cat("\n")
+      kin.loci <- list()
+      nrepet <- nloc * nbins
+      counter <- 1
+      for(i in 1: nloc) {
+        col.delete <- which(loc.fac == i)
+        loc.fac.jack <- as.numeric(as.factor(loc.fac[-col.delete]))  # renumber the factor from 1 to nloc-1
+        geno.jack <- geno[, -col.delete]
+        kin.jack <- int.kin.loiselle(geno.jack, loc.fac.jack)
+        kin.loci[[i]] <- kin.jack
+        for(j in 1:nbins) {
+          obs.jack[i, j] <- sum(kin.jack * modelmatrix[[j]]) / sum(modelmatrix[[j]])
+          cat("\r", paste("jackknife over loci...", 100 * round(counter / (nrepet), 1), "%"))
+          counter <- counter + 1
+        }
       }
-    }
-    cat("\n")
-    #---------#
-    
-    ### error bars
-    obs.real <- t(replicate(nloc, tab$obs))                                                     #value without jackknife                                                        #mean of jackknife values
-    pseudo <- (nloc * obs.real) - ((nloc - 1) * obs.jack)                   #pseudo-value
-    theta <- apply(pseudo, 2, mean)
-    pseudo.variance <- apply(pseudo, 2, var)
-    sd.jack <- sqrt(pseudo.variance / nloc) 
-    ####
-    #F1 CONFIDENCE INTERVALS
-    temp.F1 <- crit * sd.jack[1]
-    F1.confint <- drop(cbind(theta[1] - temp.F1,theta[1] + temp.F1))
-    ###
-    #ALL CONFIDENCE INTERVALS
-    temp.FCI <- crit * sd.jack
-    FCI <- drop(cbind(theta - temp.FCI, theta + temp.FCI))
-    colnames(FCI) <- c("Jack.lwr", "Jack.uppr")
-    if(test == "permutation") {
-      tab[, 7] <- round(theta, 4)
-      tab[, 8] <- round(sd.jack, 4)
-      tab[, 9:10] <- round(FCI, 4)
-    } else {
-      tab[, 4] <- round(theta, 4)
-      tab[, 5] <- round(sd.jack, 4)
-      tab[, 6:7] <- round(FCI, 4)
-    }
-    
-    #---------------------------------------------------------------------------#
-    #JACKKNIFE OF THE SLOPE OVER LOCI, USING INDIVIDUALS 
-    bhat.jack <- numeric()
-    for(i in 1:nloc) {
-      mod.jack <- lm(kin.loci[[i]][restricted] ~ logdist.sp)
-      bhat.jack[i] <- as.numeric(coef(mod.jack)[2])
-    }
-    pseudo.bhat <- (nloc * rep(bhat, nloc)) - ((nloc - 1) * bhat.jack)                   #pseudo-value
-    theta.bhat <- mean(pseudo.bhat)
-    pseudovar.bhat <- var(pseudo.bhat)
-    sd.bhat <- sqrt(pseudovar.bhat / nloc)
-    temp <- crit * sd.bhat
-    bhat.confint <- drop(cbind(theta.bhat - temp,theta.bhat + temp))
-    sp.confint <- - bhat.confint /(1 - (tab$obs)[1])
-    sp.confint <- drop(c(sp.confint[2], sp.confint[1]))
-    names(sp.confint) <- c("5%", "95%")
-    
-    bhat <- round(c(bhat, sd.bhat, theta.bhat, bhat.confint[1],
-                     bhat.confint[2], x.intercept, 
-                     (tab$obs)[1], F1.confint[1], F1.confint[2]), 4)
-    
-    names(bhat) <- c("bhat", "SD","theta", "CI.5%", "CI.95%", 
-                      "X-intercept", "F1", "F1.CI.5%", "F1.CI.95%")
-    
-    sp.stat <- c(sp.stat, sp.confint[1], sp.confint[2])
-    
-    names(sp.stat) <- c("sp", "CI.5%", "CI.95%")
-    
+      cat("\n")
+      #---------#
+      
+      ### error bars
+      obs.real <- t(replicate(nloc, tab$obs))                                                     #value without jackknife                                                        #mean of jackknife values
+      pseudo <- (nloc * obs.real) - ((nloc - 1) * obs.jack)                   #pseudo-value
+      theta <- apply(pseudo, 2, mean)
+      pseudo.variance <- apply(pseudo, 2, var)
+      sd.jack <- sqrt(pseudo.variance / nloc) 
+      ####
+      #F1 CONFIDENCE INTERVALS
+      temp.F1 <- crit * sd.jack[1]
+      F1.confint <- drop(cbind(theta[1] - temp.F1,theta[1] + temp.F1))
+      ###
+      #ALL CONFIDENCE INTERVALS
+      temp.FCI <- crit * sd.jack
+      FCI <- drop(cbind(theta - temp.FCI, theta + temp.FCI))
+      colnames(FCI) <- c("Jack.lwr", "Jack.uppr")
+      if(test == "permutation") {
+        tab[, 7] <- round(theta, 4)
+        tab[, 8] <- round(sd.jack, 4)
+        tab[, 9:10] <- round(FCI, 4)
+      } else {
+        tab[, 4] <- round(theta, 4)
+        tab[, 5] <- round(sd.jack, 4)
+        tab[, 6:7] <- round(FCI, 4)
+      }
+      
+      #---------------------------------------------------------------------------#
+      #JACKKNIFE OF THE SLOPE OVER LOCI, USING INDIVIDUALS 
+      bhat.jack <- numeric()
+      for(i in 1:nloc) {
+        mod.jack <- lm(kin.loci[[i]][restricted] ~ logdist.sp)
+        bhat.jack[i] <- as.numeric(coef(mod.jack)[2])
+      }
+      pseudo.bhat <- (nloc * rep(bhat, nloc)) - ((nloc - 1) * bhat.jack)                   #pseudo-value
+      theta.bhat <- mean(pseudo.bhat)
+      pseudovar.bhat <- var(pseudo.bhat)
+      sd.bhat <- sqrt(pseudovar.bhat / nloc)
+      temp <- crit * sd.bhat
+      bhat.confint <- drop(cbind(theta.bhat - temp,theta.bhat + temp))
+      sp.confint <- - bhat.confint /(1 - (tab$obs)[1])
+      sp.confint <- drop(c(sp.confint[2], sp.confint[1]))
+      names(sp.confint) <- c("5%", "95%")
+      
+      bhat <- round(c(bhat, sd.bhat, theta.bhat, bhat.confint[1],
+                      bhat.confint[2], x.intercept, 
+                      (tab$obs)[1], F1.confint[1], F1.confint[2]), 4)
+      
+      names(bhat) <- c("bhat", "SD","theta", "CI.5%", "CI.95%", 
+                       "X-intercept", "F1", "F1.CI.5%", "F1.CI.95%")
+      
+      sp.stat <- c(sp.stat, sp.confint[1], sp.confint[2])
+      
+      names(sp.stat) <- c("sp", "CI.5%", "CI.95%")
+      
     }
     
     distance <- data.frame(meandistance, logdist)
@@ -730,7 +730,7 @@ eco.malecot <- function(eco,
     rownames(distance) <- 1:nrow(distance)
     distance <- t(distance) 
     
-  
+    
     out.sp <- list(model = modelo,
                    distance = distance,
                    restricted = round(c(dmin, dmax), 4),
@@ -741,26 +741,26 @@ eco.malecot <- function(eco,
                    cubic_model = ifelse(cubic, cubica.final, NA)
     )
     
-
-  #######################
+    
+    #######################
     
   }
   
   if(method == "global") {
-  
-  salida <- new("eco.IBD")
-  salida@OUT <- list(tab)
-  salida@IN <- list(XY = XY, ECOGEN = eco@INT)
-  salida@BREAKS <- breaks.kin
-  salida@CARDINAL <- cardinal
-  salida@NAMES <- colnames(eco@G)
-  salida@METHOD <- c("Kinship", type)
-  salida@DISTMETHOD <- method
-  salida@TEST <- c(test, conditional) 
-  salida@NSIM <- nsim
-  salida@PADJUST <- paste(adjust, "-sequential:", sequential)
-  salida@SP <- out.sp
-  
+    
+    salida <- new("eco.IBD")
+    salida@OUT <- list(tab)
+    salida@IN <- list(XY = XY, ECOGEN = eco@INT)
+    salida@BREAKS <- breaks.kin
+    salida@CARDINAL <- cardinal
+    salida@NAMES <- colnames(eco@G)
+    salida@METHOD <- c("Kinship", type)
+    salida@DISTMETHOD <- method
+    salida@TEST <- c(test, conditional) 
+    salida@NSIM <- nsim
+    salida@PADJUST <- paste(adjust, "-sequential:", sequential)
+    salida@SP <- out.sp
+    
   } else if (method == "local") {
     
     salida <- new("eco.lsa")
@@ -781,6 +781,6 @@ eco.malecot <- function(eco,
   cat("\n")
   cat("done!")
   cat("\n\n")
-   
+  
   salida
 }

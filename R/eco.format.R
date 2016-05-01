@@ -95,14 +95,14 @@
 
 
 setGeneric("eco.format", function(data, 
-                       ncod = NULL, 
-                       nout = 3, 
-                       ploidy = 2, 
-                       sep.in,
-                       sep.out,
-                       fill.mode = c("last", "first", "none"),
-                       recode = c("none", "all", "column"),
-                       show.codes = FALSE) {
+                                  ncod = NULL, 
+                                  nout = 3, 
+                                  ploidy = 2, 
+                                  sep.in,
+                                  sep.out,
+                                  fill.mode = c("last", "first", "none"),
+                                  recode = c("none", "all", "column"),
+                                  show.codes = FALSE) {
   
   
   fill.mode <- match.arg(fill.mode)
@@ -133,7 +133,7 @@ setGeneric("eco.format", function(data,
   locnames <- colnames(data)
   
   #----control---------------------------------------------------------#  
-
+  
   # recode check
   if(any(grep("[^[:digit:]]", data)) && recode == "none") {
     stop("Non numeric characters found. Set recode = <all> or 
@@ -146,7 +146,7 @@ setGeneric("eco.format", function(data,
     stop("nout (output number of digits) < ncod 
          (input number of digits per allele) is not valid")
   }
- 
+  
   
   ###########------RECODING CASE-----------####################################
   if(recode != "none") {
@@ -162,7 +162,7 @@ setGeneric("eco.format", function(data,
       
       if(nout < max(ncod.y)) {
         stop("nout (output number of digits) < ncod 
-         (input number of digits per allele) is not valid")
+             (input number of digits per allele) is not valid")
       }
       
       ncod.y[is.na(y)] <- NA
@@ -194,7 +194,7 @@ setGeneric("eco.format", function(data,
       
       list(y, y.tab)
       
-    }
+      }
     #--------------------------------------------------#
     
     #alleles in columns

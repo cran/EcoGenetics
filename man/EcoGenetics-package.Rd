@@ -30,11 +30,17 @@ phenotypic, genotypic and environmental data. The package has been designed to m
 EcoGenetics has four basic modules. The \strong{base module} is composed by general functions (\link[=eco.lmtree]{multiple lm}, \link[=eco.detrend]{detrending spatial data utility}, etc.). 
 The \strong{general spatial module} computes global (\link[=eco.gsa]{Moran's I}, \link[=eco.mantel]{Mantel test}, etc.) and local (\link[=eco.lsa]{Getis-Ord's G*}, \link[=eco.lsa]{local Moran's I}, etc.) spatial tests. These analyses use a \link[=eco.weight]{spatial weights matrix}, provided by the  \strong{spatial weights module}.  The \strong{lag analysis module} performs two basic analyses: the obtention  of \link[=eco.variogram]{variograms} and \link[=eco.correlog]{correlograms} (see also \link[=eco.cormantel]{this link}). This module uses the other tool provided by the spatial weights module: a sequence of \link[=eco.lagweight]{spatial weights matrices}. 
 
-The package have also special plot methods, as \link[=eco.rankplot]{rankplots} and \link[=eco.forestplot]{forestplots} (implemented here for 
-\link[=eco.lsa]{local spatial analysis}), conversors of data to other programs, as (\link[=eco.2genepop]{genepop} - an \link[=eco.genepop2df]{importer} tool is also defined for genepop-, \link[=eco.2spagedi]{SPAGeDi}, etc.). Basic manipulation of genetic matrices is allowed by \link{eco.convert} and \link{eco.format}. Tools for computation of NDVI in Landsat imaginery,  post-process of rasters and temporal analysis can be found in \link{eco.NDVI}, \link{eco.NDVI.post} and \link{eco.theilsen}. Other useful functions are \link{aue.sort} (for ordering alleles), \link{eco.alfreq} (it computes histograms of allelic frequencies for detection of bottlenecks), \link{eco.post.geneland} and \link{eco.pairtest}. 
+The package have also special plot methods, as \link[=eco.rankplot]{rankplot},  
+\link[=eco.forestplot]{forestplot} \link[=eco.localplot]{localplot} (implemented the last two for 
+\link[=eco.lsa]{local spatial analysis}), \link[=globalplot]{globalplot} 
+(implemented for \link[=eco.correlog]{univariate} and \link[=eco.cormantel]{multivariate} 
+correlogram analyses). Several conversor of data to other programs are available,
+as (\link[=eco.2genepop]{genepop} - an \link[=eco.genepop2df]{importer} tool is also defined for genepop-, \link[=eco.2spagedi]{SPAGeDi}, etc.). Basic manipulation of genetic matrices is allowed by \link{eco.convert} and \link{eco.format}. Tools for computation of NDVI in Landsat imaginery, 
+post-process of rasters and temporal analysis can be found in \link{eco.NDVI}, \link{eco.NDVI.post} and \link{eco.theilsen}. Other useful functions are \link{aue.sort} (for ordering alleles), \link{eco.alfreq} (it computes histograms of allelic frequencies for detection of bottlenecks), \link{eco.post.geneland} and \link{eco.pairtest}. 
 
 The results obtained with the main functions defined in EcoGenetics are
-object of class \link[=Methods]{S4}. As default characteristic of the package design, these objects have a "show"" method for a general overview of the results, and methods to extract the results stored in slots (generic \link[=ecoslot.XY]{accessors} and double square brackets (\link[=Extract]{"[["}) definitions). 
+object of class \link[=Methods]{S4}. As a default characteristic of the package design,
+these objects have a "show"" method for a general overview of the results, and methods to extract the results stored in slots (generic \link[=ecoslot.XY]{accessors} and double square brackets (\link[=Extract]{"[["}) definitions). 
 
 For storing and pre-processing the data to analyze, the package 
 defines a special class: the class \code{\link{ecogen}}.
@@ -44,13 +50,14 @@ defines a special class: the class \code{\link{ecogen}}.
 
 Ecological genetics research requires the integration of data originated in different sources. The class \code{\link{ecogen}} has been designed for handling multidimensional data. Its basic structure is the following:
 
-- A \strong{XY} slot, storing a data frame with geographic coordinates.  
+- An \strong{XY} slot, storing a data frame with geographic coordinates.  
 
 - A \strong{P} slot, storing a phenotypic data frame.  
 
 - A \strong{G} slot, storing a genotypic data frame. 
 
-- An \strong{A} slot,containing as frequencies (of alleles in codominant data) the information of G.
+- An \strong{A} slot containing as allelic frequencies the information of G (only
+available for codominant markers.)
 
 - An \strong{E} slot, storing an environmental data frame.  
 
@@ -62,6 +69,8 @@ individuals.
 
 - An \strong{OUT} slot, containing a list for the storage of the results.
 
+
+For dominant (presence-absence) markers, the slot A is empty.
 
 
 \bold{\emph{III. A BRIEF OVERVIEW OF THE DATA HANDLING METHODS DEFINED FOR ECOGEN OBJECTS}}
@@ -80,9 +89,16 @@ The construction of a new "ecogen" object from a data frame is made with the hom
 
 # - - - - - - 
 
-\bold{# 1. subsetting by row-method, using single square brackets ("[")}
+\bold{# 1. subsetting/ordering by row-method, using single square brackets ("[")}
 
 \emph{eco.sub <- eco[1:50]}
+
+\emph{eco.ord <- eco[c(50:1)]}
+
+\emph{eco.ord[["XY"]] # object ordered and subsetted rows.
+This is a powerful method for handling the stack of ecogen data frames}
+
+\emph{eco <- eco[order(eco[["S"]][, 1])] #ordering S[, 1] and then the object}
 
 \bold{# 2. \link[=eco.merge]{merging-method}, for two objects}
 
@@ -117,13 +133,15 @@ The construction of a new "ecogen" object from a data frame is made with the hom
 
 \emph{ecoslot.P(eco); eco[["P"]]}
 
-\emph{ecoslot.A(eco); eco[["A"]]}
+\emph{ecoslot.G(eco); eco[["G"]]}
+
+\emph{ecoslot.A(eco); eco[["A"]]  (only available for codominant data}
 
 \emph{ecoslot.E(eco); eco[["E"]]}
 
 \emph{ecoslot.S(eco); eco[["S"]]}
 
-\emph{ecoslot.C(eco); eco[["S"]]}
+\emph{ecoslot.C(eco); eco[["C"]]}
 
 \emph{ecoslot.OUT(eco); eco[["OUT"]]}
 
@@ -476,7 +494,8 @@ plot(getis)
  #-------------------------
  
  # eco[["A"]] is a matrix with the genetic data of "eco"
- # as frequencies for each allele in each individual.
+ # as frequencies for each allele in each individual
+ # (use [["G"]] for presence-absence data).
  
  head(eco[["A"]])      # head of the matrix - 40 alleles
  
@@ -590,6 +609,9 @@ plot(cross)
 
 data(eco.test)
 require(ggplot2)
+
+## Mantel correlogram
+
 corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
 nsim = 99)
 plot(corm)
@@ -598,9 +620,9 @@ corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
 nsim = 99, test = "bootstrap")
 plot(corm)
 
-## variogram plots support the 
 
-## partial Mantel correlogram
+
+## Partial Mantel correlogram
 
 corm <- eco.cormantel(M = dist(eco[["P"]]), MC = dist(eco[["E"]]),
 size=1000, smax=7, XY = eco[["XY"]], nsim = 99)
@@ -618,7 +640,8 @@ data(eco.test)
 require(ggplot2)
 variog <- eco.variogram(Z = eco[["P"]][, 2],XY =  eco[["XY"]])
 plot(variog)
-use of ggplot2 syntax
+
+### variogram plots support the use of ggplot2 syntax
 variogplot <- plot(variog) + theme_bw() + theme(legend.position="none")
 variogplot
 
