@@ -1,3 +1,3 @@
 # Development version of the package EcoGenetics
 
-[A short tutorial to EcoGenetics here](https://github.com/leandroroser/EcoGenetics-Tutorial)
+# [Click here for a short tutorial to EcoGenetics](https://github.com/leandroroser/EcoGenetics-Tutorial)
