@@ -39,6 +39,8 @@
 #' In default option, the missing data input value is "NA", but any missing 
 #' data character can be passed with the option NA.char. 
 #' The output in the slot G will have coded the missing data as NA. 
+#' For dominant markers, the slot A is unnecesary and is treated
+#' in ecogen methods as a symbolic link to G.
 #' 
 #' 
 #' \strong{ACCESS TO THE SLOTS. MODIFICATION OF ECOGEN OBJECTS}
@@ -139,7 +141,7 @@
 #' @export ecogen
 
 
-setGeneric("ecogen",    		 
+setGeneric("ecogen",      	 
            function(XY = data.frame(),
                     P = data.frame(),
                     G = data.frame(), 
@@ -167,14 +169,14 @@ setGeneric("ecogen",
              }
              
              # creating a new ecogen object
-             Object <- new("ecogen")
+             object <- new("ecogen")
              
              # G configuration-------------------------------------------------#
-            
+             
              if(any(dim(G) == 0)) { # empty G
-               Object@G <- data.frame()
-               Object@A <- data.frame()
-               Object@INT <- new("int.gendata")
+               object@G <- data.frame()
+               object@A <- data.frame()
+               object@INT <- new("int.gendata")
                
                
              } else { # non empty G
@@ -191,9 +193,15 @@ setGeneric("ecogen",
                                       rm.empty.ind = rm.empty.ind,
                                       poly.level = poly.level)
                
-               # unfolding tempo
-               Object@A <- as.data.frame(tempo@tab)
-               Object@INT <- int.genind2gendata(tempo)
+               # unfolding tempo ------------------
+              
+               ## if marker type is "dominant", A is a pointer to G for assignments
+               ## and extraction methods, and the slot is empty
+               if(tempo@type == "codominant") {
+               object@A <- as.data.frame(tempo@tab)
+               } 
+ 
+               object@INT <- int.genind2gendata(tempo)
                
                ncod <- tempo@ncod
                ploidy <- tempo@ploidy
@@ -204,8 +212,8 @@ setGeneric("ecogen",
                  # order data
                  if(order.G && type == "codominant") {
                    tmp <- aue.sort(tmp, 
-                            ncod = ncod, ploidy = ploidy, 
-                            chk.plocod = FALSE)
+                                   ncod = ncod, ploidy = ploidy, 
+                                   chk.plocod = FALSE)
                  } 
                  
                  # G processed data frame 
@@ -220,16 +228,16 @@ setGeneric("ecogen",
                # END G processed case ~-~-~-~-~~-~-~-~-~
                
                # fill now the G slot
-               Object@G <- G
+               object@G <- G
              }
              
-
+             
              
              # fill the other slots--------------------------------------------
              
-             Object@XY <- as.data.frame(XY)
-             Object@P <- as.data.frame(P)
-             Object@E <- as.data.frame(E)
+             object@XY <- as.data.frame(XY)
+             object@P <- as.data.frame(P)
+             object@E <- as.data.frame(E)
              
              # all S columns as factors
              S <- as.data.frame(S)
@@ -238,10 +246,9 @@ setGeneric("ecogen",
                  S[, i] <- factor(S[, i])
                }
              }
-             Object@S <- S
-             Object@C <- as.data.frame(C)
+             object@S <- S
+             object@C <- as.data.frame(C)
              
-             return(Object)
+             return(object)
              
            })
-

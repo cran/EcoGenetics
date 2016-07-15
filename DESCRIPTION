@@ -1,18 +1,18 @@
 Package: EcoGenetics
 Type: Package
 Title: Spatial Analysis of Phenotypic, Genotypic and Environmental Data
-Version: 1.2.0-2
-Date: 2015-07-11
+Version: 1.2.0-3
+Date: 2016-07-14
 Author: Leandro Roser, Juan Vilardi, Beatriz Saidman and Laura Ferreyra
 Maintainer: Leandro Roser <learoser@gmail.com>
 Description: Geostatistical tools for analyzing spatial patterns in
-    population biology. Easy integration of information from multiple sources 
-    with "ecogen" objects. 
+    population biology. Easy integration of information from multiple sources
+    with "ecogen" objects.
 License: GPL (>= 2)
 URL: https://github.com/cran/EcoGenetics
 LazyLoad: yes
 Depends: R (>= 3.0), methods
-Imports: ggplot2, party, raster, reshape2, rgdal, rkt, SoDA, sp,
+Imports: ggplot2, grid, party, raster, reshape2, rgdal, rkt, SoDA, sp,
 Suggests: adegenet
 Collate: 'ZZZ.R' 'auxiliar.R' 'int.genind.R' 'ecogen.1OF5.definition.R'
         'ecogen.2OF5.constructor.R' 'ecogen.3OF5.basic.methods.R'
@@ -26,14 +26,17 @@ Collate: 'ZZZ.R' 'auxiliar.R' 'int.genind.R' 'ecogen.1OF5.definition.R'
         'eco.gsa.R' 'eco.kin.loiselle.R' 'eco.lagweight.R'
         'eco.lmtree.R' 'eco.lsa.R' 'eco.malecot.R' 'eco.mantel.R'
         'eco.merge.R' 'eco.order.R' 'eco.pairtest.R'
-        'eco.post.geneland.R' 'eco.rankplot.R' 'eco.rbind.R'
-        'eco.remove.R' 'eco.subset.R' 'eco.theilsen.R'
+        'eco.post.geneland.R' 'eco.rankplot.R' 'eco.rasterplot.R'
+        'eco.rbind.R' 'eco.remove.R' 'eco.slide.con.R'
+        'eco.slide.matrix.R' 'eco.subset.R' 'eco.theilsen.R'
         'eco.variogram.R' 'eco.weight.R' 'int.break.R' 'int.convert.R'
         'int.crosscor.R' 'int.geary.R' 'int.jackknife.R'
         'int.joincount.R' 'int.kin.loiselle.R' 'int.mantel.R'
         'int.moran.R' 'int.multitable.R' 'int.random.test.R'
-        'miscellaneous.R' 'plot.methods.R' 'show_summary.methods.R'
+        'miscellaneous.R' 'plot.generic.R' 'plot.methods.R'
+        'roxygen.auxiliar.R' 'show_summary.methods.R'
+RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2015-07-11 15:16:07 UTC; amadeus
+Packaged: 2016-07-15 17:09:39 UTC; leandro
 Repository: CRAN
-Date/Publication: 2015-07-11 18:31:53
+Date/Publication: 2016-07-15 20:02:10

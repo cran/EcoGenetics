@@ -39,4 +39,4 @@ setClass("ecogen",
                    C = data.frame(),
                    OUT = list(),
                    INT = new("int.gendata"))
-         )
+)

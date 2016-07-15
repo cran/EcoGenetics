@@ -20,60 +20,65 @@
 #' @export
 
 setGeneric("eco.subset",
-					 
-					 function(eco, 
+           
+           function(eco, 
                     fact, 
                     grp, 
                     missing = c("0", "NA",  "MEAN"))  {
-  
-  grupo <- eco@S
-  x <- match(fact, colnames(eco@S), nomatch = 0)
-  x <- x[!x == 0]
-  
-  missing <- match.arg(missing)
-  
-  if(length(x) == 0) {
-    stop("incorrect factor name")
-  }
-  
-  if(grp > max(as.numeric(grupo[, x]))) {
-    stop(sprintf("the number of groups (%d) exceeds the number of
-                 groups in the data (%d)", grp,
-                 max(as.numeric(grupo[, x]))))
-  }
-  
-  grupo <- which(grupo[, x] == grp)
-  z <- ecogen()
-  z@P <- eco@P[grupo, ]
-  z@G <- eco@G[grupo, ]
-  z@A <- eco@A[grupo, ]
-  z@E <- eco@E[grupo, ]
-  z@XY <- eco@XY[grupo, ]
-  
-  z@S <- as.data.frame(eco@S[grupo, ])
-  #all S columns of z as factors, removing unused levels
-  if(dim(z@S)[1] != 0) {
-    for(i in 1:(ncol(z@S))) {
-      z@S[, i] <- factor(z@S[, i])
-    }
-  }
-  
-  temp <- int.df2genind(eco@G[grupo, ], 
-                        missing = missing,
-                        ncod = eco@INT@ncod,
-                        ploidy = eco@INT@ploidy,
-                        type = eco@INT@type)
-  
-z@A <- as.data.frame(temp@tab)
-z@INT <- int.genind2gendata(temp)
-z@G <- as.data.frame(int.genind2df(temp))
-  
-  colnames(z@S) <- colnames(eco@S)
-  
-  z@C <- eco@C[grupo, ]
-  z@OUT <- list()
-  
-  z
-  
-})
-
+             
+             grupo <- eco@S
+             x <- match(fact, colnames(eco@S), nomatch = 0)
+             x <- x[!x == 0]
+             
+             missing <- match.arg(missing)
+             
+             if(length(x) == 0) {
+               stop("incorrect factor name")
+             }
+             
+             if(grp > max(as.numeric(grupo[, x]))) {
+               stop(sprintf("the number of groups (%d) exceeds the number of
+                            groups in the data (%d)", grp,
+                            max(as.numeric(grupo[, x]))))
+             }
+             
+             grupo <- which(grupo[, x] == grp)
+             z <- ecogen()
+             z@P <- eco@P[grupo, ]
+             z@G <- eco@G[grupo, ]
+             z@A <- eco@A[grupo, ]
+             z@E <- eco@E[grupo, ]
+             z@XY <- eco@XY[grupo, ]
+             
+             z@S <- as.data.frame(eco@S[grupo, ])
+             #all S columns of z as factors, removing unused levels
+             if(dim(z@S)[1] != 0) {
+               for(i in 1:(ncol(z@S))) {
+                 z@S[, i] <- factor(z@S[, i])
+               }
+             }
+             
+             tempo <- int.df2genind(eco@G[grupo, ], 
+                                   missing = missing,
+                                   ncod = eco@INT@ncod,
+                                   ploidy = eco@INT@ploidy,
+                                   type = eco@INT@type)
+             
+             # slot A is marker type dependent
+             if(eco@INT@type == "codominant") {
+             z@A <- as.data.frame(tempo@tab)
+             } else {
+             z@A <- data.frame()
+             }
+             
+             z@INT <- int.genind2gendata(tempo)
+             z@G <- as.data.frame(int.genind2df(tempo))
+             
+             colnames(z@S) <- colnames(eco@S)
+             
+             z@C <- eco@C[grupo, ]
+             z@OUT <- list()
+             
+             z
+             
+           })

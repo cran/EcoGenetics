@@ -1,4 +1,3 @@
-
 #' Cross correlation. Internal.
 #' @param Z vector, matrix or data frame.
 #' with variable/s (in matrix or data frame formats, variables in columns).
@@ -61,7 +60,7 @@ int.crosscor <- function(Z, Y, con, nsim,
   for(i in 1:nsim) {
     samp <- sample(N)
     repsim[i] <- crossfun(Mi[samp, samp])  #permutation is conditioned to the each dependent pair (z2,y2)
-  }					 		                           #symmetric weights required!
+  }  				 		                           #symmetric weights required!
   random.m <- int.random.test(repsim = repsim, obs = obs, 
                               test = test,
                               nsim = nsim,

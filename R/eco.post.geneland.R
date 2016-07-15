@@ -30,7 +30,7 @@
 #'# Auxiliar function for running some repetitions with fixed K = 4.
 #'Each repetition is saved in the folder "test":
 #'simul <- function(i) {
-#'	path <- getwd()
+#'  path <- getwd()
 #'	path <- paste(path,"/",i, sep = "")
 #'	dir.create(path) 
 #'	MCMC(coordinates = read.table("XY.txt"), 

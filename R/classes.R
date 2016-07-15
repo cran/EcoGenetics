@@ -72,6 +72,14 @@ setClass("eco.gsa",
 
 
 #------------------------------------------------------------------------------#
+#' eco.listlsa 
+#' @aliases eco.listsa-class
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
+
+setClass("eco.listlsa", contains = "list")
+
+#------------------------------------------------------------------------------#
 #' eco.lsa class
 #' @slot OUT results
 #' @slot METHOD method used in the analysis 
@@ -80,6 +88,7 @@ setClass("eco.gsa",
 #' @slot PADJUST P-values adjust method for permutation tests
 #' @slot COND conditional randomization (logical)
 #' @slot XY input coordinates  
+#' @slot NAMES variable name
 #' @aliases eco.lsa-class
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @keywords internal
@@ -91,9 +100,47 @@ setClass("eco.lsa",
                         NSIM ="numeric",
                         PADJ = "character",
                         COND = "logical",
-                        XY = "data.frame")
-         )
+                        XY = "data.frame",
+                        NAMES = "characterORnull")
+)
 
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+#' eco.multilsa class
+#' @slot METHOD method used in the analysis 
+#' @slot TEST test method used (bootstrap, permutation)
+#' @slot NSIM number of simulations
+#' @slot PADJUST P-values adjust method for permutation tests
+#' @slot COND conditional randomization (logical)
+#' @slot XY input coordinates  
+#' @slot OBS observed values
+#' @slot EXP expected values
+#' @slot ALTER test alternative
+#' @slot PVAL pvalue for permutation test
+#' @slot LWR lower confidence interval bound of the null hypotesis
+#' @slot UPPR upper confidence interval bound of the null hypotesis
+#' @slot OBS.RES rescaled observed values to [-1, 1] range
+#' @aliases eco.multilsa-class
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
+
+setClass("eco.multilsa",  
+         representation(METHOD = "character",
+                        TEST = "character",
+                        NSIM ="numeric",
+                        PADJ = "character",
+                        COND = "logical",
+                        XY = "data.frame",
+                        OBS = "matrix",
+                        EXP = "matrix",
+                        ALTER = "matrix",
+                        PVAL = "matrix",
+                        LWR = "matrix",
+                        UPPR = "matrix",
+                        OBS.RES = "matrix",
+                        POP = "matrixORnull")
+        )
 
 #------------------------------------------------------------------------------#
 #' eco.weight class
@@ -106,8 +153,10 @@ setClass("eco.lsa",
 #' @slot XY input coordinates
 #' @slot NONZERO number non-zero connections
 #' @slot NONZEROIND number of individuals
+#' @slot NONZEROINDROW individuals with non-null connections
 #' with non-zero connections (as percentage)
 #' @slot AVERAGE average number of connection (as percentage)
+#' @slot AVG.DIST average distance between connected individuals
 #' @aliases eco.weight-class 
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @keywords internal
@@ -123,7 +172,9 @@ setClass("eco.weight",
                         SELF ="logical",
                         NONZERO = "numeric",
                         NONZEROIND = "numeric",
-                        AVG = "numeric")
+                        CONNECTED = "numeric",
+                        AVG = "numeric",
+                        AVG.DIST = "numeric")
          )
 
 

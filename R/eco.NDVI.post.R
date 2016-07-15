@@ -97,7 +97,7 @@ setGeneric("eco.NDVI.post",
                                   "LOG1S"), 
                     what = c("mean", "max", "min", "var", "none")) {
              
-             correct <- match.arg(correct)														
+             correct <- match.arg(correct)  													
              method <- match.arg(method)
              datatype <- match.arg(datatype)
              what <- match.arg(what, several.ok =  TRUE)
@@ -202,5 +202,5 @@ setGeneric("eco.NDVI.post",
              }
              
              cat("\n", "done", "\n")
-
+             
            })

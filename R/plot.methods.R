@@ -3,14 +3,12 @@
 ##############################################################################
 
 #-------------------------------------------------------------------#
-#' Plot method for correlograms and variograms
-
+#' globalplot
+#' @description Plot method for correlograms and variograms
 #' @param x Result of correlogram or variogram analysis.
 #' @param var Variable to plot for multiple analyses with \code{\link{eco.correlog}}
 #' (see examples).
 #' @seealso  \code{\link{eco.correlog}} \code{\link{eco.cormantel}}  \code{\link{eco.variogram}}
-#' 
-#' 
 #' @examples
 #' 
 #' \dontrun{
@@ -18,19 +16,19 @@
 #' data(eco.test)
 #' 
 #' # single Moran's I correlogram analysis
-#' moran.example <- eco.correlog(Z=eco$P[,1], eco$XY, smax=10, size=1000)
+#' moran.example <- eco.correlog(Z=eco[[P]][,1], eco$XY, smax=10, size=1000)
 #' plot(moran.example)
 #' 
 #' # multiple Moran's I correlogram analysis
-#' moran.example2 <- eco.correlog(Z=eco$P, eco$XY, smax=10, size=1000)
+#' moran.example2 <- eco.correlog(Z=eco[[P]], eco$XY, smax=10, size=1000)
 #' plot(moran.example2, var ="P2")
 #' plot(moran.example2, var ="P3")
 #' 
-#' corm <- eco.cormantel(M = dist(eco$P), size=1000,smax=7, XY = eco$XY,
+#' corm <- eco.cormantel(M = dist(eco[[P]]), size=1000,smax=7, XY = eco$XY,
 #' nsim = 99)
 #' plot(corm)
 #' 
-#' variog <- eco.variogram(Z = eco$P[, 2],XY =  eco$XY)
+#' variog <- eco.variogram(Z = eco[[P]][, 2],XY =  eco$XY)
 #' plot(variog)
 #' }
 #' 
@@ -44,229 +42,238 @@
 
 
 setMethod("plot", "eco.correlog", function(x, var = NULL, 
-																				 xlabel = NULL, 
-																				 ylabel = NULL, 
-																				 title = NULL, 
-																				 legend = TRUE,
-																				 background = c("grey", "white"),
-																				 errorbar = FALSE,
-																				 intervals = TRUE,
-																				 significant = FALSE,
-																				 xlim = NULL,
-																				 ylim = NULL,
-																				 axis.size = 14,
-																				 title.size = 16,
-                                         meanplot = TRUE,
-                                         nsim = 999) {
-	
+                                           xlabel = NULL, 
+                                           ylabel = NULL, 
+                                           title = NULL, 
+                                           legend = TRUE,
+                                           background = c("grey", "white"),
+                                           errorbar = FALSE,
+                                           intervals = TRUE,
+                                           significant = FALSE,
+                                           xlim = NULL,
+                                           ylim = NULL,
+                                           axis.size = 14,
+                                           title.size = 16,
+                                           meanplot = TRUE,
+                                           nsim = 999) {
+  
+  op <- options()
+  options(max.print = 9999)
+  
   # tricky solution for global binding problems during check. Set the 
   # variables as NULL
   d.mean <- obs <- uppr <- lwr <- max.sd <- min.sd <- null.uppr <- null.lwr <- NULL
-	
-	if(length(x@OUT) == 1) {
-	  var2 <- 1
-	  plot.method <- "uniplot"
-	} else if(is.null(var)) {
-	  plot.method <- "multiplot"
-	} else {
-	  var2 <- which(names(x@OUT) %in% var)
-	  plot.method <- "uniplot"
-	}
-	
+  
+  if(length(x@OUT) == 1) {
+    var2 <- 1
+    plot.method <- "uniplot"
+  } else if(is.null(var)) {
+    plot.method <- "multiplot"
+  } else {
+    var2 <- which(names(x@OUT) %in% var)
+    plot.method <- "uniplot"
+  }
+  
   randtest <- (x@TEST)[1]
   if(length(randtest) == 0) { 
     randtest <- "none"
   }
-	
-	method <- (x@METHOD)[1]
-	
-	method2 <- pmatch(method, c("Mantel test",
-															"Partial Mantel test", 
-															"Moran's I", 
-															"Geary's, C",
-															"bivariate Moran's Ixy",
-															"empirical variogram",
-															"Kinship"
-															))
-	if(length(method2) == 0) {
-		stop("invalid input to plot")
-	}
-
-	if(plot.method == "uniplot") {
-	
-		datos <- as.data.frame(x@OUT[[var2]])
-	
-	
-	########## title,  x and y labels ############
-		
-		if(is.null(title)) {
-		  title <- names(x@OUT[var2])
-		}
-		
-		if(is.null(xlabel)) {
-		  xlabel <- "Great circle distance"
-		}
-		
-		if(is.null(ylabel)) {
-		  ylabel <- method
-		}
-	
-	########## x and y axes ############
-		
-	if(!is.null(xlim)) {
-		xlim <- ggplot2::scale_x_continuous(limits = xlim)
-	}
-	
-	if(!is.null(ylim)) {
-		ylim <- ggplot2::scale_y_continuous(limits = ylim)
-	}
-	
-	localenv <- environment()
-	
-	
-	########## basic plot ############
-	
-	z <- ggplot2::ggplot(datos, environment = localenv) + 
-		ggplot2::geom_line(ggplot2::aes(x = d.mean, y = obs)) + 
-		ggplot2::xlab(xlabel) + 
-		ggplot2::ylab(ylabel) + 
-		ggplot2::labs(title = title) 
-	
-	
-	######## background ########
-	
-	theme <- match.arg(background)
-	if(theme == "grey") {
-	  
-	  themecol <-  ggplot2::theme_grey()
-	} else {
-	  themecol <- ggplot2::theme_bw()
-	}
-	
-	z <- z + themecol
-
-	######## permutation and bootstrap cases ########
-	
-	if(randtest == "permutation") {
-	  #labeling S and NS points
-	  pval2 <- as.numeric(datos$p.val < 0.05)
-	  if(sum(pval2) == 0) {
-	    labelp <- "NS"
-	  } else if (sum(pval2) == length(pval2)) {
-	    labelp <- "P<0.05"
-	  } else {
-	    labelp <- c("P < 0.05", "NS")
-	  }
-	  pval2[pval2 == 0] <- "#F8766D"
-	  pval2[pval2 == 1] <- "#00B0F6"
-	  datos$pval2 <- pval2
-	  puntos <- ggplot2::geom_point(ggplot2::aes(x = d.mean, y = obs, colour = pval2), 
-	                      size = 5)
-	  z <- z + puntos
-	}
-	
-	if(randtest == "bootstrap")  {
-	  intervalo <- ggplot2::geom_ribbon(ggplot2::aes(x = d.mean, ymax = uppr, 
-	                                                 ymin = lwr), 
-	                                    fill = "blue",
-	                                    alpha = 0.2)
-	  
-	  puntos <- ggplot2::geom_point(ggplot2::aes(x = d.mean, y = obs, colour = "blue"), 
-	                                size = 5)
-	  z <- z + puntos + intervalo
-	  legend <- FALSE
-	}
-	
-	if(randtest == "none" & method == "empirical variogram") {
-	  z <- z + ggplot2::ylab("Semivariance") + 
-	    ggplot2::geom_point(ggplot2::aes(x = d.mean,y = obs), 
-	                        colour = "#F8766D", size =5)
-	  
-	  legend <- FALSE
-	}
-	
- ########## error bar ############
-	
-if(errorbar) {
-  datos$sd <- 1.96 * datos$sd.jack
-  datos$min.sd <- datos$mean.jack - datos$sd
-  datos$max.sd <- datos$mean.jack + datos$sd
-  z <- z + ggplot2::geom_errorbar(data =datos,
-                                  ggplot2::aes(x = d.mean, 
-                                               ymax = max.sd , 
-                                               ymin= min.sd))
-}
-
-#######Kinship additionals #######################################
-
-if(method == "Kinship" & intervals) {
   
-  z <- z +  ggplot2::geom_line(ggplot2::aes(x = d.mean, y = null.uppr), 
-                               directions = "hv", 
-                               linetype = 2, 
-                               colour = "red") +  
-    ggplot2::geom_line(ggplot2::aes(x = d.mean, y = null.lwr),
-                       direction = "hv", 
-                       linetype = 2, 
-                       colour = "red") + 
-    ggplot2::geom_ribbon(ggplot2::aes(x = d.mean, ymin = null.lwr, 
-                                      ymax = null.uppr), 
-                         fill = 90,
-                         alpha = 0.05) 
-}
-
-####### legend (permutation case) ##########################
-	
-	if(legend) {
-		z <- z +  ggplot2::scale_colour_discrete(name  ="P value",
-																							labels= labelp) + 
-			ggplot2::theme(axis.text = ggplot2::element_text(size = axis.size), 
-										 axis.title = ggplot2::element_text(size = title.size, face = "bold"), 
-										 legend.position = "right",  
-		plot.title = ggplot2::element_text(size = title.size, face = "bold"))
-	}
-	
-	if(!legend) {
-		z <- z + ggplot2::theme(legend.position="none", axis.text = ggplot2::element_text(size = axis.size), 
-									 axis.title = ggplot2::element_text(size = title.size, face = "bold"))
-	}
-
- ########## xlim, ylim ############
-	
-	if(!is.null(xlim)) {
-		z <- z + xlim
-	}
-	if(!is.null(ylim)) {
-		z <- z + ylim
-	}
-
-	print(z)
-	######################
-	
-
-	} else if(plot.method == "multiplot") {
-	  if(is.null(title)) {
-	    title <- ""
-	  }
-	  
-	  man <- int.multiplot(x, significant = significant, 
+  method <- (x@METHOD)[1]
+  
+  method2 <- pmatch(method, c("Mantel test",
+                              "Partial Mantel test", 
+                              "Moran's I", 
+                              "Geary's, C",
+                              "bivariate Moran's Ixy",
+                              "empirical variogram",
+                              "Kinship"
+  ))
+  if(length(method2) == 0) {
+    stop("invalid input to plot")
+  }
+  
+  if(plot.method == "uniplot") {
+    
+    datos <- as.data.frame(x@OUT[[var2]])
+    
+    
+    ########## title,  x and y labels ############
+    
+    if(is.null(title)) {
+      title <- names(x@OUT[var2])
+    }
+    
+    if(is.null(xlabel)) {
+      xlabel <- "Great circle distance"
+    }
+    
+    if(is.null(ylabel)) {
+      ylabel <- method
+    }
+    
+    ########## x and y axes ############
+    
+    if(!is.null(xlim)) {
+      xlim <- ggplot2::scale_x_continuous(limits = xlim)
+    }
+    
+    if(!is.null(ylim)) {
+      ylim <- ggplot2::scale_y_continuous(limits = ylim)
+    }
+    
+    localenv <- environment()
+    
+    
+    ########## basic plot ############
+    
+    z <- ggplot2::ggplot(datos, environment = localenv) + 
+      ggplot2::geom_line(ggplot2::aes(x = d.mean, y = obs)) + 
+      ggplot2::xlab(xlabel) + 
+      ggplot2::ylab(ylabel) + 
+      ggplot2::labs(title = title) 
+    
+    
+    ######## background ########
+    
+    theme <- match.arg(background)
+    if(theme == "grey") {
+      
+      themecol <-  ggplot2::theme_grey()
+    } else {
+      themecol <- ggplot2::theme_bw()
+    }
+    
+    z <- z + themecol
+    
+    ######## permutation and bootstrap cases ########
+    
+    if(randtest == "permutation") {
+      #labeling S and NS points
+      pval2 <- as.numeric(datos$p.val < 0.05)
+      if(sum(pval2) == 0) {
+        labelp <- "NS"
+      } else if (sum(pval2) == length(pval2)) {
+        labelp <- "P<0.05"
+      } else {
+        labelp <- c("P < 0.05", "NS")
+      }
+      pval2[pval2 == 0] <- "#F8766D"
+      pval2[pval2 == 1] <- "#00B0F6"
+      datos$pval2 <- pval2
+      puntos <- ggplot2::geom_point(ggplot2::aes(x = d.mean, y = obs, colour = pval2), 
+                                    size = 5)
+      z <- z + puntos
+    }
+    
+    if(randtest == "bootstrap")  {
+      intervalo <- ggplot2::geom_ribbon(ggplot2::aes(x = d.mean, ymax = uppr, 
+                                                     ymin = lwr), 
+                                        fill = "blue",
+                                        alpha = 0.2)
+      
+      puntos <- ggplot2::geom_point(ggplot2::aes(x = d.mean, y = obs, colour = "blue"), 
+                                    size = 5)
+      z <- z + puntos + intervalo
+      legend <- FALSE
+    }
+    
+    if(randtest == "none" & method == "empirical variogram") {
+      z <- z + ggplot2::ylab("Semivariance") + 
+        ggplot2::geom_point(ggplot2::aes(x = d.mean,y = obs), 
+                            colour = "#F8766D", size =5)
+      
+      legend <- FALSE
+    }
+    
+    ########## error bar ############
+    
+    if(errorbar) {
+      datos$sd <- 1.96 * datos$sd.jack
+      datos$min.sd <- datos$mean.jack - datos$sd
+      datos$max.sd <- datos$mean.jack + datos$sd
+      z <- z + ggplot2::geom_errorbar(data =datos,
+                                      ggplot2::aes(x = d.mean, 
+                                                   ymax = max.sd , 
+                                                   ymin= min.sd))
+    }
+    
+    #######Kinship additionals #######################################
+    
+    if(method == "Kinship" & intervals) {
+      
+      z <- z +  ggplot2::geom_line(ggplot2::aes(x = d.mean, y = null.uppr), 
+                                   directions = "hv", 
+                                   linetype = 2, 
+                                   colour = "red") +  
+        ggplot2::geom_line(ggplot2::aes(x = d.mean, y = null.lwr),
+                           direction = "hv", 
+                           linetype = 2, 
+                           colour = "red") + 
+        ggplot2::geom_ribbon(ggplot2::aes(x = d.mean, ymin = null.lwr, 
+                                          ymax = null.uppr), 
+                             fill = 90,
+                             alpha = 0.05) 
+    }
+    
+    ####### legend (permutation case) ##########################
+    
+    if(legend) {
+      z <- z +  ggplot2::scale_colour_discrete(name  ="P value",
+                                               labels= labelp) + 
+        ggplot2::theme(axis.text = ggplot2::element_text(size = axis.size), 
+                       axis.title = ggplot2::element_text(size = title.size, face = "bold"), 
+                       legend.position = "right",  
+                       plot.title = ggplot2::element_text(size = title.size, face = "bold"))
+    }
+    
+    if(!legend) {
+      z <- z + ggplot2::theme(legend.position="none", axis.text = ggplot2::element_text(size = axis.size), 
+                              axis.title = ggplot2::element_text(size = title.size, face = "bold"))
+    }
+    
+    ########## xlim, ylim ############
+    
+    if(!is.null(xlim)) {
+      z <- z + xlim
+    }
+    if(!is.null(ylim)) {
+      z <- z + ylim
+    }
+    
+    print(z)
+    ######################
+    
+    
+  } else if(plot.method == "multiplot") {
+    
+    if(is.null(title)) {
+      title <- ""
+    }
+    
+    man <- int.multiplot(x, significant = significant, 
                          plotit = FALSE, nsim = nsim)
-	 z <- plot(man, meanplot = meanplot, background = background)
-   
-cat("\n", "show significant =", significant, "\n\n")
-cat("significant loci:","\n", man$significant.loci.names, "\n\n")
-z$data <- man
-
-cat("meanplot =", meanplot, "\n\n")
-if(meanplot) {
-  cat("nsim =", nsim, "(number of simulation)", "\n\n")
-  cat("mean distance, observed value and jacknife CI (lwr-uppr)", "\n")
-  print(round(man$mean.correlogram, 4))
-}
-
-	}
-
- invisible(z)
+    z <- plot(man, meanplot = meanplot, background = background)
+    
+    cat("> show significant =", significant, "\n\n")
+    cat("> significant variables:","\n", man$significant.var.names, "\n\n")
+    z$data <- man
+    
+    cat("> Manhattan distance matrix", "\n\n")
+    print(round(man$manhattan.correlog, 4))
+    cat("\n\n")
+    
+    cat("meanplot =", meanplot, "\n\n")
+    if(meanplot) {
+      cat("> nsim =", nsim, "(number of simulation)", "\n\n")
+      cat("> mean distance, observed value and jackknife CI (lwr-uppr)", "\n\n")
+      print(round(man$mean.correlogram, 4))
+    }
+    
+  }
+  options(op)
+  
+  invisible(z)
 })
 
 
@@ -276,11 +283,13 @@ if(meanplot) {
 #' @aliases plot,eco.lsa-method
 #' @keywords internal
 
-setMethod("plot", "eco.lsa", function(x, ...) {
-  if(x@TEST == "permutation") {
-  eco.rankplot(x, ...)
+setMethod("plot", "eco.lsa", function(x, rescaled = FALSE, ...) {
+
+
+  if(x@TEST == "permutation" || x@NSIM == 0) {
+    eco.rankplot(x, rescaled = rescaled, ...)
   } else if(x@TEST == "bootstrap") {
-    eco.forestplot(x, ...)
+    eco.forestplot(x, rescaled = rescaled, ...)
   }
 })
 
@@ -293,7 +302,7 @@ setMethod("plot", "eco.lsa", function(x, ...) {
 
 
 setMethod("plot", "eco.IBD", function(x, ...) {
-    callNextMethod(...)
+  callNextMethod(...)
 })
 
 
@@ -314,7 +323,7 @@ int.multiplot<- function(correlog,
   
   data <-correlog@IN$Z
   N <- length(correlog@OUT)
-  loci.names <- colnames(correlog@IN$Z)
+  var.names <- colnames(correlog@IN$Z)
   
   if(significant) {
     sign <- numeric()
@@ -333,7 +342,26 @@ int.multiplot<- function(correlog,
     sign <- 1:N
   }
   
-  #mean correlogram
+  # manhattan matrix ------------------------------------
+  manhattan.correlog <- table(sign,sign)
+  secuencia <- matrix(sign, length(sign),length(sign), byrow = TRUE)
+  #colnames(manhattan.correlog) <- rownames(manhattan.correlog) <- colnames(data)[sign]
+  
+  #manhatann matrix construction
+  l.sign <- 1:length(sign)
+  for(i in l.sign) {
+    for(j in l.sign) {
+      mat <- mean(abs(correlog@OUT[[sign[i]]][,2]-
+                        correlog@OUT[[sign[j]]][,2]))
+      manhattan.correlog[i, j] <- mat
+    }
+  }
+  #force class manhattan.correlog = "matrix"
+  class(manhattan.correlog) <- NULL
+  dimnames(manhattan.correlog) <- list(colnames(data)[sign], colnames(data)[sign])
+  #-----------------------------------------------
+  
+  #mean correlogram--------------------------------------
   mean.correlog <- matrix(0, ncol = length(sign), nrow = length(correlog@CARDINAL))
   l.sign <- 1:length(sign)
   for(j in l.sign) {
@@ -356,10 +384,11 @@ int.multiplot<- function(correlog,
   
   
   salida <- list(correlogram.alleles = mean.correlog,
+                 manhattan.correlog = manhattan.correlog,
                  mean.correlogram = intervalos,
                  method = correlog@METHOD,
-                 significant.loci.names = colnames(data)[sign],
-                 significant.loci.number = sign)
+                 significant.var.names = colnames(data)[sign],
+                 significant.var.number = sign)
   
   class(salida) <- "int.multiplot"
   
@@ -375,12 +404,12 @@ int.multiplot<- function(correlog,
 #' @keywords internal
 
 setMethod("plot", "int.multiplot", function(x, 
-                                        xlabel = NULL, 
-                                        ylabel = NULL, 
-                                        title = NULL, 
-                                        background = c("grey", "white"),
-                                        meanplot = TRUE,
-                                        multiplot = TRUE) { 
+                                            xlabel = NULL, 
+                                            ylabel = NULL, 
+                                            title = NULL, 
+                                            background = c("grey", "white"),
+                                            meanplot = TRUE,
+                                            multiplot = TRUE) { 
   
   
   # tricky solution for global binding problems during check. Set the 
@@ -470,4 +499,172 @@ setMethod("plot", "int.multiplot", function(x,
   
   invisible(salida)
 })
+
+
+#-------------------------------------------------------------------#
+#' plot eco.multilsa
+#' @description Plot method for local spatial analysis
+#' @rdname eco.multilsa-method
+#' @aliases plot,eco.multilsa-method
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @seealso  \code{\link{eco.lsa}}
+#' @exportMethod plot
+
+setMethod("plot", 
+          "eco.multilsa", 
+          function(x,
+                   significant = TRUE,
+                   alpha = 0.05,
+                   rescaled = FALSE,
+                   limits = NULL,
+                   title = NULL,
+                   z.name = NULL,
+                   grp =  NULL,
+                   vertical = TRUE) {
+            
+                  
+            eco.rasterplot(x = x, 
+                           grp = grp,
+                           rescaled = rescaled,
+                           limits = limits,
+                           title = title,
+                           z.name = z.name,
+                           vertical = vertical,
+                           significant = significant,
+                           alpha = alpha)
+            
+          })
+
+
+#-------------------------------------------------------------------#
+#' listplot
+#' @param x list of ggplot objects
+#' @param n number of plot in layout
+#' @param nrow Number of rows in layout
+#' @param byrow plot by row?
+#' @param significant plot only significant individuals?
+#' @description Plot method for local spatial analysis as list
+#' @rdname eco.listlsa-method
+#' @aliases plot,eco.listlsa-method
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @seealso  \code{\link{eco.lsa}}
+#' @keywords internal
+
+setMethod("plot", "eco.listlsa", 
+          function(x,
+                   significant = TRUE,
+                   rescaled = FALSE,
+                   legend = TRUE,
+                   n = 4,
+                   nrow = 2, 
+                   byrow = TRUE,
+                   ...) {
+              
+            
+              if(legend) {
+              all.plots <- suppressMessages(lapply(x, function(x) plot(x, significant = significant, rescaled = rescaled)))
+              } else {
+                all.plots <- suppressMessages(lapply(x, function(x) {
+                                                       plot(x, significant = significant, rescaled = rescaled)+ 
+                                                       ggplot2::theme(legend.position="none")
+                                                                     })
+                                              )
+              }
+              message(paste("plot options: significant =", significant))
+              message(paste("plot options: rescaled =", rescaled))
+              grf.seqmultiplot(all.plots, n, nrow, byrow = byrow, ...)
+          })
+
+
+#-------------------------------------------------------------------#
+#' Plot for a connection network
+#' @param con connection network
+#' @description Plot method for an eco.weight object. This function
+#' makes a graph for the original coordinates and transformed as ranks.
+#' @aliases plot,eco.weight-method
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
+
+setMethod("plot", "eco.weight", 
+          function(x) {
+            
+            #par settings-on exit reset
+            op <- par(no.readonly = TRUE)
+            on.exit(par(op))
+            
+            # for inverse and exponential, all individuals are
+            # connected. Return a rester with the connections.
+            if(x@METHOD %in% c("inverse", "exponential")) {
+              nonzero <- which(x@W != 0)
+              plot(as.matrix(dist(x@XY))[nonzero], x@W[nonzero],
+                   xlab = "inter-individual distance", ylab = "Weight",
+                   pch = 19)
+              return(invisible())
+            }
+            
+            # non zero connections as data frame. The first columns
+            # have the rows of each connected pair
+            df.con <- with(x, {
+              out <- aue.image2df(x@W)
+              out <- out[which(out[, 3] != 0), ] #connected pairs
+              out
+            })
+            
+            # colour configuration
+            
+            # dos posibilidades mas de color, pero no son buenas
+            # col.custom <- brewer.pal(8, "Accent")
+            #  nrep <- ceiling(nrow(which.con) / length(colors))
+            # col.custom <- rep(col.custom, nrep)
+            
+            #nind <- length(unique(which.con[,1]))
+            #col.custom<-rgb(runif(nind),runif(nind),runif(nind)) 
+            set.seed(10)
+            col.custom <- sample(rainbow(length(unique(df.con[,2])), v = 0.8, s = 0.7, alpha = 0.7))
+            col.custom <-  col.custom[df.con[, 1]]
+            
+            # which.con : individuals connected as (number of rows)
+            # coord coordinates
+            #--------------------------LINE.PLOT FUNCTION-------------------------
+            line.plot <- function(coord, which.con, colour) {
+              
+              # coordinates of each pair (c2, c1) of connected individuals
+              c1 <- coord[which.con[, 2], ]
+              c2 <- coord[which.con[, 1], ]
+              
+              for(i in 1:nrow(which.con)) {
+                lines(c(c1[i, 1], c2[i, 1]), c(c1[i, 2], c2[i, 2]), 
+                      col = colour[i], lwd = 3)
+              }
+            }
+            #------------------------------------------------------------------
+            par(mfrow = c(1,2))
+           
+            plot(x = range(x@XY[, 1]), y = range(x@XY[,2]),
+                 main = "original coordinates", xlab = "X", ylab = "Y",
+                 type='n')
+            line.plot(x@XY, df.con, col.custom)
+            points(x@XY[,1], x@XY[,2], cex = 0.8, pch =21, bg = "beige")
+            
+              
+            rcoord <- apply(x@XY, 2, rank)
+            plot(x = range(rcoord[, 1]), y = range(rcoord[,2]),
+                 main = "rank of coordinates", xlab = "X rank", ylab = "Y rank", type='n')
+            line.plot(rcoord, df.con, col.custom)
+            points(rcoord[,1], rcoord[,2], cex = 0.8, pch = 21, bg = "beige")
+            
+            invisible()
+          })
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 

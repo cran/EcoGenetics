@@ -1,13 +1,14 @@
 #' Local spatial analysis
 #' 
-#' @description This program computes Getis-Ord G and G*, and LISA's (local
-#' Moran and local Geary) statistics for 
-#' the data Z, with P-values or bootstrap confidence intervals.
+#' @description 
+#' Univariate and multivariable local spatial analysis. This program computes Getis-Ord G
+#' and G*, and LISA's (local Moran and local Geary) statistics for the data Z,
+#' with P-values or bootstrap confidence intervals.
 #' 
-#' @param Z Vector for the analysis.  
+#' @param var Vector, matrix or data frame for the analysis. Multiple variables in columns.
 #' @param con An object of class eco.weight obtained with the function \code{\link{eco.weight}},
-#' a "listw" object, or a matrix, containing the weights for the analysis. If a matrix, an attribute "xy" with the 
-#' projected coordinates is required. 
+#' a "listw" object, or a matrix, containing the weights for the analysis. 
+#' If a matrix, an attribute "xy" with the projected coordinates is required. 
 #' @param method Method of analysis: "G" for Getis-Ord G, "G*" for Getis-Ord G*, 
 #'  "I" for local Moran's I or "C" for local Geary's C. 
 #' @param zerocon If zerocon = 0 the program assigns the value 0 to those individuals
@@ -20,16 +21,30 @@
 #' the program generates a bootstrap 
 #' resampling and the associated confidence intervals of the null hypotesis.
 #' If test = "permutation" (default) a permutation test is made and the P-value
-#' is computed. 	
+#' is computed.   
 #' @param alternative The alternative hypothesis for "permutation" test.
 #'  If "auto" is selected (default) the
 #' program determines the alternative hypothesis in each individual test.
 #' Other options are: "two.sided", "greater" and "less".
 #' @param adjust Correction method of P-values for multiple tests, 
 #' passed to \code{\link[stats]{p.adjust}}. Defalut is "none" (no correction).
+#' @param multi multiple output format results. "list" for object with a list 
+#' of individual test for each variable, or "matrix" for results as matrices
+#' of multiples variables.
+#' @param pop numeric factor with the population of each individual. Optional 
+#' for multiple tests with multi = "matrix".
 #' 
-#' @return The program returns an object of class "eco.lsa" with the following slots:
-#' @return > OUT results
+#' @return For single test, the program returns an object of class "eco.lsa" 
+#' with the following slots:
+#' @return > OUT results - table with output results. 
+#' 
+#' --> If test =  "permutation": observed value of the statistic , null confidence 
+#' interval and #rescaled observed value to [-1, 1] range, as in Sokal (2006)
+#' 
+#' --> If test =  "bootstrap": observed and expected value
+#' of the statistic, alternative hypotesis, null confidence interval and 
+#' rescaled observed value to [-1, 1] range, as in Sokal (2006)
+#' 
 #' @return > METHOD method (coefficent) used in the analysis 
 #' @return > TEST test method used (bootstrap, permutation)
 #' @return > NSIM number of simulations
@@ -37,6 +52,24 @@
 #' @return > COND conditional randomization (logical)
 #' @return > XY input coordinates 
 #' 
+#' @return For multiple test, if the parameter multi = "list", the program
+#' returns a list of eco.lsa objects (one element for each variable).
+#' 
+#' @return For multiple test, if the parameter multi = "matrix", the program
+#' returns an object of class "eco.multilsa" with the following slots:
+#' @return > METHOD method used in the analysis 
+#' @return >  TEST test method used (bootstrap, permutation)
+#' @return >  NSIM number of simulations
+#' @return >  PADJUST P-values adjust method for permutation tests
+#' @return >  COND conditional randomization (logical)
+#' @return >  XY input coordinates  
+#' @return >  OBS observed value
+#' @return >  EXP expected value
+#' @return >  ALTER test alternative
+#' @return >  PVAL pvalue for permutation test
+#' @return >  LWR lower confidence interval bound of the null hypotesis
+#' @return >  UPPR upper confidence interval bound of the null hypotesis
+#' @return >  OBS.RES rescaled observed value to [-1, 1] range, as in Sokal (2006)
 #' 
 #' \strong{ACCESS TO THE SLOTS}
 #' The content of the slots can be accessed 
@@ -52,6 +85,129 @@
 #' 
 #' data(eco.test)
 #' 
+#' #---------------------------------------------------------------------------#
+#' 
+#' 
+#' #####################
+#' # LOCAL MORAN'S I
+#' #####################
+#' 
+#' DETAILED EXAMPLE
+#' 
+#' #-------------------------
+#' # TESTING PHENOTYPIC DATA-
+#' #-------------------------
+#' 
+#' set.seed(10)
+#' 
+#' # test for a single variable---------------------------------
+#' #computing weights
+#' 
+#' con <- eco.weight(eco[["XY"]], method = "knearest",  k = 4, row.sd = TRUE) 
+#' # row standardized weights = TRUE
+#' 
+#' # test for the first trait of the data frame P 
+#' localmoran <- eco.lsa(eco[["P"]][, 1], con, method = "I", nsim = 99)     
+#' 
+#' # "rankplot" graph
+#' plot(localmoran)
+#' 
+#' # test for several variables---------------------------------
+#' 
+#' # ordering the factor "pop" in increasing order and the object "eco"
+#' # in relation to this ordered factor prior to the multivariate analysis.
+#' # This step is important for "localplot" graphs.
+#' 
+#' eco <- eco[order(eco[["S"]][,1])]
+#' 
+#' #computing weights with the ordered object
+#' 
+#' con <- eco.weight(eco[["XY"]], method = "knearest",  k = 4, row.sd = TRUE) 
+#' # row standardized weights = TRUE
+#' 
+#' all.traits <- eco.lsa(eco[["P"]], con, method = "I", nsim = 99)     
+#' 
+#' # Plot of the phenotypic spatial patterns
+#' 
+#' # "rasterplot" graph 
+#' plot(all.traits)
+#' 
+#' # in grey: non significant results (P > 0.05)
+#' # set significant = FALSE for showing significant and no significant results
+#' plot(all.traits, significant = FALSE)
+#'
+#' # single plots using "rankplot" graphs
+#' all.single.traits <- apply(eco[["P"]],  2, eco.lsa, con, method = "I", nsim = 99)
+#' multiplot(plotlist = lapply(all.single.traits, plot), layout = matrix(1:8, 2, 4))
+#' 
+#' # removing legends for a better visualization
+#' # - individual plots support ggplot2 sintax
+#' all.single.traits <- lapply(all.single.traits, 
+#' function(x)plot(x)+ggplot2::theme(legend.position="none"))
+#' grf.seqmultiplot(all.single.traits, 8, 2, 4)
+#' 
+#' 
+#' #-------------------------
+#' # TESTING GENOTYPIC DATA-
+#' #-------------------------
+#' 
+#' # eco[["A"]] is a matrix with the genetic data of "eco"
+#' # as frequencies for each allele in each individual.
+#' 
+#' head(eco[["A"]])      # head of the matrix - 40 alleles
+#' 
+#' # ordering the factor "pop" in increasing order and the object "eco"
+#' # in relation to this ordered factor prior to the multivariate analysis.
+#' # This step is important for "localplot" graphs
+#' 
+#' data(eco.test) # for security this resets the data (unordered)
+#'
+#' eco <- eco[order(eco[["S"]][,1])] # ordering
+#' 
+#' # computing weights with the ordered object
+#' 
+#' con <- eco.weight(eco[["XY"]], method = "knearest",  k = 4, row.sd = TRUE) 
+#' # row standardized weights = TRUE
+#' 
+#' # test for a single allele
+#' localmoran.geno <-  eco.lsa(eco[["A"]][, 32], con, method = "I", nsim = 99)
+#' 
+#' # test for several alleles -  40 alleles (it runs in less than 1 min 
+#' # for 99 simulations per allele;  999 simulations takes ~ 11 s per allele, 
+#' # less than 8 min in total.) 
+#' all.alleles <-  eco.lsa(eco[["A"]], con, method = "I", nsim = 99)
+#' 
+#' # plot all alleles to get an overview of the spatial patterns
+#' plot(all.alleles)
+#' 
+#' # in grey: non significant results (P > 0.05)
+#' # set significant = FALSE for showing significant and no significant results
+#' plot(all.alleles, significant = FALSE)
+#' 
+#' # counting individuals with P < 0.05 for each allele (5 * 225 /100 ~  12 significant tests 
+#' # by random)
+#' signif <- apply(ecoslot.PVAL(all.alleles), 2, function(x) sum (x < 0.05))
+#' 
+#' # filtering alleles, loci with > 12 significant individual tests
+#' 
+#' A.local <- eco[["A"]][, signif > 12]     #filtered matrix
+#' 
+#' all.alleles.f <-  eco.lsa(eco[["A"]][, signif > 12] , con, method = "I", nsim = 99)
+#' 
+#' 
+#' # Plot of the genotypic spatial patterns using "localplot" graphs
+#' 
+#' plot(all.alleles.f)
+#' 
+#' 
+#' ## using "rankplot" graphs
+#' 
+#' all.sf <- apply(A.local,  2, eco.lsa, con, method = "I", nsim = 99)
+#' all.sf <- lapply(all.sf, 
+#' function(x)plot(x)+ggplot2::theme(legend.position="none"))
+#' multiplot(plotlist = all.sf[1:6], layout = matrix(1:6, 2, 3))
+#' multiplot(plotlist = all.sf[7:12], layout = matrix(1:6, 2, 3))
+#' 
 #' #####################
 #' # GETIS-ORD'S G*
 #' #####################
@@ -61,8 +217,9 @@
 #' getis.ak
 #' 
 #' ### to plot the results, the function "eco.lsa" calls "eco.rankplot"
-#' (see ?eco.rankplot) when test = "permutation" and "eco.forestplot" (see ?eco.forestplot)
-#'  when test = "bootstrap"
+#' ### (see ?eco.rankplot) when test = "permutation" and "eco.forestplot" (see ?eco.forestplot)
+#' ###  when test = "bootstrap"
+#' 
 #' p <- plot(getis.ak)      # rankplot graph
 #' p    #  points with colors of the color-scale:  
 #'      #  points with P < 0.05. Yellow points : points with P > 0.05
@@ -99,101 +256,6 @@
 #' #---------------------------------------------------------------------------#
 #' 
 #' #####################
-#' # LOCAL MORAN'S I
-#' #####################
-#' 
-#' #-------------------------
-#' # TESTING PHENOTYPIC DATA-
-#' #-------------------------
-#' 
-#' con <- eco.weight(eco[["XY"]], method = "knearest",  k = 4, row.sd = TRUE) 
-#' # row standardized weights = TRUE
-#' 
-#' # test for the first trait of the data frame P 
-#' localmoran <- eco.lsa(eco[["P"]][, 1], con, method = "I", nsim = 99)     
-#' 
-#' plot(localmoran)
-#' 
-#' # test for several variables
-#' 
-#' all.traits <- apply(eco[["P"]], 2, eco.lsa,  con, method = "I", nsim = 99)
-#' 
-#' # Observed statistic and P-values tables (individuals x traits)
-#' stat.P <- sapply(all.traits, function(x) return(ecoslot.OUT(x)[,1]))
-#' pval.P <- sapply(all.traits, function(x) return(ecoslot.OUT(x)[,4]))
-#' 
-#' # Plot of the phenotypic spatial patterns
-#' 
-#' par(mfrow = c(2,4))
-#' for(i in 1:8) {
-#' image(matrix(stat.P[,i], 15,15))
-#' }
-#' 
-#' par(mfrow = c(2,4))
-#' for(i in 1:8) {
-#' image(matrix(pval.P[,i], 15,15))
-#' }
-#' 
-#' 
-#' #-------------------------
-#' # TESTING GENOTYPIC DATA-
-#' #-------------------------
-#' 
-#' # eco[["A"]] is a matrix with the genetic data of "eco"
-#' # as frequencies for each allele in each individual.
-#' 
-#' head(eco[["A"]])      # head of the matrix - 40 alleles
-#' 
-#' con <- eco.weight(eco[["XY"]], method = "knearest",  k = 4, row.sd = TRUE) 
-#' # row standardized weights = TRUE
-#' 
-#' # test for a single allele
-#' localmoran.geno <-  eco.lsa(eco[["A"]][, 32], con, method = "I", nsim = 99)
-#' 
-#' # test for several alleles -  40 alleles (it runs in less than 1 min 
-#' # for 99 simulations per allele;  999 simulations takes ~ 11 s per allele, 
-#' # less than 8 min in total.) 
-#' all.alleles <- apply(eco[["A"]], 2, eco.lsa,  con, method = "I", nsim = 99)
-#' 
-#' # plot all alleles to get an overview of the spatial patterns
-#' lapply(all.alleles, plot)
-#' 
-#' # Observed statistic and P-values tables (individuals x loci)
-#' stat.G <- sapply(all.alleles, function(x) return(ecoslot.OUT(x)[,1]))
-#' pval.G <- sapply(all.alleles, function(x) return(ecoslot.OUT(x)[,4]))
-#' 
-#' # counting individuals with P < 0.05 for each allele (5 * 225 /100 ~  12 significant tests 
-#' # by random)
-#' signif <- lapply(all.alleles, function(x) sum(ecoslot.OUT(x)[,4] < 0.05))
-#' signif <- unlist(signif)
-#' 
-#' # filtering alleles, loci with > 12 significant individual tests
-#' 
-#' A.local <- eco[["A"]][, signif > 12]     #filtered matrix
-#' stat.G.f <- stat.G[, signif > 12] 
-#' pval.G.f <- pval.G[, signif > 12]
-#' 
-#' # Plot of the genotypic spatial patterns
-#' 
-#' # one plot possibility, using the EcoGenetics method <rankplot>
-#' all.local <- all.alleles[signif > 12] 
-#' lapply(all.local, plot)
-#' 
-#' # other plot possibility, using <image>
-#' par(mfrow = c(3,4))
-#' for(i in 1:12) {
-#' image(matrix(stat.G[,i], 15,15))
-#' }
-#' 
-#' par(mfrow = c(3,4))
-#' for(i in 1:12) {
-#' image(matrix(pval.G[,i], 15,15))
-#' }
-#' 
-#'  
-#' #---------------------------------------------------------------------------#
-#' 
-#' #####################
 #' # LOCAL GEARY'S C
 #' #####################
 #' 
@@ -227,235 +289,448 @@
 
 
 setGeneric("eco.lsa",
-					 function(Z, con, method = c("G*","G", "I", "C"),
-					          zerocon = NA, nsim = 99, 
-					 				 conditional = c("auto", TRUE, FALSE),
-					 				 test = c("permutation", "bootstrap"),
-					 				 alternative = c("auto", "two.sided", 
-					 				 								"greater", "less"), 
-					 				 adjust = "none") {
-					 	
-					 	method <- match.arg(method)
-					 	conditional <- match.arg(conditional)
-					 	
-					 	test <- match.arg(test)
-					 	alternative.i <- match.arg(alternative)
+           function(var, con, method = c("G*","G", "I", "C"),
+                    zerocon = NA, nsim = 99, 
+                    conditional = c("auto", "TRUE", "FALSE"),
+                    test = c("permutation", "bootstrap"),
+                    alternative = c("auto", "two.sided", 
+                                    "greater", "less"), 
+                    adjust = "none",
+                    multi = c("matrix", "list"),
+                    pop = NULL) {
+             
+             
+             # GENERAL CONFIGURATION ------------------------------------------------#
+            
+             var <- as.data.frame(var)
+             
+             if(dim(var)[2] == 1) {
+               multitest <- FALSE
+             } else {
+               multitest <- TRUE
+             }
+             
+             
+             method <- toupper(method)
+             method <- match.arg(method)
+             
+             test <- match.arg(test)
+             alternative.i <- match.arg(alternative)
+             multi <- match.arg(multi)
+             
+             conditional <- as.character(conditional)
+             ## 'conditional'  configuration - no class/case dependent
+             conditional <- match.arg(conditional)
+             if(conditional == "auto") {
+               if(method == "G*") {
+                 conditional <- FALSE
+               } else {
+                 conditional <- TRUE
+               }
+             }
+             if(conditional == "TRUE") {
+               conditional <- TRUE
+             }
+             if(conditional == "FALSE") {
+               conditional <- FALSE
+             }
+             
+             # population configuration
+             
+             if(!is.null(pop) && multi == "matrix") {
+               
+               if(length(pop) != nrow(var)) {
+                 stop(paste("incorrect factor length", paste("(", length(pop), ")", sep = "")))
+               }
+               
+               # create a matrix with pop
+               pop <- as.integer(as.factor(pop))
+               orden <- order(pop)
+               pop <- pop[orden]
+               grp <- t(matrix(rep(pop, ncol(var)), ncol = ncol(var)))
+               
+               # order var
+               var <- var[orden, ]
 
-					 	
-					 	if(conditional == "auto") {
-					 		if(method == "G*") {
-					 			conditional <- FALSE
-					 		} else {
-					 			conditional <- TRUE
-					 		}
-					 	}
-					 		
-					 	
-					 	
-					 	#weight configuration
-					 	
-					 	zerocon2 <- match(zerocon, c(0, NA))
-					 	if(is.null(zerocon2)) {
-					 		stop("zerocon argument must be 0 or NA")
-					 	}
-					 	
-					 	
-					 	if(class(con) == "eco.weight") {
-					 		XY <- con@XY
-					 		con <- con@W
-					 	} else {
-					 		con <- int.check.con(con)
-					 		if(attr(con, "xy") == NULL) {
-					 		  stop("The weight matrix requires an attribute <xy>")
-					 		}
-					 		XY <- attr(con, "xy")
-					 		}
-					 	
-					 	
-					 	#general configuration. method selection
-					 	n <- length(Z)
-					 	counter <- 0
-					 	cat("\n")
-					 	
-					 	############## getis ####################
-					 	
-					 	if(method == "G*"| method == "G") {
-					 	classG <- method
-			 	
-					 	Gm <- t(replicate(n, return(Z)))
-					 	
-					 	
-					 	if (classG == "G") {
-					 	  if(any(diag(con) != 0)) {
-					 		diag(con) <- 0
-					 		warning(paste("Non zero elements in the diagonal of the weight matrix", 
-					 		        "self-included individuals). These values are set to 0 for G"))
-					 	  }
-					 		diag(Gm) <- 0
-					 		n2 <- n - 1
-					 	} else if (classG == "G*"){
-					 		if(any(diag(con) == 0)) {
-					 		  stop(paste("Individuals non self-included in the weight matrix",
-					 		       "(zeros present in the diagonal). Self-included individuals",
-					 		       "are required for G*"))
-					 		}
-					 		n2 <- n
-					 	}
-					 	
-					 	#specific function for G* or G
-					 	select.method <- function(Gm) {
-					 		
-					 		G <- con * Gm
-					 		G <- apply(G, 1, sum)
-					 		Gm2 <- Gm ^ 2
-					 		
-					 		meanG <- apply(Gm, 1, sum) / n2
-					 		desvsqG <- apply(Gm2, 1, sum) / n2
-					 		desvsqG <- desvsqG - meanG ^ 2
-					 		W <- apply(con, 1, sum)
-					 		S1 <- apply(con ^ 2, 1, sum)
-					 		denom <- n2 * S1 - W ^ 2
-					 		denom <- sqrt(desvsqG * denom / (n2-1))
-					 		numer <- (G - W * meanG)
-					 		G <- numer / denom
-					 		G
-					 	}
-					 	
-					 	
-					 	############## moran ####################
-					 	
-					 	} else if(method == "I") {
-					 		
-					 		Z2 <- Z - mean(Z)
-					 		m2 <-  sum(Z2 ^ 2) / n 
-					 		Gm <- t(replicate(length(Z), return(Z2)))
-					 		select.method <- function(Gm) {
-					 			 
-					 			coef.sup <- apply(Gm * con, 1, sum)
-					 			out <- Z2 * coef.sup / m2
-					 			out
-					 		}
-					 		
-					 		############## geary ####################
-					 		
-					 	} else if(method == "C") {
-					 		
-					 		Z2 <- Z - mean(Z)
-					 		m2 <-  sum(Z2 ^ 2) / n 
-					 		Gm <- as.matrix(dist(Z, upper = T))
-					 		
-					 		select.method <- function(Gm) {
-					 			
-					 			num <- Gm ^ 2
-					 			num <- con * Gm 
-					 			num <- apply(num, 1, sum)
-					 			out <- num / m2
-					 			out
-					 			
-					 		}
-	
-					 	}
-					 	
-					 	obs <- select.method(Gm)
-					 	
-					 	
-		################ TESTING #################################
-					 	if(test == "permutation") {
-					 		replace <- FALSE
-					 	} else {
-					 		replace <- TRUE
-					 	}
-					 	
-					 	monte.c <- matrix(0, nrow(Gm), nsim)
-					 		#fixed pivot
-					 		if(conditional) {
-					 		for(k in 1:nsim) {
-					 			Gm.test <- Gm
-					 			samp <- 1:nrow(Gm)
-					 			for(i in samp) {
-					 				order.Z <- sample(samp[-i], replace = replace)
-					 				Gm.test[i, -i]<- Gm.test[i, order.Z]
-					 			}
-					 			monte.c[, k] <- select.method(Gm.test)
-					 			
-					 			counter <- counter + 1
+             } else {
+               grp <- NULL
+             }
+           
+             
+             ## weights configuration
+             
+             zerocon2 <- match(zerocon, c(0, NA))
+             if(is.null(zerocon2)) {
+               stop("zerocon argument must be 0 or NA")
+             }
+             
+             
+             if(class(con)[1] == "eco.weight") {
+               XY <- con@XY
+               con <- con@W
+             } else {
+               con.temp <- int.check.con(con)
+               if(is.null(attr(con, "xy"))) {
+                 stop("The weight matrix requires an attribute <xy> with the coordinates")
+               }
+               con <- con.temp
+               XY <- attr(con, "xy")
+             }
+             
+             ## single/multiple test configuration 
+             
+         
+             
+             ########################################################################
+             # SINGLE TEST (CORE) FUNCTION------------------------------------------#
+             ########################################################################
+             
+             singletest <- function(Z) {
+             
+             ## general configuration. method selection
+             var.names <- colnames(Z)
+             Z <- Z[, 1]
+             ## NAs removed. When finalized the algorithm, NA individuals are restored.
+             noNA <- !is.na(Z) 
+             Z <- Z[noNA]
+             con.cl <- con[noNA, noNA]
+             n <- length(Z)
+             ## element to fill during restore of NAs
+             
+             counter <- 0
+             cat("\n")
+             
+             # STATISTICS SECTION---------------------------------------------------#
+             ############## Getis - Ord's G*/G ####################
+             
+             if(method == "G*"| method == "G") {
+               classG <- method
+               
+               Gm <- t(replicate(n, Z))
+               
+               if (classG == "G") {
+                 if(any(diag(con.cl) != 0)) {
+                   diag(con.cl) <- 0
+                   msg <- "Non zero elements in the diagonal of the weight matrix, 
+                                self-included individuals. These values are set to 0 for G"
+                   warning()
+                 }
+                 diag(Gm) <- 0
+                 n2 <- n - 1
+               } else if (classG == "G*"){
+                 if(any(diag(con.cl) == 0)) {
+                   stop(paste("Individuals non self-included in the weight matrix",
+                              "(zeros present in the diagonal). Self-included individuals",
+                              "are required for G*"))
+                 }
+                 n2 <- n
+               }
+               
+               #specific function for G* or G
+               select.method <- function(Gm) {
                  
-					 			cat(paste("\r", "simulations...computed",
-					 			          ceiling(100 * counter / nsim), "%"))
-					 			
-					 		}
-					 		#free sampling
-					 		} else {
-					 			for(i in 1:nsim) {
-					 			monte.c[, i] <- select.method(Gm[,sample(ncol(Gm), 
-					 																							 replace = replace)])
-					 			
-					 			
-					 			counter <- counter + 1
+                 G <- con.cl * Gm
+                 G <- apply(G, 1, sum)
+                 Gm2 <- Gm ^ 2
                  
-					 			cat(paste("\r", "simulations...computed",
-					 			          ceiling(100 * counter / nsim), "%"))
-					 			}
-					 		}
+                 meanG <- apply(Gm, 1, sum) / n2
+                 desvsqG <- apply(Gm2, 1, sum) / n2
+                 desvsqG <- desvsqG - meanG ^ 2
+                 W <- apply(con.cl, 1, sum)
+                 S1 <- apply(con.cl ^ 2, 1, sum)
+                 denom <- n2 * S1 - W ^ 2
+                 denom <- sqrt(desvsqG * denom / (n2-1))
+                 numer <- (G - W * meanG)
+                 G <- numer / denom
+                 G
+               }
+               
+               
+               ############## moran ####################
+               
+             } else if(method == "I") {
+               
+               Z2 <- Z - mean(Z)
+               m2 <-  sum(Z2 ^ 2) / n 
+               Gm <- t(replicate(length(Z), Z2))
+               
+               select.method <- function(Gm) {
+                 coef.sup <- apply(Gm * con.cl, 1, sum)
+                 out <- Z2 * coef.sup / m2
+                 out
+               }
+               
+               ############## geary ####################
+               
+             } else if(method == "C") {
+               
+               Z2 <- Z - mean(Z)
+               m2 <-  sum(Z2 ^ 2) / n 
+               Gm <- as.matrix(dist(Z, upper = T))
+               
+               select.method <- function(Gm) {
+                 
+                 num <- Gm ^ 2
+                 num <- con.cl * Gm 
+                 num <- apply(num, 1, sum)
+                 out <- num / m2
+                 out
+                 
+               }
+               
+             }
+             
+             obs <- select.method(Gm)
+             
+             # no simulations case
+             if(nsim == 0) {
+               res <- new("eco.lsa")
+               tab <- data.frame(obs)
+               
+               #NA action - restore NA individuals
+               if(any(!noNA)) {
+                 tmp <- matrix(nrow = length(noNA), ncol = ncol(tab))
+                 colnames(tmp) <- colnames(tab)
+                 tab <- as.matrix(tab)
+                 tmp[noNA, ] <- tab
+                 tab <- as.data.frame(tmp)
+                 for(i in c(1,2,4,5,6)) {
+                   tab[, i] <- as.numeric(as.character(tab[, i]))
+                 }
+               }
+               
+               if(!is.null(rownames(Z))) {
+                 rownames(tab) <- rownames(Z)
+               }
+               
+               tab <- data.frame(tab, round(aue.rescale(tab$obs, "one.one"), 4))
+               colnames(tab)[2] <- "obs.res"
+               
+               res@NAMES <- var.names
+               res@OUT <- tab
+               res@XY <- data.frame(XY)
+               res@METHOD <- method
+               res@NSIM <- nsim
+               res@COND <- conditional
+               res
+               return(res)
+             }
+             
+             # TEST SECTION---------------------------------------------------------#
+             
+             if(test == "permutation") {
+               replace <- FALSE
+             } else {
+               replace <- TRUE
+             }
+             
+             monte.c <- matrix(0, nrow(Gm), nsim)
+             #fixed pivot
+             if(conditional) {
+               for(k in 1:nsim) {
+                 Gm.test <- Gm
+                 samp <- 1:nrow(Gm)
+                 for(i in samp) {
+                   order.Z <- sample(samp[-i], replace = replace)
+                   Gm.test[i, -i]<- Gm.test[i, order.Z]
+                 }
+                 monte.c[, k] <- select.method(Gm.test)
+                 
+                 counter <- counter + 1
+                 
+                 cat(paste("\r", "simulations...computed",
+                          round(100 * counter / nsim), "%"))
+                 
+               }
+               #free sampling
+             } else {
+               for(i in 1:nsim) {
+                 monte.c[, i] <- select.method(Gm[,sample(ncol(Gm), 
+                                                          replace = replace)])
+                 
+                 
+                 # only for single tests- multiple test avoid this
+                 if(!multitest) {
+                 counter <- counter + 1
+                 cat(paste("\r", "simulations...computed",
+                           ceiling(100 * counter / nsim), "%"))
+                 }
+               }
+             }
+             
+             
+             monte.c <- t(monte.c)
+             
+             tab <- int.random.test(repsim = monte.c, 
+                                    obs = obs,
+                                    nsim = nsim,
+                                    test = test, 
+                                    alternative = alternative,
+                                    adjust = adjust)
+             
+             
+             
+             # OUTPUT SECTION-------------------------------------------------------#
+            
+             connect <- apply(con.cl, 1, sum)
+             if(is.na(zerocon)) {
+               tab[which(connect == 0), ] <- rep(NA, 3)
+             } else {
+               tab[which(connect == 0), ] <- rep(0, 3)
+             }
+             
+             
+             res <- new("eco.lsa")
+            
+              #NA action - restore NA individuals
+             if(any(!noNA)) {
+               tmp <- matrix(nrow = length(noNA), ncol = ncol(tab))
+               colnames(tmp) <- colnames(tab)
+               tab <- as.matrix(tab)
+               tmp[noNA, ] <- tab
+               tab <- as.data.frame(tmp)
+               for(i in c(1,2,4,5,6)) {
+               tab[, i] <- as.numeric(as.character(tab[, i]))
+                     }
+             }
+             
+             
+             if(!is.null(rownames(Z))) {
+               rownames(tab) <- rownames(Z)
+             }
+             
+             tab <- data.frame(tab, round(aue.rescale(tab$obs, "one.one"), 4))
+             colnames(tab)[ncol(tab)] <- "obs.res"
 
-					 		
-					 		monte.c <- t(monte.c)
-					 		
-					 	tab <- int.random.test(repsim = monte.c, 
-					 													obs = obs,
-					 													nsim = nsim,
-					 													test = test, 
-					 													alternative = alternative,
-					 												  adjust = adjust)
-					 	
-					 	
-					 	################ END OF  TESTING #################################
-					 	
-					 		connect <- apply(con, 1, sum)
-					 		if(is.na(zerocon)) {
-					 			tab[which(connect == 0), ] <- rep(NA, 3)
-					 		} else {
-					 			tab[which(connect == 0), ] <- rep(0, 3)
-					 		}
-					 		
-					 	
-					 		if(!is.null(rownames(Z))) {
-					 			rownames(tab) <- rownames(Z)
-					 		}
-					 		
-					 	
-					 		sel <- match(method,  c("G", "G*", "I", "C"))
-					 		name <- c("Getis Ord's G", "Getis Ord's G*", 
-					 		          "local Moran's I", "local Geary's C")
-					 		method <- name[sel]
-					 		
-					 		
-					 		res <- new("eco.lsa")
-
-					 	
-					 		if(test == "bootstrap") {
-					 			
-					 			res@METHOD <- method
-					 			res@TEST <- test
-					 			res@NSIM <- nsim
-					 			res@COND <- conditional
-					 			res@OUT <- tab
-					 			res@XY <- data.frame(XY)
-					 			
-					 		} else {
-					 			
-					 		  res@OUT <- tab
-					 			res@METHOD <- method
-					 			res@TEST <- test
-					 			res@NSIM <- nsim
-					 			res@COND <- conditional
-					 			res@PADJ <- adjust
-					 			res@XY <- data.frame(XY)
-					 			
-					 		}
-					 		
-					 
-					 	cat("\n", "done!", "\n\n")
-					 	res
-					 	
-					 })
+             res@NAMES <- var.names
+             res@OUT <- tab
+             res@XY <- data.frame(XY)
+             res@METHOD <- method
+             res@TEST <- test
+             res@NSIM <- nsim
+             res@COND <- conditional
+             
+             if(test == "permutation") {
+               res@TEST <- test
+               res@NSIM <- nsim
+               res@COND <- conditional
+               res@PADJ <- adjust
+             }
+             res
+           }
+           # END SINGLE TEST FUNCTION-----------------------------------------------#
+           
+           
+           ##########################################################################
+           # RUN NOW SINGLE / MULTIPLE TEST ----------------------------------------#
+           ##########################################################################
+           
+           #-(1) single test case -------------------------------#
+           #-----------------------------------------------------#
+           if(!multitest) {
+             res <- singletest(var[, 1, drop = FALSE])
+           } 
+           
+           #-(2) multiple tests case ----------------------------#
+           #-----------------------------------------------------#
+           counter <- 1
+           ntests <- ncol(var)
+           
+           # (2- 1/2)(list format--------------------------------#
+           if(multitest && multi == "list") {
+             res <- new("eco.listlsa")
+             counter <- 1
+             for(i in 1:ncol(var)) {
+             res[[i]] <- singletest(var[, i, drop = FALSE])
+           
+             cat(paste("\r", "variable", counter, "--- total progress",
+                       round(100 * counter / ntests), "%"))
+             counter <- counter  + 1
+             }
+           }
+           
+           # (2- 2/2) matrix format------------------------------#
+           #-----------------------------------------------------#
+           if(multitest && multi == "matrix") {
+             # names configuration-------------
+             ind.names <- rownames(var)
+             var.names <- colnames(var)
+             # add names function
+             add.names <- function(outmat) {
+               rownames(outmat) <- rownames(var)
+               colnames(outmat) <- colnames(var)
+               outmat
+             }
+             #perform here a multiple test. Use for for counting progress
+             all.traits <- list()
+             for(i in 1:ntests) {
+             all.traits[[i]] <- singletest(var[, i, drop = FALSE])
+             
+             cat(paste("\r", "variable", counter, "--- total progress",
+                       round(100 * counter / ntests), "%"))
+             
+             counter <- counter  + 1
+             }
+             
+             # GENERATE RASTERS (individuals x traits)
+             obs.multi <- sapply(all.traits, function(x) ecoslot.OUT(x)[,1])
+            
+             nmax <- ncol(ecoslot.OUT(all.traits[[1]]))
+             obs.res.multi <- sapply(all.traits, function(x) ecoslot.OUT(x)[, nmax])
+             
+             if(nsim != 0) {
+             if(test  == "permutation") {
+             exp.multi <- sapply(all.traits, function(x) ecoslot.OUT(x)[,2])
+             
+             # alternative as intergers
+             alter.inter <- function(v) {
+               vout <- as.integer(rep(0, length(v)))
+               vout[v == "two.sided"] <- 0L
+               vout[v == "greater"] <- 1L
+               vout[v == "less"] <- 2L
+               vout
+             }
+             
+             alter.multi <- sapply(all.traits, function(x) alter.inter(ecoslot.OUT(x)[,3]))
+             pval.multi <- sapply(all.traits, function(x) ecoslot.OUT(x)[,4])
+             lwr.multi <- sapply(all.traits, function(x) ecoslot.OUT(x)[,5])
+             uppr.multi <- sapply(all.traits, function(x) ecoslot.OUT(x)[,6])
+             }
+             if(test  == "bootstrap") {
+               lwr.multi <- sapply(all.traits, function(x) ecoslot.OUT(x)[,2])
+               uppr.multi <- sapply(all.traits, function(x) ecoslot.OUT(x)[,3])
+             }
+             }
+             
+             #---output construction----#
+             res <- new("eco.multilsa") 
+             res@METHOD <- method
+             res@NSIM <- nsim
+             res@XY <- data.frame(XY)
+             res@OBS <- t(add.names(obs.multi))
+             res@OBS.RES <- t(add.names(obs.res.multi))
+             
+             if(nsim != 0) {
+             res@TEST <- test
+             res@COND <- conditional
+             res@LWR <- t(add.names(lwr.multi))
+             res@UPPR <- t(add.names(uppr.multi))
+             }
+             
+             res@POP <- grp
+             
+               if(test == "permutation" && nsim != 0) {
+                 # permutation case specific
+                 res@PADJ <- adjust
+                 res@EXP <- t(add.names(exp.multi))
+                 res@ALTER <- t(add.names(alter.multi))
+                 res@PVAL <- t(add.names(pval.multi))
+               }
+             # end multiple - matrix format  -----------------------#
+             }
+           
+           cat("\t\n\ndone!\n\n")
+           
+             res
+             
+           })

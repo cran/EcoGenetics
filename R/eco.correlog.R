@@ -29,6 +29,7 @@
 #' resampling and the associated confidence intervals of the null hypothesis.
 #'  If test = "permutation" (default) a permutation test is made and the P-values 
 #'  are computed. 	
+#' @param alpha Value for alpha. Default alpha = 0.05.
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the alternative hypothesis.
 #' Other options are: "two.sided", "greater" and "less".	
@@ -81,18 +82,23 @@
 #' ##########################
 #' 
 #' ## single test with phenotypic traits
-#' moran <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], method = "I", smax=10, size=1000)
+#' moran <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], 
+#' method = "I", smax=10, size=1000)
 #' plot(moran)
 #' 
 #' ## multiple tests with phenotypic traits
-#' moran2 <- eco.correlog(Z=eco[["P"]], XY = eco[["XY"]], method = "I", smax=10, size=1000)
+#' moran2 <- eco.correlog(Z=eco[["P"]], XY = eco[["XY"]],
+#' method = "I", smax=10, size=1000)
 #' 
 #' plot(moran2, var ="P2") ## single plots
 #' plot(moran2, var ="P3") ## single plots
 #' 
-#' graf <- plot(moran2, meanplot = TRUE)            ## multiple plot with mean correlogram 
-#'                                                  ## and jackknifed confidence intervals.
-#'                                                                                                           
+#'
+#'  ## multiple plot with mean correlogram 
+#'  ## and jackknifed confidence intervals.
+#'  
+#'  graf <- plot(moran2, meanplot = TRUE)
+#'  
 #'  plot(graf[[1]])
 #'  plot(graf[[2]])
 #' 
@@ -113,28 +119,33 @@
 #' head(eco[["A"]])      # head of the matrix
 #' 
 #' # analyzing allele 1
-#' moran <- eco.correlog(Z=[["A"]][,1], XY = eco[["XY"]], method = "I", smax=10, size=1000)                
+#' moran <- eco.correlog(Z=[["A"]][,1], XY = eco[["XY"]], method = "I",
+#' smax=10, size=1000)                
 #' plot(moran)
-#' 
 #' 
 #' # multiple tests with genotypic traits. 
 #' # nsim is set to 10 only for speed in the example
-#' moran2 <- eco.correlog(Z = eco[["A"]], XY = eco[["XY"]], method = "I",smax=10, size=1000, nsim=99)
-#'     
+#' moran2 <- eco.correlog(Z = eco[["A"]], XY = eco[["XY"]], 
+#' method = "I",smax=10, size=1000, nsim=99)
 #' 
-#' graf <- plot(moran2, meanplot = TRUE)              ## multiple plot with mean 
-#'                                                    ## correlogram and jackknifed 
-#'                                                    ## confidence intervals.
+#' 
+#' ## multiple plot with mean 
+#' ## correlogram and jackknifed 
+#' ## confidence intervals.
+#' 
+#' graf <- plot(moran2, meanplot = TRUE)
 #' 
 #' ## the same example, but with nsim = 99. 
-#' moran3 <- eco.correlog(Z = eco[["A"]], XY = eco[["XY"]], method = "I", smax=10, size=1000, nsim=99)  
-#'                                                           
-#'                                                    
-#' plot(moran3, meanplot = TRUE, significant = TRUE)  ## plot for alleles with at least
-#'                                                    ## one significant value after
-#'                                                    ## Bonferroni-Holm sequential P correction
-#'                                                    ## (set adjust "none" for no family-wise 
-#'                                                    ## P correction in "eco.correlog")                                                  
+#' moran3 <- eco.correlog(Z = eco[["A"]], XY = eco[["XY"]], method = "I", 
+#' smax=10, size=1000, nsim=99)  
+#'        
+#' ## plot for alleles with at least one significant value after
+#' ## Bonferroni-Holm sequential P correction
+#' ## (set adjust "none" for no family-wise 
+#' ## P correction in "eco.correlog")
+#' 
+#' plot(moran3, meanplot = TRUE, significant = TRUE)
+#' 
 #' #-----------------------
 #' # ACCESSORS USE EXAMPLE
 #' #-----------------------
@@ -147,11 +158,11 @@
 #' ecoslot.BREAKS(moran)   # slot BREAKS
 #'                                              
 #' #---------------------------------------------------------------------------#
-#'                                                                                                                                                            
+#' 
 #' ##########################
 #' # Geary's C correlogram
-#' ##########################                                                   
-#'
+#' ##########################
+#' 
 #' geary <- eco.correlog(Z = eco[["P"]][,1], XY = eco[["XY"]], method = "C",
 #' smax=10, size=1000)
 #' plot(geary)
@@ -215,6 +226,7 @@ setGeneric("eco.correlog",
                     method = c("I", "C", "CC"),
                     nsim = 99,
                     test = c("permutation", "bootstrap"),
+                    alpha = 0.05,
                     alternative = c("auto", "two.sided", 
                                     "greater", "less"),
                     adjust = "holm",
@@ -261,6 +273,7 @@ setGeneric("eco.correlog",
                include.zero = FALSE
              }
              
+             XY <- as.data.frame(XY)
              if(ncol(XY) > 2) {
                message("XY slot with > 2 columns. The first two are taken as X-Y coordinates")
                XY <- XY[,1:2]
@@ -340,6 +353,9 @@ setGeneric("eco.correlog",
              
              #output data frame/s construction
              
+             counter <- 1          
+             n.classes <- length(d.min)
+             
              #bootstrap case
              if(test == "bootstrap") {
                
@@ -354,11 +370,14 @@ setGeneric("eco.correlog",
                
                
                for(j in 1:nvar) {
+                 
                  var.test <- Z[, j]
                  
-                 for(i in 1:length(d.min))  {
-                   cat("\r", "Computing",  
-                       ceiling(i*100/length(d.min)), "%", "trait", j)
+                 for(i in 1:n.classes)  {
+                 
+                   cat(paste("\r", "simulations...computed",
+                             round(100 * i / n.classes), "%\t\t"))
+                   
                    lag2 <- lag[[i]]
                    est <- select_method(u = var.test, 
                                         con = lag2, 
@@ -381,7 +400,11 @@ setGeneric("eco.correlog",
                    lista[[j]][1, 3:4] <- cor.zero$conf.int
                    lista[[j]][1, 5] <- nrow(Z) 
                  }
+                 cat(paste("\r", "variable", counter, "--- total progress",
+                           round(100 * counter / nvar), "%    "))
+                 counter <- counter + 1
                  cat("\n")
+                
                }
                
                #permutation case
@@ -401,9 +424,12 @@ setGeneric("eco.correlog",
                for(j in 1:nvar) {
                  var.test <- Z[, j]
                  
-                 for(i in 1:length(d.min))  {
-                   cat("\r", "Computing",  
-                       ceiling(i*100/length(d.min)), "%", "trait", j)
+                 for(i in 1:n.classes)  {
+                   
+                   cat(paste("\r", "simulations...computed",
+                             round(100 * i / n.classes), "%\t\t"))
+  
+                   
                    lag2 <- lag[[i]]
                    est <- select_method(u = var.test, 
                                         con = lag2, 
@@ -438,10 +464,11 @@ setGeneric("eco.correlog",
                    lista[[j]][ , 3] <- p.adjust(lista[[j]][ , 3], 
                                                 method = adjust)
                  }
-                 
+                 cat(paste("\r", "variable", counter, "--- total progress",
+                           round(100 * counter / nvar), "%"))
+                 counter <- counter + 1
                  cat("\n")
                }
-               
              }
              
              
@@ -470,10 +497,8 @@ setGeneric("eco.correlog",
              salida@TEST <- test
              salida@NSIM <- nsim
              salida@PADJUST <- paste(adjust, "-sequential:", sequential)
-             
-             cat("\n")
-             cat("done!")
-             cat("\n\n")
+
+             cat("\ndone!\n\n")
              
              
              salida

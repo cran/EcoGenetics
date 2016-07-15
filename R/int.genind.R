@@ -1,4 +1,3 @@
-
 ####################---INT.GENIND AND GENDATA CLASSES----#######################
 # A product of the genind class for internal processing of ecogen class.
 #                    ----------o----------
@@ -55,7 +54,19 @@ setClass("int.gendata",
                         ncod = "intORnull",
                         missing = "character",
                         missing.cells = "intORnull",
-                        removed.image = "list"))
+                        removed.image = "list"), 
+         
+         prototype(loc.fac = NULL,
+                   all.names = NULL,
+                   ploidy = 2,
+                   type = "codominant",
+                   NA.char = "NA",
+                   sep = "",
+                   ncod = NULL,
+                   missing = "0",
+                   missing.cells = NULL,
+                   removed.image = list())
+)
 
 
 #' int.genind
@@ -366,9 +377,9 @@ int.df2genind <- function(indata,
     # check that data values are "0", "1" and NA
     if(!all(out %in% c(NA, "1", "0"))) { 
       stop("dominant data must be binary (0 for absence, 
-            1 for presence")
+           1 for presence")
     }
-           
+    
     
     # restore missing individuals if required
     if(!rm.empty.ind && length(remove.ind) > 0) {
@@ -399,7 +410,7 @@ int.df2genind <- function(indata,
     }
     # save data image
     removed.image[, !isPoly] <- 1
-  }
+    }
   
   # END DOMINANT----------------
   
@@ -630,19 +641,19 @@ int.genind2df <- function(x, sep = "",                   #the product is a matri
       temp[-rem.rows, -rem.cols] <- res
       rownames(temp) <- restore.info[[4]]
       colnames(temp) <- restore.info[[5]]
-      return(as.data.frame(temp, stringsAsFactors = FALSE))
+      return(temp)
     } # only columns
     if(l.rc && !l.rr) {
       temp[, -rem.cols] <- res
       rownames(temp) <- restore.info[[4]]
       colnames(temp) <- restore.info[[5]]
-      return(as.data.frame(temp, stringsAsFactors = FALSE))
+      return(temp)
     } # only rows
     if(!l.rc && l.rr) {
       temp[-rem.rows, ] <- res
       rownames(temp) <- restore.info[[4]]
       colnames(temp) <- restore.info[[5]]
-      return(temp, stringsAsFactors = FALSE)
+      return(temp)
     }
   }
   
@@ -655,4 +666,3 @@ int.genind2df <- function(x, sep = "",                   #the product is a matri
 }
 
 #########################END INT.GENIND#########################################
-

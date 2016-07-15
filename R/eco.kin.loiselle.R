@@ -46,7 +46,7 @@ eco.kin.loiselle <- function(eco) {
   
   ###SUPERIOR COEFFICENT###
   
-  #RIGHT TERM	
+  #RIGHT TERM  
   T2  <- p.la * (1 - p.la) / (n1 - 2)
   
   #LEFT TERM
