@@ -30,8 +30,8 @@ int.crosscor <- function(Z, Y, con, nsim,
     stop("Non symmetric weight matrix. Weights must be symmetric.")
   }
   
-  if(adjust.n == TRUE) {
-    colTRUE <- apply(wg, 1, sum)
+  if(adjust.n) {
+    colTRUE <- rowSums(wg)
     colTRUE[colTRUE != 0] <- 1
     Nc <- sum(colTRUE)
   } else  {
@@ -57,10 +57,11 @@ int.crosscor <- function(Z, Y, con, nsim,
   
   repsim <- numeric()
   
-  for(i in 1:nsim) {
+  repsim <- sapply(seq_len(nsim), function(i) {
     samp <- sample(N)
-    repsim[i] <- crossfun(Mi[samp, samp])  #permutation is conditioned to the each dependent pair (z2,y2)
-  }  				 		                           #symmetric weights required!
+    crossfun(Mi[samp, samp])  #permutation is conditioned to the each dependent pair (z2,y2)
+  }) 				 		                           #symmetric weights required!
+  
   random.m <- int.random.test(repsim = repsim, obs = obs, 
                               test = test,
                               nsim = nsim,
@@ -86,7 +87,7 @@ int.crosscor <- function(Z, Y, con, nsim,
   }
   
   
-  if(plotit == TRUE) {
+  if(plotit) {
     hist(c(repsim, random.m$obs), 
          xlab = "Bivariate Moran's Ixy", 
          main = "Monte Carlo test")

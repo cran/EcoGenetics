@@ -106,17 +106,15 @@ setGeneric("eco.cbind",
              }
              
              # fill XY slot--------------------------------
-             # this rule retains the first non empty matrix.
-             # XY consistency should be checked across paired objects?
-             # one posibility is to use row names for checks in the future
-             # and standard (unique) column names (X, Y, Z)
-             if(nrow(e1@XY) != 0) {
-               z@XY <- e1@XY
+             # It assumes identical rownames from EcoGenetics 1.2.1
+             if(any(e1@XY != e2@XY)) {
+               warning(paste("Individuals in < XY >  
+                             data frame do not have the same rownames.
+                             This will generate an empty slot."))
+               z@XY <- data.frame()
              } else {
-               if(nrow(e2@XY) != 0) {
-               z@XY <- e2@XY
+               z@XY <- e1@XY
                }
-             } 
              
              
              # fill P slot-----
@@ -157,7 +155,7 @@ setGeneric("eco.cbind",
                  
                  
                  # fill A and the internal slot INT-------
-                 z@A <- data.frame(tempo@tab)
+                 z@A <- tempo@tab
                  z@INT@loc.fac <- tempo@loc.fac
                  z@INT@all.names <- tempo@all.names
                  z@INT@ploidy <- tempo@ploidy
@@ -191,9 +189,15 @@ setGeneric("eco.cbind",
                  z@C <- tem[[5]]
                }
              
-             return(z)
+             # set names with nrow method
+             if(any(nrow(z) != 0)) {
+             z@ATTR$names <- e1@ATTR$names
              }
-             #-----END INT.CBIND----------------------#
+             
+             z
+             
+             } # END INT.CBIND
+             
              
              #-----OUTPUT CREATION--------------------#
              # bind multiple objects using recursion
@@ -205,6 +209,10 @@ setGeneric("eco.cbind",
              out <- int.cbind(out, u.ecogen[[i]])
              i <- i + 1
              }
+             
+
+               # check validity
+               validObject(out)
                
                return(out)
              

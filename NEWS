@@ -1,4 +1,20 @@
-EcoGenetics 1.2.0-3 (Release date: 2016-05-xx)
+EcoGenetics 1.2.1 (Release date: 2017-03-02)
+==============
+Changes:
+ 
+ * ecogen objects code now the slot A as integer (0,1 or 2) in the case of codominant markers
+ * Validation defined for ecogen objects. 
+ * New ecogen methods: nrow, ncol, dim, logical subsetting for "["
+ * new export and import methods for ecogen objects
+ * Improved graphical display using ggplotly, networkD3, edgebundleR, igraph and pheatmap in addition to ggplot2
+ * Algorithm used to compute Join-count statistic has been improved, and now is faster
+ * New functions: eco.plotCorrelog, eco.plotCorrelogB, eco.plotLocal, eco.plotGlobal, eco.bearing, eco.formula, eco.split, eco.plotWeight
+ * New option to compute a Mantel test with a truncated or an angular weights object
+ * Definition of new functions for the conversion to/from other formats, and
+  standardization of the nomenclature used for the names of conversion functions
+ * eco.order has been converted in an internal function of the ecogen constructor
+
+EcoGenetics 1.2.0-3 (Release date: 2015-07-15)
 ==============
 	
 	Changes:

@@ -10,7 +10,7 @@
 # coding/missing data information and were removed the slots loc.nall, loc.names
 # and ind.names. The int.genind objects are temporal (they only exist as
 # intermediate stages of the information in several 
-# processes): they are are unfolded 
+# processes): they are unfolded 
 # into a frequency matrix and a class "int.gendata" with pure information 
 # about the matrix with the function "int.genind2gendata".
 # These two objects are joined together in temporal operations with the function
@@ -393,7 +393,7 @@ int.df2genind <- function(indata,
     }
     
     # remove non polymorphic data
-    mode(out) <- "numeric"
+    mode(out) <- "integer"
     isPoly <- aue.is.poly(out, poly.level)
     out <- X[,  isPoly,  drop = FALSE]
     
@@ -473,7 +473,7 @@ int.df2genind <- function(indata,
     allele.data <- factor(allele.data, levels = unique(allele.data))
     out <- table(ind.data, allele.data)
     out <- out[ind.names, , drop = FALSE] # table sorts alphabetically. This resets.
-    out <- out/2
+    #out <- out/2
     ## force type 'matrix'
     class(out) <- NULL
     dimnames(out) <- list(rownames(out), colnames(out))
@@ -536,8 +536,10 @@ int.df2genind <- function(indata,
                         names.rows = rownames(indata), 
                         names.cols = colnames(indata))
   
-  # numeric matrix
-  mode(out) <- "numeric"
+  # numeric matrix // old ecogen object, now integer, L.R. 9/12/2016
+  # mode(out) <- "numeric"
+  out <- as.matrix(out)
+  mode(out) <- "integer"
   
   # OUTPUT CREATION------------------------------------------------------------#
   
@@ -589,7 +591,7 @@ int.genind2df <- function(x, sep = "",                   #the product is a matri
   for(i in loc.names){
     kX[[i]] <- output[, i == loc.fac, drop = FALSE]
   }
-  kX <- lapply(kX, function(X) round(X * x@ploidy))
+  #kX <- lapply(kX, function(X) round(X * x@ploidy))
   
   # function to recode a genotype in form 
   # "A1[sep]...[sep]Ak" from frequencies--------#

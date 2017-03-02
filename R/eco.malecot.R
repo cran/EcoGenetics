@@ -1,9 +1,11 @@
-#' Global and local kinship analyses (beta version)
+#' Global and local kinship analyses 
 #' 
-#' @description NOTE: THIS IS A BETA VERSION OF THE FUNCTION (UNDER DEVELOPMENT). 
+#' @description 
 #' The program computes a global multilocus correlogram, or a local analysis, using a 
 #' kinship matrix. When a kinship matrix is not given as input, the program
 #' computes the Loiselle's Fij (Kalisz et al., 2001; Loiselle et al., 1995). 
+#' The program can compute a bearing correlogram (Rosenberg 2000, Born et al.
+#' 2012) for the obtention of a directional approach to the global test.
 #' 
 #' @param eco Object of class ecogen.
 #' @param method Analysis method: "global" or "local".
@@ -25,6 +27,7 @@
 #' @param testmantel.b Should be performed a Mantel test for testing the slope (b)? Defalut TRUE.
 #' @param jackknife Should be performed jackknife in each individual class for computing
 #' the standard deviation (SD) of the coancestry (class) values? Defalut TRUE.
+#' @param normLocal Normalize the local kinship values ([local_kinship-mean]/sd)? Default TRUE
 #' @param bin Rule for constructing intervals when a partition parameter (int, 
 #' nclass or size) is not given. Default is Sturge's rule (Sturges, 1926). Other
 #' option is Freedman-Diaconis method (Freedman and Diaconis, 1981).
@@ -49,6 +52,8 @@
 #' the coordinates must be in a matrix/data frame with the longitude in the first
 #' column and latitude in the second. The position is projected onto a plane in
 #' meters with the function \code{\link[SoDA]{geoXY}}.
+#' @param angle direction for computation of bearing correlogram (angle between 0 and 180).
+#' Default NULL (omnidirectional).
 #' 
 #' @details
 #' The GLOBAL ANALYSIS mode, computes a multilocus correlogram, with a detailed
@@ -61,14 +66,21 @@
 #' - The Sp statistic (Vekemans and Hardy, 2004) with confidence intervals
 #' - A cubic interpolation of (kinship)ij ~ ln(dij) residuals vs ln(dij)
 #' 
+#' A directional approach is based in bearing analysis method. This compute the 
+#' directional correlogram using the method of Rosenberg (2000). The 
+#' slope is computed for the logarithm of D' (Born et al 2012), where D' is the distance matrix
+#' between individuals weighted by cos(alpha - B)^2, being alpha the angle
+#' between individuals and B the desired direction angle, with B = 0
+#'  the positive x axis, B = 0 the positive y axis, and B = 180 the negative x axis.
+#' 
 #' 
 #' The LOCAL ANALYSIS mode, computes a local kinship estimate, based in a weighted 
-#' mean (for the each individual). The signification of each local statistic
+#' mean (for each individual). The signification of each local statistic
 #' is computed using a permutation test, as in eco.lsa (see ?"eco.lsa"). 
 #' Default option do not adjust the individual P values 
 #' for multiple corrections.
 #' 
-#' @return NOTE: THIS IS A BETA VERSION OF THE FUNCTION (UNDER DEVELOPMENT). 
+#' @return 
 #' 
 #' 
 #' For the global analysis, the program returns an object of class "eco.IBD" 
@@ -99,6 +111,11 @@
 #'  confidence interval for the statistic;
 #' - cardinal: number of individuals in each class;
 #' 
+#' @return > GLOBALTEST Oden's (1984) global test of significance for the correlogram.
+#' The test consists in checking if the most significant kinship coefficent is 
+#' significant at a Bonferroni- corrected significance level of alpha' = alpha/k, where
+#' k is the number of distance classes of the correlogram; alpha is set to 0.05.
+#' The program return the values: "SIGNIFICANT" or "NOT-SIGNIFICANT"
 #' 
 #' @return > IN analysis input data
 #' @return > SP Sp statistic results
@@ -185,7 +202,7 @@
 #' 
 #' globaltest <- eco.malecot(eco=eco, method = "global", smax=10,
 #'                          size=1000)
-#' plot(globaltest)    # Significant mean class coancestry classes at   
+#' eco.plotCorrelog(globaltest)    # Significant mean class coancestry classes at   
 #'                     # individual level (alpha = 0.05, 
 #'                     # out of the red area), 
 #'                     # and family-wise P corrected values (red-blue
@@ -211,6 +228,12 @@
 #' #   classes;the bootstrap null confidence intervals and 
 #' #   jackknife statistics (jackknifed mean, jackknifed SD, and
 #' #                         CI for the class statistic)
+#' 
+#' 
+#' A directional approach based in bearing correlograms, 30 degrees
+#' globaltest_30 <- eco.malecot(eco=eco, method = "global", smax=10,
+#'                          size=1000, angle = 30)
+#' eco.plotCorrelog(globaltest, angle = 30) 
 #'
 #' #----------------------------------------------------------#
 #' # ---local analysis---
@@ -225,7 +248,7 @@
 #' localktest <- eco.malecot(eco=eco, method = "local",
 #'                          type = "knearest", kmax = 5, 
 #'                          adjust = "none")
-#' plot(localktest)
+#' eco.plotLocal(localktest)
 #'
 #'
 #' # ---local analysis with radial distance---
@@ -234,16 +257,16 @@
 #'                         type = "radialdist", smax = 3, 
 #'                         adjust = "none")
 #'                         
-#' plot(localdtest)                         # rankplot graphic (see ?"eco.rankplot")
+#' eco.plotLocal(localdtest)                    # rankplot graphic (see ?"eco.rankplot")
 #' 
 #'                                          # Significant values
 #'                                          # in blue-red scale, 
 #'                                          # non significant 
 #'                                          # values in yellow
 #'
-#' plot(localktest, significant = FALSE)    # significant and non
-#'                                          # signficant values
-#'                                          # in blue-red scale
+#' eco.plotLocal(localktest, significant = FALSE)    # significant and non
+#'                                               # signficant values
+#'                                               # in blue-red scale
 #'
 #' # The slot OUT of localktest (ecoslot.OUT(localktest)) and localdtest 
 #' # (ecoslot.OUT(localdtest)) contains:
@@ -254,6 +277,10 @@
 #' }
 #' 
 #' @references
+#' 
+#' Born C., P. le Roux, C. Spohr, M. McGeoch, B. Van Vuuren. 2012.
+#' Plant dispersal in the sub-Antarctic inferred from anisotropic genetic structure.
+#' Molecular Ecology 21: 184-194.
 #' 
 #' Double M., R. Peakall, N. Beck, and Y. Cockburn. 2005. 
 #' Dispersal, philopatry, and infidelity: dissecting 
@@ -269,6 +296,13 @@
 #' Spatial genetic structure of a tropical understory shrub, 
 #' Psychotria officinalis (Rubiaceae). 
 #' American Journal of Botany 1420-1425.
+#' 
+#' Oden, N., 1984. Assessing the significance of a spatial correlogram. 
+#' Geographical Analysis, 16: 1-16.
+#' 
+#' Rosenberg, M. 2000. The bearing correlogram: a new method 
+#' of analyzing directional spatial autocorrelation. 
+#' Geographical Analysis, 32: 267-278.
 #' 
 #' Vekemans, X., and O. Hardy. 2004. New insights from fine-scale 
 #' spatial genetic structure analyses in plant populations. 
@@ -298,6 +332,7 @@ eco.malecot <- function(eco,
                         testmantel.b = TRUE,
                         jackknife = TRUE,
                         cummulative = FALSE,
+                        normLocal = TRUE,
                         nsim = 99, 
                         test = c("permutation", "bootstrap"), 
                         alternative = c("auto","two.sided", 
@@ -307,7 +342,8 @@ eco.malecot <- function(eco,
                         bin = c("sturges", "FD"),
                         row.sd = FALSE,
                         adjust = "holm",
-                        latlon = FALSE) {
+                        latlon = FALSE,
+                        angle = NULL) {
   
   XY <- eco@XY
   
@@ -377,6 +413,14 @@ eco.malecot <- function(eco,
                                       bin = bin,
                                       cummulative = FALSE)
     
+    
+    if(!is.null(angle)) {
+      if(angle < 0  || angle > 180) {
+        stop("angle must be a number between 0 and 180")
+      }
+      modelmatrix.comp <- eco.bearing(modelmatrix.comp, angle)
+    }
+    
     modelmatrix <- modelmatrix.comp@W
     nbins <- length(modelmatrix)
     
@@ -399,6 +443,15 @@ eco.malecot <- function(eco,
                                 method = "knearest", 
                                 k = kmax,
                                 row.sd = row.sd)
+      
+      
+      if(!is.null(angle)) {
+        if(angle < 0  || angle > 180) {
+          stop("angle must be a number between 0 and 180")
+        }
+        modelmatrix<- eco.bearing(modelmatrix, angle)
+      }
+      
       modelmatrix <- modelmatrix@W
     } else if (type == "radialdist") {
       modelmatrix <- eco.weight(XY = XY, 
@@ -406,28 +459,38 @@ eco.malecot <- function(eco,
                                 d1 = 0, 
                                 d2 = smax,
                                 row.sd = row.sd)
+      
+      if(!is.null(angle)) {
+        if(angle < 0  || angle > 180) {
+          stop("angle must be a number between 0 and 180")
+        }
+        modelmatrix<- eco.bearing(modelmatrix, angle)
+      }
+      
       modelmatrix <- modelmatrix@W
     }
     nbins <- nind
   }
   
   
-  ### function for computing each case
+  ### function for computing observed values in each case
   
   select_method <- function(kinmat) {
-    out <- numeric()
     
     if(method != "local") {
       
-      for(i in 1:nbins) {
+      out <- sapply(1:nbins, function(i) {
         if(sum(modelmatrix[[i]]) == 0) {
           stop("no individuals in class", i)
         }
-        out[i] <- sum(kinmat * modelmatrix[[i]]) / sum(modelmatrix[[i]])
-      }
+        sum(kinmat * modelmatrix[[i]]) / sum(modelmatrix[[i]])
+      })
       
     } else {
       out <- apply((kinmat * modelmatrix), 1, sum) / apply(modelmatrix, 1, sum)
+      if(normLocal){
+        out <- (out - mean(out, na.rm = TRUE)) / sd(out, na.rm = TRUE)
+      }
       out[is.infinite(out)] <- NA             #when there are no connections
       out[is.na(out)] <- NA 
     }
@@ -439,37 +502,38 @@ eco.malecot <- function(eco,
   # Here stats the permutation test. The kinship matrix is randomized, 
   #then select_method is called each time
   
-  random.kin <- matrix(0, nbins, nsim)
-  samp <- 1:nind
-  kin.perm <- kin
-  cat("\n\n")
   
-  counter <- 1
-  
-  
-  for(i in 1:nsim) {
+  if(nsim != 0) {
     
-    #permuted matrix for each repetition
-    #conditional case
-    if(conditional) {
-      for(k in samp) {
-        order.z <- sample(samp[-k], replace = replace)
-        kin.perm[k,-k] <- kin.perm[k, ][order.z]
+    cat("Performing randomization test...")
+    
+    
+    samp <- 1:nind
+    kin.perm <- kin
+
+    # create a matrix with randomized kinship values 
+    random.kin <- sapply(1:nsim, function(i) {
+      
+      #permuted matrix for each repetition
+      #conditional case
+      if(conditional) {
+        for(k in samp) {
+          order.z <- sample(samp[-k], replace = replace)
+          kin.perm[k,-k] <- kin.perm[k, ][order.z]
+        }
+        
+        #free case
+      } else {
+        shuffle.kin <- sample(samp, replace = replace)
+        kin.perm <- kin[shuffle.kin, shuffle.kin]
       }
       
-      #free case
-    } else {
-      shuffle.kin <- sample(samp, replace = replace)
-      kin.perm <- kin[shuffle.kin, shuffle.kin]
-    }
-    
-    
-    random.kin[ , i] <- select_method(kin.perm)
-    cat(paste("\r", "simulations...computed",
-              100 * round(counter / nsim, 1), "%"))
-    counter <- counter + 1
-  }
+      # call function for computing observed values, with the randomized kinship matrix
+      select_method(kin.perm)
+      
+    }) # end randomization test
   
+}
   
   if(method == "global") {
     meandistance <- modelmatrix.comp@MEAN
@@ -506,43 +570,49 @@ eco.malecot <- function(eco,
                        "cardinal")
     tab[, 1] <- meandistance
     tab[, 2] <- logdist
-    for(i in 1:nrow(tab)) {
-      ran <-  int.random.test(random.kin[i, ], obs[i],
-                              test = "permutation", 
-                              alternative = alternative, 
-                              nsim = nsim) 
+    tab[, 3] <- round(obs, 4) #obs
+    tab[, 13] <- cardinal 
+    
+    if(nsim != 0) {
       
-      if(!is.na(ran[[1]])) {
+        for(i in 1:nrow(tab)) {
+        if(!is.na(obs[i])) {
+        ran <-  int.random.test(random.kin[i, ], obs[i],
+                                test = "permutation", 
+                                alternative = alternative, 
+                                nsim = nsim) 
         
-        tab[i, 3] <- round(ran[[1]], 4) #obs
-        tab[i, 4] <- round(ran[[2]], 4) #exp
-        tab[i, 5] <- ran[[3]]           #alter
-        tab[i, 6] <- round(ran[[4]], 4) #p.val
-        tab[i, 11] <- round(ran[[5]][1], 4) #null.lwr
-        tab[i, 12] <- round(ran[[5]][2], 4) #null.uppr
-        
-        tab[, 3:4] <- round(tab[, 3:4], 4) # rounding obs, exp
-        tab[, 13] <- cardinal       #cardinal
-        
-        if(sequential) {
-          for(i in 1:nrow(tab)) {
-            tab[i, 6] <- (p.adjust(tab[1:i, 6], method= adjust))[i]
-          }
-        } else {
-          tab[ , 6] <- p.adjust(tab[ , 6], method = adjust)
+          tab[i, 4] <- round(ran[[2]], 4) #exp
+          tab[i, 5] <- ran[[3]]           #alter
+          tab[i, 6] <- ran[[4]] #p.val
+          tab[i, 11] <- round(ran[[5]][1], 4) #null.lwr
+          tab[i, 12] <- round(ran[[5]][2], 4) #null.uppr
+          
+          if(sequential) {
+              tab[i, 6] <- (p.adjust(tab[1:i, 6], method= adjust))[i]
+            }
+            
+          } else  {
+          tab[i, 4] <- NA
+          tab[i, 5] <- NA
+          tab[i, 6] <- NA
+          tab[i, 11] <- NA
+          tab[i, 12] <- NA
+          } 
         }
+            
+         if(!sequential) {
+              tab[ , 6] <- p.adjust(tab[ , 6], method = adjust)
+        }
+            
         tab[, 6] <- round(tab[, 6], 5)
-        
-      } else  {
-        tab[i, 3] <- NA
-        tab[i, 4] <- NA
-        tab[i, 5] <- NA
-        tab[i, 6] <- NA
-        tab[i, 9] <- NA
-        tab[i, 10] <- NA
-      }
+            
+    } else {
       
+      # if no test, fill with NA
+      tab[, 4:12] <- NA
     } 
+
   } else if(test == "bootstrap") {
     tab <- data.frame(matrix(nrow = length(d.min), ncol=10))
     rownames(tab) <- dist.dat
@@ -551,17 +621,25 @@ eco.malecot <- function(eco,
                        "cardinal")
     tab[, 1] <- round(meandistance, 3)
     tab[, 2] <- round(logdist, 3)
+    tab[, 3] <- round(obs, 4) # obs
+    tab[, 10] <- cardinal     #cardinal
+    
+    if(nsim != 0) {
     for(i in 1:nrow(tab)) {
       rand <-  int.random.test(random.kin[i, ],
                                obs[i], 
                                test = "bootstrap", 
                                nsim = nsim)
       if(!is.na(obs[i])) {
-        tab[i, 3] <- round(rand[[1]], 4) # obs
         tab[i, 8:9] <- round(rand[[2]], 4) #null lwr, uppr
       }
     }
-    tab[, 10] <- cardinal     #cardinal
+    
+    } else  {
+      
+    # if no test, fill with NA
+    tab[, 8:9] <- NA
+    }
   }
   
   
@@ -571,7 +649,17 @@ eco.malecot <- function(eco,
   if(method == "global") {  
     ##############calculo de sp 
     dist.sp <- as.matrix(distancia)
-    logdistmat <- as.matrix(logdistancia)
+    
+    if(!is.null(angle)) {
+      XDIST<- dist(XY[, 1])
+      YDIST<- dist(XY[, 2])
+      ind_angle <- 180 * atan2(YDIST, XDIST) / pi
+      ind_angle <- as.matrix((cos(round(ind_angle) - angle)) ^ 2)
+      logdistmat <- log(as.matrix(distancia) * ind_angle)
+    } else {
+      logdistmat <- as.matrix(logdistancia)
+    }
+
     Fij.sp <- kin
     dmin <- min(breaks.kin)
     dmax <- max(breaks.kin)
@@ -621,7 +709,7 @@ eco.malecot <- function(eco,
     
     #--------------------MANTEL TEST FOR SP-------------------------------------#
     
-    if(testmantel.b) {
+    if(testmantel.b && nsim != 0) {
       mantelcells <- (row(logdistmat)>col(logdistmat)) & restricted
       logdist.mantel <- logdistmat[mantelcells]
       Fij.mantel <- kin[mantelcells]
@@ -629,11 +717,11 @@ eco.malecot <- function(eco,
       
       repsim <- numeric()
       N <- nrow(logdistmat)
-      for(i in 1:nsim){
+      repsim <- sapply(1:nsim, function(i) {
         samp <- sample(N)
         temp <- (kin[samp, samp])[mantelcells]
-        repsim[i] <- cor(logdist.mantel, temp)
-      }
+        cor(logdist.mantel, temp)
+      })
       
       resmantel <- int.random.test(repsim = repsim, 
                                    obs = obs,
@@ -642,6 +730,9 @@ eco.malecot <- function(eco,
                                    alternative = "auto")
       mantel.obs <- resmantel$obs
       mantel.pval <- resmantel$p.val
+    } else{
+      mantel.obs <- NA
+      mantel.pval <- NA
     }
     
     ##################################################################
@@ -697,11 +788,11 @@ eco.malecot <- function(eco,
       
       #---------------------------------------------------------------------------#
       #JACKKNIFE OF THE SLOPE OVER LOCI, USING INDIVIDUALS 
-      bhat.jack <- numeric()
-      for(i in 1:nloc) {
+     bhat.jack <- sapply(1:nloc, function(i) {
         mod.jack <- lm(kin.loci[[i]][restricted] ~ logdist.sp)
-        bhat.jack[i] <- as.numeric(coef(mod.jack)[2])
-      }
+        as.numeric(coef(mod.jack)[2])
+      })
+     
       pseudo.bhat <- (nloc * rep(bhat, nloc)) - ((nloc - 1) * bhat.jack)                   #pseudo-value
       theta.bhat <- mean(pseudo.bhat)
       pseudovar.bhat <- var(pseudo.bhat)
@@ -747,19 +838,24 @@ eco.malecot <- function(eco,
   }
   
   if(method == "global") {
+
     
     salida <- new("eco.IBD")
     salida@OUT <- list(tab)
+    salida@GLOBALTEST <- ifelse(min(tab$p.val) < 0.05/nrow(tab), "SIGNIFICANT", "NON-SIGNIFICANT")
     salida@IN <- list(XY = XY, ECOGEN = eco@INT)
     salida@BREAKS <- breaks.kin
     salida@CARDINAL <- cardinal
     salida@NAMES <- colnames(eco@G)
-    salida@METHOD <- c("Kinship", type)
+    salida@METHOD <- c("Kinship", type) 
+    
     salida@DISTMETHOD <- method
     salida@TEST <- c(test, conditional) 
     salida@NSIM <- nsim
     salida@PADJUST <- paste(adjust, "-sequential:", sequential)
     salida@SP <- out.sp
+    salida@ANGLE <- angle
+    salida@BEARING <- FALSE
     
   } else if (method == "local") {
     
@@ -769,6 +865,8 @@ eco.malecot <- function(eco,
     } else {
       tab <- tab[, c(1,3,8, 9,10)]
     }
+    tab <- data.frame(tab, round(aue.rescale(tab$obs, "one.one"), 4))
+    colnames(tab)[ncol(tab)] <- "obs.res"
     salida@OUT <- tab
     salida@METHOD <- "local kinship"
     salida@TEST <- test
@@ -776,6 +874,10 @@ eco.malecot <- function(eco,
     salida@COND <- ifelse(conditional ==  "TRUE", TRUE, FALSE)
     salida@PADJ <- adjust
     salida@XY <- data.frame(XY)
+  }
+  
+  if(!is.null(angle)) {
+    salida@METHOD[1] <- paste0(salida@METHOD[1], " (directional)")
   }
   
   cat("\n")

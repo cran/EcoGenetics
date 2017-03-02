@@ -82,16 +82,6 @@
 #' # method sturges-smax: idem, but smin = 3
 #' classlist <- eco.lagweight(eco[["XY"]], smin = 3, smax = 15)
 #' 
-#' #-----------------------
-#' # ACCESSORS USE EXAMPLE
-#' #-----------------------
-#' 
-#' # the slots are accessed with the generic format 
-#' # (ecoslot. + name of the slot + name of the object). 
-#' # See help("EcoGenetics accessors")
-#' 
-#' ecoslot.BREAKS(classlist) # information about breaks. It includes the upper and lower limits
-#' 
 #' # method sturges-smax: complete range, 
 #' # and cummulative = TRUE (instead of using
 #' # lower and upper limits for each class, only the upper is used in turn)
@@ -133,6 +123,17 @@
 #' # method seqvec: a vector with the breaks is used
 #' vec <- seq(0, 10, 2)
 #' classlist <- eco.lagweight(eco[["XY"]], seqvec = vec)
+#' 
+#' #-----------------------
+#' # ACCESSORS USE EXAMPLE
+#' #-----------------------
+#' 
+#' # the slots are accessed with the generic format 
+#' # (ecoslot. + name of the slot + name of the object). 
+#' # See help("EcoGenetics accessors")
+#' 
+#' ecoslot.BREAKS(classlist) # information about breaks. It includes the upper and lower limits
+#' 
 #' }
 #' 
 #' @references 
@@ -166,15 +167,15 @@ setGeneric("eco.lagweight",
              
              
              #variables definitions
-             if(ncol(XY) != 2) {
-               message("more than 3 columns in coordinates. The first two will we
-                       taken as X-Y data for estimating distance intervals")
-               XY <- XY[,1:2]
-             }
              
              if(latlon == FALSE) {
                distancia <- dist(XY)
              } else {
+               if(ncol(XY) > 2) {
+                 message("more than 3 columns in coordinates. The first two will we
+                       taken as X-Y data for estimating distance intervals")
+                 XY <- XY[,1:2]
+               }
                distancia <- dist(SoDA::geoXY(XY[,2], XY[,1], unit=1))
              }
              distancia <- as.matrix(distancia)
@@ -388,6 +389,7 @@ setGeneric("eco.lagweight",
              res@CARDINAL <- cardinal
              res@BREAKS <- breaks
              res@METHOD <- method
+             res@ANGLE <- NULL
              
              
              res

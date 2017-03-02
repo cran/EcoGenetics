@@ -10,37 +10,37 @@
 #' are computed. 
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the alternative hypothesis.
-#' Other options are: "two.sided", "greater" and "less".   
+#' Other options are: "two.sided", "greater" and "less". 
+#' @param plotit Should be generated a plot of the simulations?  
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @keywords internal
 
 
 int.mantel <- function(d1, d2, dc, nsim, 
                        test, alternative = "auto", 
-                       plotit = FALSE, method = "pearson", na.omit = FALSE, ...) {
+                       plotit = FALSE, method = "pearson", 
+                       na.omit = FALSE, ...) {
   
-  m1 <- as.vector(d1)
-  m2 <- as.vector(d2)
-  m3 <- as.vector(dc)
+  m1 <- as.double(d1)
+  m2 <- as.double(d2)
+  m3 <- if(!is.null(dc)) as.double(dc)
   
-  repsim <- vector()
-  
+  m1m <- as.matrix(d1)
+  N <- nrow(m1m)
+  lowerTri <- which(row(m1m) > col(m1m))
   
   if(is.null(m3)) {
     
     obs <- cor(m1, m2, method = method, ...)
     
-    m1m <- as.matrix(d1)
-    N <- nrow(m1m)
-    for(i in 1:nsim){
+    repsim <- double(nsim)
+    for(i in seq_len(nsim)) {
       samp <- sample(N)
-      temp <- (m1m[samp, samp])[row(m1m)>col(m1m)]
-      repsim[i] <- cor(temp, m2, method = method, ...)
+      repsim[i] <- cor((m1m[samp, samp])[lowerTri], m2, method = method, ...)
     }
     
     
   } else {
-    
     
     x23 <- cor(m2, m3, method = method, ...)
     
@@ -53,15 +53,14 @@ int.mantel <- function(d1, d2, dc, nsim,
       num / denom
     }
     
-    obs <- corpartial(m1)
+    obs <- corpartial(m1, ...)
     
-    m1m <- as.matrix(d1)
-    N <- nrow(m1m)
-    for(i in 1:nsim){
+    repsim <- double(nsim)
+    for(i in seq_len(nsim)) {
       samp <- sample(N)
-      temp <- (m1m[samp, samp])[row(m1m)>col(m1m)]
-      repsim[i] <- corpartial(temp)
+      repsim[i] <- corpartial((m1m[samp, samp])[lowerTri], ...)
     }
+    
     
   }
   
@@ -79,7 +78,7 @@ int.mantel <- function(d1, d2, dc, nsim,
   }
   
   
-  if(plotit == TRUE) {
+  if(plotit) {
     
     hist(c(repsim, obs), xlab = xlab,
          main = "Monte Carlo test")

@@ -27,6 +27,12 @@ setClassUnion("intORmissing",
               c("integer","missing","NULL"))
 setClassUnion("intORnull", 
               c("integer","NULL"))
+setClassUnion("numericORnull", 
+              c("numeric","NULL"))
+setClassUnion("numericORmissing", 
+              c("numeric","missing"))
+setClassUnion("logicalORmissing", 
+              c("logical","missing","NULL"))
 
 
 #------------------------------------------------------------------------------#
@@ -69,9 +75,24 @@ aue.rescale  <- function(dfm, method =c("zero.one", "one.one")) {
   return(col)
 }
 
+#' Conversion from listw to ecoweight
+#' @param X A listw object
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @export
+
+eco.listw2ew <- function(X) {
+  out <- int.check.con(X)
+  xy <- attributes(X)$xy
+  if(is.null(rownames(xy))) {
+    message("coordinates without row names. The names were automatically set")
+  rownames(xy) <- 1:nrow(xy)
+    }
+  rownames(out) <- colnames(out) <- rownames(xy)
+  eco.weight(XY = xy, W = out)
+}
 
 #' Phenotypic similarity for vector, matrix or data frame acoording to Ritland (1996)
-#' @param dfm Data frame, matrix or vector. If dfm is not a vector, the program
+#' @param X Data frame, matrix or vector. If X is not a vector, the program
 #' returns a list of matrices.
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
 #' @export
@@ -101,7 +122,7 @@ aue.phenosimil <- function(X) {
 #' @keywords internal
 
 is.meta <- function(X) {
-  meta <- c("\\.", "\\\\", "\\|", "\\(", "\\)", "\\[", "\\]", "\\{", "\\}", 
+  meta <- c("\\.", "\\\\", "\\|", "\\[", "\\]", "\\{", "\\}", 
             "\\(", "\\)", "\\^", "\\*", "\\?", "\\+", "\\$")
   any(meta %in% paste("\\", X, sep = ""))
 }
@@ -125,11 +146,21 @@ meta2char <- function(X) {
 
 
 #------------------------------------------------------------------------------#
+#' Remove spaces in a line of text
+#' @param X character string
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
+
+aue.formatLine <- function(X) {
+gsub("[[:space:]]+|[[:blank:]]+", " ", X)
+}
+
+#------------------------------------------------------------------------------#
 #' Ordering the content of cells in a matrix. Ordering alleles in a genetic matrix.
 #' @description This program takes a matrix and orders
 #' the content of each cell. It was specially designed 
 #' for genetic data, but can be used with any data 
-#' that can be rearrenged by the function \code{\link{order}}.
+#' that can be rearranged by the function \code{\link{order}}.
 #' The arguments ploidy and ncode determine the mode of
 #' ordering the data. 
 #' The cells corresponding to each individual \emph{i} and 
@@ -556,6 +587,7 @@ aue.circle.w <- function(mat, x0, y0) {
 #' @description This function returns a data frame with the column number (x),
 #' row number (y) and cell value (z) of each pixel in a raster.
 #' @param mat Input raster matrix.
+#' @param origin Origin of the reference for the coordinates. Default: upperleft. 
 #' @param out output format: "data.frame" (default) or "matrix".
 #' @examples
 #' 
@@ -610,10 +642,11 @@ aue.image2df <- function(mat, origin = c("upperleft", "lowerleft"), out = c("dat
 #' 
 #' @description This is the inverse function of aue.image2df
 #' @param x output of aue.image2df
+#' @param origin Origin of the reference for the coordinates. Default: upperleft.
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @export
 
-aue.df2image <- function(x, origin = "upperleft") {
+aue.df2image <- function(x, origin = c("upperleft", "lowerleft")) {
   
   out <- matrix(x[,3], ncol = max(x[,1]))
   
@@ -622,10 +655,7 @@ aue.df2image <- function(x, origin = "upperleft") {
       out <- aue.rotate(out, c(4,3,2,1))
     }
   }
-  if(origin == "lowerleft") {
-    out <- aue.rotate(out, c(4,3,2,1))
-  }
-  
+
   out
   
 }
@@ -753,4 +783,69 @@ aue.geom.dist <- function(XY, geometry = c("ellipse", "square"),  d = 1,
   
   Z
 }
+ 
+#' eco.correlog  output to degrees list 
+#' @param x eco.correlog object
+#' @description convert a eco.correlog  output into a list for degrees 
+#' @keywords internal
+int.corvarToDeg <- function(x, angle) {
+  outlist <- list()
+  mynames <- colnames(x[[1]])
+  mynames[1] <- "angle"
+  rnames <- rownames(x[[1]])
   
+  for(i in seq_len(nrow(x[[1]]))) {
+    temp <- lapply(x, function(y) y[i, ])
+    temp <- do.call("rbind", temp)
+    outlist[[i]] <- as.data.frame(temp)
+    outlist[[i]][, 1] <- angle
+  }
+  names(outlist) <- rnames
+  
+  outlist
+}
+
+#' Angles for an XY coordinates matrix
+#' @param  XY XY matrix with projected coordinates
+#' @param maxpi angles bounded between 0 - pi?
+#' @param deg angles in decimal degrees?
+#' @param latlon Are the coordinates in decimal degrees format? Defalut FALSE. If TRUE,
+#' the coordinates must be in a matrix/data frame with the longitude in the first
+#' column and latitude in the second. The position is projected onto a plane in
+#' meters with the function \code{\link[SoDA]{geoXY}}.
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords export
+
+
+aue.dataAngle <- function(XY, maxpi = FALSE, deg = FALSE, latlon = FALSE) {
+  
+  if(latlon == TRUE) {
+    XY <- SoDA::geoXY(XY[,2], XY[,1], unit=1)
+  } 
+  
+  X <- XY[, 1]
+  Y <- XY[, 2]
+  
+  TWOPI <- 2 * pi
+  
+  # distance in X and Y axes
+  x_dist <- outer(X, X, function(x, y) x - y)
+  y_dist <- outer(Y, Y, function(x, y) x - y)
+  
+  angle <- atan2(y_dist, x_dist)
+  
+  # correction for negative angles and angles > 2 * pi
+  angle[angle < 0]  <- angle[angle < 0] + TWOPI
+  angle[angle > TWOPI]  <- angle[angle > TWOPI] - TWOPI
+  
+  #angles bounded from 0 to 180
+  if(maxpi) {
+  angle[angle > pi] <- angle[angle > pi] - pi
+  }
+  
+  if(deg) {
+  angle <- angle * 180 / pi
+  }
+  angle
+}
+

@@ -3,18 +3,23 @@
 #' @param x data matrix (raster)
 #' @param filter optional data matrix used as filter
 #' @param condition condition used to filter data
+#' @param grp factor with groups to use in the plot. Default NULL
 #' @param limits values limits used for computing the data gradient for the plot
 #' @param title plot title
 #' @param z.name name for the legend
 #' @param vertical should be partitioned the populations on the x axis? Default
 #' TRUE. 
+#' @param interactivePlot Show an interactive plot via plotly? (default: TRUE)
+#' @param ... additional arguments
+#' 
 #' @description This function generates a multivariate plot for 
 #' a data matrix (raster), with an option for filtering the data
 #' and to graph using groups. The resterplot graph is a flexible tools
 #' for multiple data sources (environmental, genetic, phenotypic, etc.).
 #' 
-#' 
 #' @examples
+#' 
+#'  \dontrun{
 #' data(eco.test)
 #' 
 #' # using the ecogen object "eco" to perform a multiple-lsa
@@ -22,12 +27,12 @@
 #' test.lsa <- eco.lsa(eco[["P"]], con = con, method = "I", nsim = 99, multi = "matrix")
 #' 
 #' # the default method for this object, is a resterplot
-#' plot(test.lsa)
+#' eco.plotLocal(test.lsa)
 #' 
 #' # adding a factor
 #' test.lsa <- eco.lsa(eco[["P"]], con = con, method = "I",
 #' nsim = 99, multi = "matrix", pop = eco[["S"]][,1])
-#' plot(test.lsa)
+#' eco.plotLocal(test.lsa)
 #' 
 #' # The generic rasterplot method requires a data matrix, and, as option, a condition 
 #' # and a filter matrix. The condition is an expression, containing the word "filter" and 
@@ -37,21 +42,29 @@
 #' # is applied over the data matrix, also using the word "filter". 
 #' # Internally, the multi.lsa plot uses three fundamental elements. 
 #' # - a data matrix: in the example, ecoslot.OBS(test.lsa)
-#' #  a filter matrix: in the example, ecoslt.PVAL(test.lsa); i.e., the data matrix will be filtered
+#' #  a filter matrix: in the example, ecoslt.PVAL(test.lsa); i.e., 
+#' the data matrix will be filtered
 #' # by P-value using the third element, an expresion.
 #' # - an expression: in the example: "filter < 0.05"
 #'  
 #'  # Combining the three elements, the multivariate plot can be manually constructed:
-#'  my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), filter = ecoslot.PVAL(test.lsa), condition = "filter < 0.05")
+#'  my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
+#'  filter = ecoslot.PVAL(test.lsa), condition = "filter < 0.05")
 #'  
 #'  
 #'  # add population
-#'  my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), filter = ecoslot.PVAL(test.lsa), 
+#'  my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
+#'  filter = ecoslot.PVAL(test.lsa), 
 #'  condition = "filter < 0.05", grp = ecoslot.POP(test.lsa))
 #'  
 #'  
-#'  # extra manipulation with ggplot2 syntax (ggplot2 commands allowed by rasterplot)
+#'  # Extra manipulation with ggplot2 graphs (ggplot2 commands allowed by rasterplot)
+#'  my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
+#'  filter = ecoslot.PVAL(test.lsa), condition = "filter < 0.05",
+#'  interactivePlot = FALSE)
+#'  
 #'  ## rotate plot
+#'  
 #'  my.plot + coord_flip()
 #'  
 #'  ## change design
@@ -67,6 +80,8 @@
 #'  eco.rasterplot(x= ecoslot.OBS(test.lsa), filter = ecoslot.OBS(test.lsa), 
 #'  condition = "filter > 0 && filter < 3")
 #'  
+#'  }
+#'  
 #' @export
 
 
@@ -81,7 +96,17 @@ setGeneric("eco.rasterplot",
                     title = NULL,
                     z.name = NULL,
                     vertical  = TRUE,
+                    interactivePlot = TRUE,
                     ...) {
+             
+             
+             if(interactivePlot) {
+               axis.size = 9
+               title.size = 13
+             } else {
+               axis.size = 10
+               title.size = 14
+             }
              
              x <- aue.image2df(x)
              
@@ -162,8 +187,8 @@ setGeneric("eco.rasterplot",
                                     high= scales::muted("red"),
                                     low = scales::muted("blue"), limits = limits) +
                ggplot2::theme_bw()+
-               ggplot2::theme(axis.text = ggplot2::element_text(size = 12), 
-                              axis.title = ggplot2::element_text(size = 14, face = "bold"), 
+               ggplot2::theme(axis.text = ggplot2::element_text(size = axis.size), 
+                              axis.title = ggplot2::element_text(size = title.size), 
                               legend.position = "right") + 
                ggplot2::scale_y_discrete(expand = c(0.1, 0), limits = c(minplot:maxplot), 
                                          breaks = scales::pretty_breaks())
@@ -173,10 +198,14 @@ setGeneric("eco.rasterplot",
                if(vertical) {
                out <- out + ggplot2::facet_grid(.~ Group , scales = "free") 
                } else {
-               out <- out + ggplot2::facet_grid(Group ~., ,scales = "free") 
+               out <- out + ggplot2::facet_grid(Group ~., scales = "free") 
                }
              }
-        
+             
+             if(interactivePlot) {
+               out <- plotly::ggplotly(out)
+             }
+            # message(paste("plot options: interactivePlot =", interactivePlot))
              out
 
              
@@ -187,30 +216,26 @@ setGeneric("eco.rasterplot",
 #' 
 #' @param x eco.multilsa object returned by \code{\link{eco.lsa}} or 
 #' @param significant plot only significant results?  Default TRUE
+#' @param grp factor with groups to use in the plot. Default NULL
 #' @param rescaled plot the rescaled observed values ([-1,1] range)?
 #' @param alpha threshold P value for results with permutation tests. default = 0.05.
 #' @param limits values limits used for computing the data gradient for the plot
 #' @param title plot title
 #' @param z.name name for the legend
+#' @param vertical should be partitioned the populations on the x axis? Default
+#' TRUE. 
+#' @param interactivePlot Show an interactive plot via plotly? (default: TRUE)
+#' @param ... additional arguments
 #' @description Plot method for local spatial analysis
-#' @rdname eco.multilsa-method
-#' @aliases plot,eco.multilsa-method
+#' @aliases eco.rasterplot,eco.multilsa-method
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @seealso  \code{\link{eco.lsa}}
-#' @examples
-#' 
-#' \dontrun{
-#' 
-#' }
-#' 
-#' @exportMethod plot
+#' @exportMethod eco.rasterplot
 
 
 setMethod("eco.rasterplot", 
           
-          c("eco.multilsa", 
-            "missing",
-            "missing"),
+          "eco.multilsa",
           
           function(x,
                    grp =  NULL,
@@ -220,7 +245,9 @@ setMethod("eco.rasterplot",
                    vertical = TRUE,
                    significant = TRUE,
                    rescaled = FALSE,
-                   alpha = 0.05) {
+                   alpha = 0.05,
+                   interactivePlot = TRUE,
+                   ...) {
             
             
             if(rescaled) {
@@ -251,12 +278,13 @@ setMethod("eco.rasterplot",
                         "local Moran's I", "local Geary's C")
             title <- title[sel]
             
-            message(paste("plot options: significant =", significant))
-            message(paste("plot options: rescaled =", rescaled))
+            #message(paste("plot options: significant =", significant))
+            #message(paste("plot options: rescaled =", rescaled))
+            #message(paste("plot options: interactivePlot =",  interactivePlot))
             
             callGeneric(x = values, filter = NULL, condition =  NULL,
                         grp = x@POP, limits = limits,
                         title = title,  z.name = paste("  ", x@METHOD),
-                        vertical = vertical)
+                        vertical = vertical, interactivePlot = interactivePlot, ...)
             
           })

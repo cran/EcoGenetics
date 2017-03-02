@@ -12,6 +12,9 @@
 #' @param ylabel Optional label for y axis.
 #' @param titlelabel Optional title label.
 #' @param legendlabel Optional legend label.
+#' @param rescaled rescale values to [-1, 1] range?
+#' @param interactivePlot Show an interactive plot via plotly? (default: TRUE)
+#' @param ... Additional elements to the generic.
 #' 
 #' @examples
 #' \dontrun{
@@ -28,7 +31,8 @@
 #' forest <- eco.forestplot(data)
 #' forest
 #' 
-#' # the forestplot method support the use of ggplot2 syntax
+#' # the forestplot method support the use of ggplot2 syntax with ggplot2 graphs
+#' forest <- eco.forestplot(data, interactivePlot = FALSE)
 #' forest <- forest + theme_bw() + theme(legend.position="none")
 #' forest
 #' }
@@ -48,6 +52,7 @@ setGeneric("eco.forestplot",
                     ylabel = NULL,
                     titlelabel = NULL,
                     legendlabel = NULL,
+                    interactivePlot = TRUE,
                     ...) {
              standardGeneric("eco.forestplot")
            })
@@ -65,8 +70,20 @@ setMethod("eco.forestplot",
                    xlabel,
                    ylabel,
                    titlelabel,
-                   legendlabel) {
+                   legendlabel,
+                   interactivePlot = TRUE) {
             
+            obs2 <- NULL
+            
+            if(interactivePlot) {
+              axis.size <- 9
+              title.size <- 13
+              point.size <- 1.2
+            } else {
+              axis.size <- 10
+              title.size <- 14
+              point.size <- 0.9
+            }
             
             if(input@TEST != "bootstrap") {
               stop("this method is available for eco.lsa with bootstrap test")
@@ -107,13 +124,14 @@ setMethod("eco.forestplot",
               legendlabel <- paste("  ", method)
             }
             
+            data.select$obs2 <- obs
             p <- ggplot2::ggplot(data.select, ggplot2::aes(x = c(1:length(ind)), 
-                                                           y = obs, 
+                                                           y = obs2, 
                                                            ymin = lwr,
                                                            ymax = uppr)) + 
               ggplot2::geom_pointrange(ggplot2::aes(colour = obs), size=0.9) +
-              ggplot2::geom_point(size=2.5,  shape=1) +
-              ggplot2::geom_point(size=2.7,  shape=1) +
+              #ggplot2::geom_point(size=2.5,  shape=1) +
+              #ggplot2::geom_point(size=2.7,  shape=1) +
               
               #ggplot2::geom_line(ggplot2::aes(x= XVALUE, y = YVALUE), lwd = 1, alpha = 0.4) + 
               ggplot2::coord_flip() + 
@@ -123,12 +141,14 @@ setMethod("eco.forestplot",
               ggplot2::ylab(xlabel) +
               ggplot2::xlab(ylabel) +
               ggplot2::labs(title = titlelabel)+
-              ggplot2::theme(axis.text = ggplot2::element_text(size = 12), 
-                             axis.title = ggplot2::element_text(size = 14, 
-                                                                face = "bold"), 
-                             plot.title = ggplot2::element_text(size = 16, 
-                                                                face = "bold"))
+              ggplot2::theme(axis.text = ggplot2::element_text(size = axis.size), 
+                             axis.title = ggplot2::element_text(size = title.size), 
+                             plot.title = ggplot2::element_text(size = title.size, hjust=0.5))
             attr(p, "data") <- data.select
+            if(interactivePlot) {
+              p <- plotly::ggplotly(p, tooltip = c("obs", "lwr", "uppr"))
+            }
+            message(paste("plot options: interactivePlot =", interactivePlot))
             p
             
           })
@@ -144,8 +164,21 @@ setMethod("eco.forestplot",
                    xlabel,
                    ylabel,
                    titlelabel,
-                   legendlabel) {
+                   legendlabel,
+                   interactivePlot = TRUE) {
             
+            
+            obs2 <- NULL
+            
+            if(interactivePlot) {
+              axis.size <- 9
+              title.size <- 13
+              point.size <- 1.2
+            } else {
+              axis.size <- 10
+              title.size <- 14
+              point.size <- 0.9
+            }
             
             datos <- input
             
@@ -172,24 +205,27 @@ setMethod("eco.forestplot",
               legendlabel <- ""
             }
             
+            data.select$obs2 <- obs
             p <- ggplot2::ggplot(data.select, ggplot2::aes(x = c(1:length(ind)), 
-                                                           y = obs, 
+                                                           y = obs2, 
                                                            ymin = lwr,
                                                            ymax = uppr)) + 
-              ggplot2::geom_pointrange(ggplot2::aes(colour = obs), size=0.9) +
+              ggplot2::geom_pointrange(ggplot2::aes(colour = obs), size= point.size) +
               ggplot2::scale_colour_gradient(low = "blue", 
                                              high = "red") +
-              ggplot2::geom_point(size=2.5,  shape=1) +
-              ggplot2::geom_point(size=2.7,  shape=1) +
+              #ggplot2::geom_point(size=2.5,  shape=1) +
+              #ggplot2::geom_point(size=2.7,  shape=1) +
               ggplot2::coord_flip() +  
               ggplot2::ylab(xlabel) +
               ggplot2::xlab(ylabel) +
               ggplot2::labs(title = titlelabel)+
-              ggplot2::theme(axis.text = ggplot2::element_text(size = 12), 
-                             axis.title = ggplot2::element_text(size = 14, 
-                                                                face = "bold"), 
-                             plot.title = ggplot2::element_text(size = 16, 
-                                                                face = "bold"))
+              ggplot2::theme(axis.text = ggplot2::element_text(size = axis.size), 
+                             axis.title = ggplot2::element_text(size = title.size), 
+                             plot.title = ggplot2::element_text(size = title.size, hjust=0.5))
+            
+            if(interactivePlot) {
+              p <- plotly::ggplotly(p, tooltip = c("obs", "lwr", "uppr"))
+            }
             
             attr(p, "data") <- data.select
             p

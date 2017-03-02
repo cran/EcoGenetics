@@ -15,15 +15,10 @@
 #'@author Hadley Wickham
 #'@export
 
-setGeneric("grf.multiplot", function(..., list.arg = NULL,
-                          plotlist = NULL, file, 
-                          cols = 1, layout = NULL) {
+setGeneric("grf.multiplot", function(..., plotlist = NULL, 
+                                     cols = 1, layout = NULL) {
   library(grid)
-  
-  if(!is.null(list.arg)) {
-    plots <- list.arg
-  }
-  
+
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)
   

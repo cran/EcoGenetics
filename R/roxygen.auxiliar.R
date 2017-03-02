@@ -15,6 +15,8 @@
 #'@importFrom graphics points
 #'@importFrom graphics text
 #'@importFrom grid viewport grid.layout grid.newpage pushViewport viewport
+#'@importFrom grDevices rainbow
+#'@importFrom graphics lines par
 #'@importFrom party ctree
 #'@importFrom party where
 #'@importFrom raster addLayer
@@ -43,7 +45,15 @@
 #'@importFrom utils data
 #'@importFrom utils head
 #'@importFrom utils write.table
-
+#'@importFrom plotly ggplotly
+#'@importFrom networkD3 forceNetwork
+#'@importFrom edgebundleR edgebundle
+#'@importFrom igraph plot.igraph
+#'@importFrom igraph graph_from_adjacency_matrix
+#'@importFrom igraph V
+#'@importFrom igraph graph.data.frame
+#'@importFrom igraph E
+#'
 0
 
 #--------------------
@@ -169,5 +179,26 @@
 #' genotype
 #' @keywords data
 
+0
+
+#' table.sokal
+#' @name table.sokal
+#' @docType data
+#' @description Allelic frequency table from 50 villages, analyzed in Sokal et al. (1986). 
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @usage
+#' data(sokal1986)
+#' table.sokal
+#' @keywords data
 
 0
+
+#' Pipe operator
+#'
+#' @name %>%
+#' @rdname pipe
+#' @keywords internal
+#' @export
+#' @importFrom magrittr %>%
+#' @usage lhs \%>\% rhs
+NULL

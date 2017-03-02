@@ -27,7 +27,11 @@
 #' @export
 
 eco.kin.loiselle <- function(eco) {
-  geno <- eco@A
+  
+  # correction (geno -> geno/2) for the new storing schema
+  # with integers in the slot A. LR, 9/12/2016. 
+  
+  geno <- eco@A / 2
   locus <- as.numeric(eco@INT@loc.fac)
   nloc <- max(locus)
   nal <- ncol(geno)

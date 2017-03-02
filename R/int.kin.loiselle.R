@@ -1,13 +1,18 @@
 #' obtetion of multilocus Loiselle's Fij matrix 
-#' @param eco Object of class ecogen. 
+#' @param geno genotipic matrix: eco@A for codominant, eco@G for dominant
+#' @param locus  corresponds to: as.numeric(eco@INT@loc.fac)
 #' @keywords internal
 
 # depends of geno and locus
-# geno is: eco@A for codominant data, eco@G for dominant
+# geno is: eco@A (codominant data)
 # locus is: as.numeric(eco@INT@loc.fac)
 
 int.kin.loiselle <- function(geno, locus) {
   
+  # correction (geno -> geno/2) for the new storing schema
+  # with integers in the slot A. LR, 9/12/2016. 
+  
+  geno <- geno / 2
   nloc <- max(locus)
   nal <- ncol(geno)
   N <- nrow(geno)

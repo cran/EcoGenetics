@@ -65,12 +65,13 @@
 #' data(eco.test)
 #' 
 #' # mlm additive model
-#' mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]], analysis = "mlm")                                 
+#' mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]], 
+#' analysis = "mlm")                                 
 #' mod
 #' summary(mod)
 #' 
 #' # mctree additive model
-#' mod <- eco.lmtree(df1 = eco2[["P"]], df2 = eco2[["E"]], 
+#' mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]], 
 #' analysis = "mctree", fact = eco[["S"]]$pop) 
 #' 
 #' 
@@ -96,7 +97,8 @@
 #' 
 #' # mlm custom model
 #' mymod <- "E1+E2*E3"
-#' mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]], analysis = "mlm", mod.class = mymod)            
+#' mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]], 
+#' analysis = "mlm", mod.class = mymod)            
 #' summary(mod)
 #' 
 #' # mctree custom model

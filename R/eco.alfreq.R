@@ -32,10 +32,10 @@ setGeneric("eco.alfreq", function(eco, grp = NULL) {
     grp.num <- as.numeric(levels(eco@S[, cual]))[eco@S[, cual]] 
     nfact <- max(grp.num)
   } else {
-    dummy <- rep(1, nrow(eco@G))
-    eco@S <- data.frame(dummy)
-    cual <- which(colnames(eco@S) =="dummy")
-    grp.num <- as.numeric(levels(as.factor(eco@S[, cual])))[eco@S[, cual]] 
+    eco@S <- data.frame(dummy = rep(1, nrow(eco@G)))
+    cual <- 1
+    rownames(eco@S) <- eco@ATTR$names
+    grp.num <- rep(1, nrow(eco@G))
     nfact <- 1
   }
   
@@ -44,7 +44,8 @@ setGeneric("eco.alfreq", function(eco, grp = NULL) {
     eco2 <- eco[which(eco@S[, cual] == i)]
     clases<- as.numeric(eco2@INT@loc.fac)
     tabla <- ecoslot.A(eco2)
-    tabla <- 2 * tabla
+    # correction, accordingly to the new format of the slot A. LR, 10/12/16
+    #tabla <- 2 * tabla
     frecuencia <- apply(tabla, 2, sum)
     alelos.locus <- tapply(frecuencia, clases, sum)
     for( j in 1:length(clases)) {
