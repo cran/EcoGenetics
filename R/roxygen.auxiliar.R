@@ -53,7 +53,9 @@
 #'@importFrom igraph V
 #'@importFrom igraph graph.data.frame
 #'@importFrom igraph E
-#'
+#'@importFrom grDevices heat.colors
+#'@importFrom graphics barplot legend
+#'@importFrom stats sd
 0
 
 #--------------------
