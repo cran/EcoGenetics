@@ -4,16 +4,13 @@
 \alias{int.joincount}
 \title{Join-count statistic, internal.}
 \usage{
-int.joincount(Z, con, ncod, ploidy, nsim, alternative, test = "permutation",
-  adjust.n = FALSE, adjust)
+int.joincount(Z, con, nsim, alternative, test = "permutation",
+  adjust.n = FALSE, adjustjc = "none", plotit)
 }
 \arguments{
 \item{Z}{Vector, matrix or data frame.}
 
 \item{con}{Connection network.}
-
-\item{ncod}{number of elements coding each category (e.g., if x ncod =1, if xx, 
-ncod = 2, and so on).}
 
 \item{nsim}{Number of Monte-Carlo simulations.}
 
@@ -30,7 +27,7 @@ resampling and the associated confidence intervals of the null hypothesis.
 \item{adjust.n}{Should be adjusted the number of individuals? (warning, this would
 change variances)}
 
-\item{adjust}{Method for multiple correction of P-values 
+\item{adjustjc}{Method for multiple correction of P-values 
 passed to \code{\link[stats]{p.adjust}}.}
 }
 \description{

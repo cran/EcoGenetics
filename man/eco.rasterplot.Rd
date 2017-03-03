@@ -5,7 +5,8 @@
 \title{rasterplot graphs}
 \usage{
 eco.rasterplot(x, filter = NULL, condition = NULL, grp = NULL,
-  limits = NULL, title = NULL, z.name = NULL, vertical = TRUE, ...)
+  limits = NULL, title = NULL, z.name = NULL, vertical = TRUE,
+  interactivePlot = TRUE, ...)
 }
 \arguments{
 \item{x}{data matrix (raster)}
@@ -25,6 +26,8 @@ eco.rasterplot(x, filter = NULL, condition = NULL, grp = NULL,
 \item{vertical}{should be partitioned the populations on the x axis? Default
 TRUE.}
 
+\item{interactivePlot}{Show an interactive plot via plotly? (default: TRUE)}
+
 \item{...}{additional arguments}
 }
 \description{
@@ -43,12 +46,12 @@ con <- eco.weight(eco[["XY"]], method = "knearest", k = 4, row.sd = TRUE)
 test.lsa <- eco.lsa(eco[["P"]], con = con, method = "I", nsim = 99, multi = "matrix")
 
 # the default method for this object, is a resterplot
-plot(test.lsa)
+eco.plotLocal(test.lsa)
 
 # adding a factor
 test.lsa <- eco.lsa(eco[["P"]], con = con, method = "I",
 nsim = 99, multi = "matrix", pop = eco[["S"]][,1])
-plot(test.lsa)
+eco.plotLocal(test.lsa)
 
 # The generic rasterplot method requires a data matrix, and, as option, a condition 
 # and a filter matrix. The condition is an expression, containing the word "filter" and 
@@ -74,8 +77,13 @@ the data matrix will be filtered
  condition = "filter < 0.05", grp = ecoslot.POP(test.lsa))
  
  
- # extra manipulation with ggplot2 syntax (ggplot2 commands allowed by rasterplot)
+ # Extra manipulation with ggplot2 graphs (ggplot2 commands allowed by rasterplot)
+ my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
+ filter = ecoslot.PVAL(test.lsa), condition = "filter < 0.05",
+ interactivePlot = FALSE)
+ 
  ## rotate plot
+ 
  my.plot + coord_flip()
  
  ## change design

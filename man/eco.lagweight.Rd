@@ -116,16 +116,6 @@ classlist <- eco.lagweight(eco[["XY"]], smax=16)
 # method sturges-smax: idem, but smin = 3
 classlist <- eco.lagweight(eco[["XY"]], smin = 3, smax = 15)
 
-#-----------------------
-# ACCESSORS USE EXAMPLE
-#-----------------------
-
-# the slots are accessed with the generic format 
-# (ecoslot. + name of the slot + name of the object). 
-# See help("EcoGenetics accessors")
-
-ecoslot.BREAKS(classlist) # information about breaks. It includes the upper and lower limits
-
 # method sturges-smax: complete range, 
 # and cummulative = TRUE (instead of using
 # lower and upper limits for each class, only the upper is used in turn)
@@ -167,6 +157,17 @@ classlist <- eco.lagweight(eco[["XY"]], kmax = 3, self = TRUE)
 # method seqvec: a vector with the breaks is used
 vec <- seq(0, 10, 2)
 classlist <- eco.lagweight(eco[["XY"]], seqvec = vec)
+
+#-----------------------
+# ACCESSORS USE EXAMPLE
+#-----------------------
+
+# the slots are accessed with the generic format 
+# (ecoslot. + name of the slot + name of the object). 
+# See help("EcoGenetics accessors")
+
+ecoslot.BREAKS(classlist) # information about breaks. It includes the upper and lower limits
+
 }
 
 }

@@ -11,10 +11,23 @@
 
 setMethod("names", "ecogen",
           function(x){
-            return(c("XY", "P", "G",
-                     "A","E",
-                     "S", "C", "OUT"))
+            return(x@ATTR$names)
           })
+
+#' names<- 
+#' @rdname ecogen-methods
+#' @aliases names,ecogen-method
+#' @exportMethod names<-
+
+setReplaceMethod("names", c(x="ecogen", value="character"), function(x, value) {
+  x@ATTR$names <- value
+  out <- try(int.order(x), silent = TRUE)
+  if(attr(out, "class") == "try-error") {
+    warning("Names can not be set. Incongruence with row names of data frames")
+  }
+  out
+})
+
 
 
 # is --------------------------------------------------------------------------#
@@ -27,6 +40,46 @@ is.ecogen <- function(x) {
   value <- is(x, "ecogen")
   value
 }
+
+# nrow -----------------------------------------------------------------------#
+
+#' nrow
+#' @rdname ecogen-methods
+#' @aliases nrow,ecogen-method
+#' @exportMethod nrow
+
+setMethod("nrow", "ecogen",
+          function(x){
+            c(XY=nrow(x@XY), P=nrow(x@P), G=nrow(x@G), A=nrow(x@A), E=nrow(x@E), S=nrow(x@S), C=nrow(x@C))
+          })
+
+# ncol -----------------------------------------------------------------------#
+
+#' ncol
+#' @rdname ecogen-methods
+#' @aliases ncol,ecogen-method
+#' @exportMethod ncol
+
+setMethod("ncol", "ecogen",
+          function(x){
+            c(XY=ncol(x@XY), P=ncol(x@P), G=ncol(x@G), A=ncol(x@A), E=ncol(x@E), S=ncol(x@S), C=ncol(x@C))
+          })
+
+# dim -----------------------------------------------------------------------#
+
+#' dim
+#' @rdname ecogen-methods
+#' @aliases dim,ecogen-method
+#' @exportMethod dim
+
+setMethod("dim", "ecogen",
+          function(x){
+            list(XY=c(nrow(x@XY), ncol(x@XY)),  P=c(nrow(x@P), ncol(x@P)), 
+            G=c(nrow(x@G), ncol(x@G)), A=c(nrow(x@A), ncol(x@A)), 
+            E=c(nrow(x@E), ncol(x@E)), S=c(nrow(x@S),ncol(x@S)),
+            C=c(nrow(x@C), ncol(x@C)))
+          })
+
 
 
 # as.list----------------------------------------------------------------------#
@@ -90,6 +143,9 @@ setMethod("as.int.list",
 setMethod("show", 
           "ecogen", 
           function(object) {
+            # check validity using a temporal element to pass environment
+            validObject(object)
+
             
             #--space function--------------------------------------#
             

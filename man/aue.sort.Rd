@@ -28,7 +28,7 @@ in ploidy and number of digits coding alleles.}
 This program takes a matrix and orders
 the content of each cell. It was specially designed 
 for genetic data, but can be used with any data 
-that can be rearrenged by the function \code{\link{order}}.
+that can be rearranged by the function \code{\link{order}}.
 The arguments ploidy and ncode determine the mode of
 ordering the data. 
 The cells corresponding to each individual \emph{i} and 

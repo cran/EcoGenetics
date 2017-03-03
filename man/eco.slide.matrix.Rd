@@ -10,16 +10,16 @@ eco.slide.matrix(mat, r, slide, fun, window = c("square", "circle"),
 \arguments{
 \item{mat}{Input raster matrix.}
 
-\item{r}{half a side for square, radius for circle, diagonal length for rhombus.}
+\item{r}{Half a side for square, radius for circle, diagonal length for rhombus.}
 
-\item{slide}{number of elements between two focal pixels, for column 
+\item{slide}{Number of elements between two focal pixels, for column 
 and row dimension}
 
 \item{fun}{Function to apply in each focal pixel.}
 
-\item{window}{window type. Default "square".}
+\item{window}{Window type. Default "square".}
 
-\item{within}{should be computed the function in borders focal pixels only if 
+\item{within}{Should be computed the function in borders focal pixels only if 
 the area is within the matrix? Default TRUE.}
 }
 \description{
@@ -32,13 +32,13 @@ the value to the focal pixel.
 \dontrun{
 
 data(eco.test)
-ras <- matrix(eco[["P"]][,1],15,15)
+ras <- matrix(eco[["P"]][, 1], 15, 15)
 image(ras)
-ras.square <- eco.slidewindow(ras, 1, 1, mean, "square")
+ras.square <- eco.slide.matrix(ras, 1, 1, mean, "square")
 image(ras.square)
 
 # or allowing more control over the function:
-ras.square <- eco.slide.matrix(ras, r = 3, slide = 1, function(x)mean(x, na.rm = TRUE), "diamond")
+ras.square <- eco.slide.matrix(ras, r = 3, slide = 1, function(x) mean(x, na.rm = TRUE), "square")
 image(ras.square)
 
 # sliding a circle:

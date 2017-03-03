@@ -71,7 +71,7 @@
 #' summary(mod)
 #' 
 #' # mctree additive model
-#' mod <- eco.lmtree(df1 = eco2[["P"]], df2 = eco2[["E"]], 
+#' mod <- eco.lmtree(df1 = eco[["P"]], df2 = eco[["E"]], 
 #' analysis = "mctree", fact = eco[["S"]]$pop) 
 #' 
 #' 

@@ -6,7 +6,7 @@
 \alias{plot,eco.IBD-method}
 \title{plot eco.IBD}
 \usage{
-\S4method{plot}{eco.IBD,ANY}(x, y, ...)
+\S4method{plot}{eco.IBD,ANY}(x)
 }
 \description{
 plot eco.IBD

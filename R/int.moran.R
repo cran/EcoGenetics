@@ -16,15 +16,16 @@
 
 int.moran <- function(Z, con, nsim,
                       alternative, 
-                      test = "permutation", adjust.n = FALSE, 
+                      test = "permutation", 
+                      adjust.n = FALSE, 
                       plotit) {
   
   N <- length(Z)
   wg <- int.check.con(con)
   
   #weight adjustment to number of connections
-  if(adjust.n == TRUE) {
-    colTRUE <- apply(wg, 1, sum)
+  if(adjust.n) {
+    colTRUE <- rowSums(wg)
     colTRUE[colTRUE != 0] <- 1
     Nc <- sum(colTRUE)
   } else  {
@@ -48,12 +49,11 @@ int.moran <- function(Z, con, nsim,
   obs <- moranfun(z2)
   
   #Monte carlo replicates
-  repsim <- numeric()
-  for(i in 1:nsim) {
+  repsim <- sapply(seq_len(nsim), function(i) {
     samp <- sample(N)
     coefsup.mc <- z2[samp]
-    repsim[i] <- moranfun(coefsup.mc)
-  }
+    moranfun(coefsup.mc)
+  })
   
   
   #p value or CI computation
@@ -85,7 +85,7 @@ int.moran <- function(Z, con, nsim,
   
   
   #plot
-  if(plotit == TRUE) {
+  if(plotit) {
     hist(c(repsim, random.m$obs),
          xlab = "Moran's I", 
          main = "Monte Carlo test")

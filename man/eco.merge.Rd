@@ -35,10 +35,7 @@ that the user wishes to merge.
 \dontrun{
 data(eco.test)
 eco
-eco1 <- eco
-eco1[["XY"]] <- eco[["XY"]][sample(1:225), ]  #object with permuted rows
-eco[["XY"]]
-eco1[["XY"]]
+eco1 <- eco[2:20]
 merged <- eco.merge(eco, eco1)
 merged
 }

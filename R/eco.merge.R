@@ -21,10 +21,7 @@
 #' \dontrun{
 #' data(eco.test)
 #' eco
-#' eco1 <- eco
-#' eco1[["XY"]] <- eco[["XY"]][sample(1:225), ]  #object with permuted rows
-#' eco[["XY"]]
-#' eco1[["XY"]]
+#' eco1 <- eco[2:20]
 #' merged <- eco.merge(eco, eco1)
 #' merged
 #' }
@@ -63,7 +60,7 @@ setGeneric("eco.merge",
                  Z <- Z[, -c(1, 2)]
                }
                return(Z)
-             }
+             } # end int.merge
              
              
              # fill XY,  P  and G data frames
@@ -89,9 +86,9 @@ setGeneric("eco.merge",
               
                # slot A is marker type dependent
                if(e1@INT@type == "codominant") {
-                 z@A <- as.data.frame(tempo@tab)
+                 z@A <- tempo@tab
                } else {
-                 z@A <- data.frame()
+                 z@A <- matrix(nrow = 0, ncol = 0)
                }
                
                z@INT@loc.fac <- tempo@loc.fac
@@ -111,6 +108,15 @@ setGeneric("eco.merge",
              z@E <- int.merge(e1@E, e2@E, z@E, m[3] == TRUE)
              z@S <- int.merge(e1@S, e2@S, z@S, m[4] == TRUE)
              z@C <- int.merge(e1@C, e2@C, z@C, m[5] == TRUE)
+             
+             # set row names
+             maxrow <- maxrow<-which(nrow(z) == max(nrow(z)))
+             if(any(maxrow) != 0){
+             maxrow<-maxrow[1]
+             z@ATTR$names <- rownames(z[[maxrow]])
+             }
+             # check validity
+             validObject(z)
              
              z
              

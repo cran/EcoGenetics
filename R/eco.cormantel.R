@@ -1,4 +1,4 @@
-#' Mantel and partial Mantel correlograms
+#' Mantel and partial Mantel correlograms, omnidirectional and directional 
 #' 
 #' @description This program computes a Mantel correlogram for the data M, 
 #' or a partial Mantel correlogram for the data M conditioned on MC, with P-values 
@@ -35,6 +35,10 @@
 #' the coordinates must be in a matrix/data frame with the longitude in the first
 #' column and latitude in the second. The position is projected onto a plane in
 #' meters with the function \code{\link[SoDA]{geoXY}}.
+#' @param angle for computation of bearing correlogram (angle between 0 and 180).
+#' Default NULL (omnidirectional).
+#' @param as.deg in case of bearing correlograms for multiple angles, 
+#' generate an output for each lag in function of the angle? Default TRUE.
 #' @param ... Additional arguments passed to \code{\link[stats]{cor}}. 
 #' @return The program returns an object of class "eco.correlog" 
 #' with the following slots:
@@ -65,21 +69,41 @@
 #' data(eco.test)
 #' require(ggplot2)
 #' 
+#' ###############################
+#' ## Omnidirectional correlogram
+#' ###############################
+#' 
 #' corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
 #' nsim = 99)
-#' plot(corm)
+#' eco.plotCorrelog(corm)
 #' 
 #' corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
 #' nsim = 99, test = "bootstrap")
-#' plot(corm)
+#' eco.plotCorrelog(corm)
+#' 
+#' #######################################################
+#' ## A directional approach based in bearing correlograms
+#' #######################################################
+#' 
+#' corm_b <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
+#' nsim = 99, angle = seq(0, 170, 10))
+#' 
+#'  # use eco.plotCorrelogB for this object
+#' eco.plotCorrelogB(corm_b)
+#' 
+#'  # plot for the first distance class, 
+#'  use a number between 1 and the number of classes to select the corresponding class
+#' eco.plotCorrelogB(moran_b, interactivePlot = FALSE, var = 1) 
 #' 
 #' # partial Mantel correlogram
 #' corm <- eco.cormantel(M = dist(eco[["P"]]), MC = dist(eco[["E"]]),
 #' size=1000, smax=7, XY = eco[["XY"]], nsim = 99)
-#' plot(corm)
+#' eco.plotCorrelog(corm)
 #' 
-#' # correlogram plots support the use of ggplot2 syntax
-#' mantelplot <- plot(corm) + theme_bw() + theme(legend.position="none")
+#' # standard correlogram plots support the use of ggplot2 syntax
+#' require(ggplot2)
+#' mantelplot <- eco.plotCorrelog(corm, interactivePlot = FALSE)
+#' mantelplot <- mantelplot + theme_bw() + theme(legend.position="none")
 #' mantelplot
 #'
 #'
@@ -106,6 +130,9 @@
 #' 
 #' Oden N., and R. Sokal. 1986. Directional autocorrelation: an extension 
 #' of spatial correlograms to two dimensions. Systematic Zoology, 35:608-617
+#' 
+#' Rosenberg, M. 2000. The bearing correlogram: a new method of analyzing 
+#' directional spatial autocorrelation. Geographical Analysis, 32: 267-278.
 #' 
 #' Sokal R. 1986. Spatial data analysis and historical processes. 
 #' In: E. Diday, Y. Escoufier, L. Lebart, J. Pages, Y. Schektman, and R. Tomassone,
@@ -134,6 +161,8 @@ setGeneric("eco.cormantel",
                     adjust = "holm", 
                     sequential = TRUE, 
                     latlon = FALSE,
+                    angle = NULL,
+                    as.deg = TRUE,
                     ...) {
              
              
@@ -191,7 +220,39 @@ setGeneric("eco.cormantel",
                                      bin = bin,
                                      cummulative = FALSE)
              
-             lag <- listaw@W
+             if(!is.null(angle)) {
+               if(any(angle < 0)  || any(angle > 180)) {
+                 stop("angle must be a number between 0 and 180")
+               }
+               listanglew <- list()
+               # compute directional weights
+               for(i in seq_along(angle)) {
+                 listanglew[[i]] <- eco.bearing(listaw, angle[i])
+               }
+             }
+             
+             # unfold weights and create dummy iterators for
+             # lag selection during computations. This allows
+             # to select a list of lags for each angle
+             if(!is.null(angle)) {
+               # lag will be passed to int.mantel as list of vectors
+               #(int.mantel corrected for this purpose 2016/12/29)
+               # row(x) > col(x) in place of as.vector(as.dist(x))
+               lagangle <- lapply(listanglew, function(x) lapply(x@W, function(y) y[row(y) > col(y)]))
+               dummylag <- seq_along(lagangle)
+             } else {
+               lag <- lapply(listaw@W, function(x) x[row(x) > col(x)])
+               dummylag <- 1
+             }
+
+             # create iterator to work around each angle,
+             # and being 1 for a single correlogram
+             if(length(angle) > 1) {
+               seqvar <- seq_along(angle)
+             } else {
+               seqvar <- 1
+             }
+             
              
              d.mean <- listaw@MEAN
              d.mean <- round(d.mean, 3)
@@ -211,57 +272,73 @@ setGeneric("eco.cormantel",
                method.mantel <- "Partial Mantel statistic"
              }
              
-             cat("\r", "interval", 0,"/", lengthbreak , "completed")
+             cat("\r", "interval", 0,"/", lengthbreak, "completed")
              
              
              #starting the computation of the statistic
              
-             ####bootstrap case ####
-             if(test == "bootstrap") {
-               tab <- data.frame(matrix(nrow = length(d.min), ncol=5))
-               rownames(tab) <- dist.dat
-               colnames(tab) <- c("d.mean","obs", "lwr", "uppr", "size")
+             # list to store the table output
+             out <-list()
+             
+             for(j in seqvar) {
+             
+              # when angle of null, select from the list of list of lags those corresponding 
+              # to the angle
+              if(!is.null(angle)) {    
+                 lag <- lagangle[[dummylag[j]]]
+              } 
                
-               for(i in 1:length(lag)) {
+             seqlag <- seq_along(lag)
+            
+             
+              ####bootstrap case ####
+             if(test == "bootstrap") {
+               #tab <- data.frame(matrix(nrow = length(d.min), ncol=5))
+               
+               tab <- vapply(seqlag, function(i) {
                  
                  #mantel test
                  
-                 result <- int.mantel(d1 = M, d2 = as.dist(lag[[i]]), 
-                                      dc = MC, nsim = nsim, test = "bootstrap", 
+                 result <- int.mantel(d1 = M, d2 =  lag[[i]],
+                                      dc = MC, nsim = nsim, 
+                                      test = "bootstrap",
                                       method = method, ...)
-                 
-                 obs <- result$obs
-                 ext <- result$CI
-                 ext1 <- ext[1]
-                 ext2 <- ext[2]
-                 
-                 # change of sign for "dist" data
-                 if(classM == "dist") {
-                   obs <- - obs
-                 }
-                 
-                 tab[i, ] <-c(d.mean[i],
-                              round(obs, 4),
-                              round(ext1, 4),
-                              round(ext2, 4),
-                              cardinal[i])
-                 
-                 cat("\r", "interval", i,"/", lengthbreak , "completed")
-                 
+               
+               obs <- result$obs
+               ext <- result$CI
+               ext1 <- ext[1]
+               ext2 <- ext[2]
+               
+               # change of sign for "dist" data
+               if(classM == "dist") {
+                 obs <- - obs
                }
                
-               ####permutation case ####
-             } else if(test == "permutation") {
-               tab <- data.frame(matrix(nrow = length(d.min), ncol= 5))
-               rownames(tab) <- dist.dat
-               colnames(tab) <- c("d.mean","obs", "exp", "p.val", "cardinal")
+               cat("\r", "interval", i,"/", lengthbreak , "completed")
                
-               for(i in 1:length(lag)) {
+               c(d.mean[i],
+                 round(obs, 4),
+                 round(ext1, 4),
+                 round(ext2, 4),
+                 cardinal[i])
+               }, numeric(5)) # end vapply
+
+tab <- t(tab)
+rownames(tab) <- dist.dat
+colnames(tab) <- c("d.mean","obs", "lwr", "uppr", "size")
+
+####permutation case ####
+             } else if(test == "permutation") {
+               #tab <- data.frame(matrix(nrow = length(d.min), ncol= 5))
+               
+               tab <- vapply(seqlag, function(i) {
                  
-                 result <- int.mantel(d1 = M, d2 = as.dist(lag[[i]]), 
-                                      dc = MC, nsim,  test = "permutation",
+                 
+                 result <- int.mantel(d1 = M, d2 = lag[[i]], 
+                                      dc = MC, nsim,  
+                                      test = "permutation",
                                       alternative = alternative, 
-                                      method = method, ...)
+                                      method = method)
                  
                  obs <- result$obs
                  expected <- result$exp
@@ -273,39 +350,66 @@ setGeneric("eco.cormantel",
                    expected <- - expected
                  }
                  
-                 tab[i,] <-c(round(d.mean[i], 3),
-                             round(obs, 4),
-                             round(expected, 4), 
-                             round(p.val, 5),
-                             cardinal[i])
+                 cat("\r", "interval", i,"/", lengthbreak, "completed")
                  
-                 cat("\r", "interval", i,"/", lengthbreak , "completed")
+                 c(round(d.mean[i], 3),
+                   round(obs, 4),
+                   round(expected, 4), 
+                   round(p.val, 5),
+                   cardinal[i])
                  
-               }
+               }, numeric(5)) # end vapply
+               
+               tab <- t(tab)
+               
+               rownames(tab) <- dist.dat
+               colnames(tab) <- c("d.mean","obs", "exp", "p.val", "cardinal")
+               
                
                
                #sequential correction
                
                if(sequential) {
-                 for(j in 1:nrow(tab)) {
-                   tab[j, 4] <- (p.adjust(tab[1:j, 4], method= adjust))[j]
+                 for(k in 1:nrow(tab)) {
+                   tab[k, 4] <- (p.adjust(tab[1:k, 4], method= adjust))[k]
                  }
                } else {
                  tab[ , 4] <- p.adjust(tab[ , 4], method = adjust)
                }
                
              }
+             cat("\n")
+             out[[j]] <- tab 
+             } # end for loop --
              
-             salida <- new("eco.correlog")
-             salida@OUT <- list (tab)
+
+             # Configuring the output
+             
+             if(length(angle) > 1 && as.deg) {
+               salida <- new("eco.correlogB")
+               bearing <- TRUE
+               out <- int.corvarToDeg(out, angle)
+               breaks <- angle
+             } else {
+               salida <- new("eco.correlog")
+               bearing <- FALSE
+             }
+
+             salida@OUT <- out
              salida@IN <- list(XY = XY, M = M, MC = MC)
              salida@BREAKS <- breakpoints
              salida@CARDINAL <- cardinal
              salida@METHOD <- c(method.mantel, method)
+             if(!is.null(angle)) {
+               salida@METHOD[1] <- paste0(salida@METHOD[1], " (directional)")
+             }
              salida@DISTMETHOD <- listaw@METHOD
              salida@TEST <- test
              salida@NSIM <- nsim
              salida@PADJUST <- paste(adjust, "-sequential:", sequential)
+             salida@ANGLE <- angle
+             salida@BEARING <- bearing
              
              salida
+
            })

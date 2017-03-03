@@ -1,7 +1,9 @@
-#' Moran's I, Geary's C and bivariate Moran's I correlograms
+#' Moran's I, Geary's C and bivariate Moran's I correlograms, omnidirectional and directional 
 #' 
 #' @description This program computes Moran's, Geary's and bivariate Moran's correlograms, 
 #' for single or multiple variables, with P-values or bootstrap confidence intervals.
+#' Correlograms can be omnidirectional or directional, the latter based in the bearing method 
+#' (Rosenberg, 2000).
 #' The program allows high flexibility for the construction of intervals. For detailed
 #' information about the range partition methods see \code{\link{eco.lagweight}}
 #' 
@@ -46,6 +48,10 @@
 #' the coordinates must be in a matrix/data frame with the longitude in the first
 #' column and latitude in the second. The position is projected onto a plane in
 #' meters with the function \code{\link[SoDA]{geoXY}}.
+#' @param angle for computation of bearing correlogram (angle between 0 and 180).
+#' Default NULL (omnidirectional).
+#' @param as.deg in case of bearing correlograms for multiple angles, 
+#' generate an output for each lag in function of the angle? Default TRUE.
 #' 
 #' @return The program returns an object of class "eco.correlog" 
 #' with the following slots:
@@ -84,31 +90,90 @@
 #' ## single test with phenotypic traits
 #' moran <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], 
 #' method = "I", smax=10, size=1000)
-#' plot(moran)
+#' 
+#' # interactive plot via plotly
+#' eco.plotCorrelog(moran)
+#' 
+#' # standard plot via ggplot2
+#' eco.plotCorrelog(moran, interactivePlot = FALSE)
+#' 
+#' 
+#' #-------------------------------------------------------
+#' ## A directional approach based in bearing correlograms
+#' #-------------------------------------------------------
+#' 
+#' moran_b <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], 
+#' method = "I", smax = 10, size = 1000, angle  = seq(0, 175, 5))
+#' 
+#'  # use eco.plotCorrelogB for this object
+#' eco.plotCorrelogB(moran_b)
+#' 
+#'  # plot for the first distance class, 
+#'  use a number between 1 and the number of classes to select the corresponding class
+#' eco.plotCorrelogB(moran_b, var = 1) 
+#' 
+#' #-----------------------------
+#' ## Multivariable correlograms
+#' #-----------------------------
 #' 
 #' ## multiple tests with phenotypic traits
 #' moran2 <- eco.correlog(Z=eco[["P"]], XY = eco[["XY"]],
 #' method = "I", smax=10, size=1000)
 #' 
-#' plot(moran2, var ="P2") ## single plots
-#' plot(moran2, var ="P3") ## single plots
+#' eco.plotCorrelog(moran2, var ="P2") ## single plots
+#' eco.plotCorrelog(moran2, var ="P3") ## single plots
 #' 
 #'
-#'  ## multiple plot with mean correlogram 
+#'  ## Multivariable interactive plot with mean correlogram 
 #'  ## and jackknifed confidence intervals.
 #'  
-#'  graf <- plot(moran2, meanplot = TRUE)
+#'  graf <- eco.plotCorrelog(moran2, meanplot = TRUE)
 #'  
-#'  plot(graf[[1]])
-#'  plot(graf[[2]])
+#'  # Only mean
+#'  graf$mean.correlog
+#'  
+#'  # Mean and variables
+#'  graf$multi.correlog
+#'  
+#'  # Information
+#'  - correlogram data for individual variables
+#'  - manhattan distance matrix
+#'  - mean correlogram data
+#'  - method used for analysis
+#'  - names and numbers (column in data frame) of significant variables 
+#'  
+#'  
+#'  
+#'  graf$data
+#'  
+#'  
+#'  # plot only alleles
+#'  graf <- eco.plotCorrelog(moran2, meanplot = FALSE)
+#'  graf
+#'  
+#'  # Both plots can also be constructed using ggplot2
+#'  
+#'  gg_graf <- eco.plotCorrelog(moran2, meanplot = TRUE, interactivePlot = FALSE)
+#'  gg_graf[[1]]
+#'  gg_graf[[2]]
+#'  
+#'  gg_graf <- eco.plotCorrelog(moran2, meanplot = FALSE, interactivePlot = FALSE)
+#'  gg_graf
+#'
 #' 
-#' # correlogram plots support the use of ggplot2 syntax
-#' moranplot <- plot(moran2, var ="P3") + theme_bw() + theme(legend.position="none")
+#' # standard ggplot2 correlograms support the use of ggplot2 syntax
+#' require(ggplot2)
+#' moranplot <- eco.plotCorrelog(moran2, var ="P3", interactivePlot = FALSE) 
+#' moranplot <- moranplot + theme_bw() + theme(legend.position="none")
 #' moranplot
 #' 
-#' moranplot2 <- graf[[2]] + theme_bw() + theme(legend.position="none")
+#' moranplot2 <- gg_graf[[2]] + theme_bw() + theme(legend.position="none")
 #' moranplot2
 #' 
+#' 
+#' #-----------------------
+#' Analyzing genetic data
+#' #-----------------------
 #' 
 #' # single test with genotypic traits
 #' 
@@ -121,7 +186,7 @@
 #' # analyzing allele 1
 #' moran <- eco.correlog(Z=[["A"]][,1], XY = eco[["XY"]], method = "I",
 #' smax=10, size=1000)                
-#' plot(moran)
+#' eco.plotCorrelog(moran)
 #' 
 #' # multiple tests with genotypic traits. 
 #' # nsim is set to 10 only for speed in the example
@@ -133,7 +198,7 @@
 #' ## correlogram and jackknifed 
 #' ## confidence intervals.
 #' 
-#' graf <- plot(moran2, meanplot = TRUE)
+#' graf <- eco.plotCorrelog(moran2, meanplot = TRUE)
 #' 
 #' ## the same example, but with nsim = 99. 
 #' moran3 <- eco.correlog(Z = eco[["A"]], XY = eco[["XY"]], method = "I", 
@@ -144,7 +209,7 @@
 #' ## (set adjust "none" for no family-wise 
 #' ## P correction in "eco.correlog")
 #' 
-#' plot(moran3, meanplot = TRUE, significant = TRUE)
+#' eco.plotCorrelog(moran3, meanplot = TRUE, significant.M = TRUE)
 #' 
 #' #-----------------------
 #' # ACCESSORS USE EXAMPLE
@@ -165,7 +230,10 @@
 #' 
 #' geary <- eco.correlog(Z = eco[["P"]][,1], XY = eco[["XY"]], method = "C",
 #' smax=10, size=1000)
-#' plot(geary)
+#' # Interactive plot
+#' eco.plotCorrelog(geary)
+#' # ggplot2 plot
+#' eco.plotCorrelog(geary, interactivePlot = FALSE)
 #' 
 #' #---------------------------------------------------------------------------#
 #' 
@@ -175,7 +243,10 @@
 #'
 #' cross <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], Y = eco[["P"]][, 1],
 #' method = "CC", int= 2, smax=15)
-#' plot(cross)
+#' # Interactive plot
+#' eco.plotCorrelog(cross)
+#' # ggplot2 plot
+#' eco.plotCorrelog(cross, interactivePlot = FALSE)
 #' 
 #'}
 #'
@@ -195,6 +266,10 @@
 #' Reich R., R. Czaplewski and W. Bechtold. 1994. 
 #' Spatial cross-correlation of undisturbed, natural shortleaf pine stands 
 #' in northern Georgia. Environmental and Ecological Statistics, 1: 201-217.
+#' 
+#' Rosenberg, M. 2000. The bearing correlogram: a new method 
+#' of analyzing directional spatial autocorrelation. 
+#' Geographical Analysis, 32: 267-278.
 #' 
 #' Sokal R. and N. Oden 1978. Spatial autocorrelation in biology: 
 #' 1. Methodology. Biological journal of the Linnean Society, 10: 199-228.
@@ -235,7 +310,9 @@ setGeneric("eco.correlog",
                     cummulative = FALSE,
                     bin = c("sturges", "FD"),
                     row.sd = FALSE,
-                    latlon = FALSE) {
+                    latlon = FALSE,
+                    angle = NULL,
+                    as.deg = TRUE) {
              
              
              # We start with some checks.
@@ -248,7 +325,10 @@ setGeneric("eco.correlog",
              test <- match.arg(test)  
              bin <- match.arg(bin)
              
-      
+             if(length(angle) > 1 && as.deg && test == "bootstrap") {
+               stop("Only permutation test is available for bearing correlograms with degrees format output")
+             }
+             
              
              Z.class <- class(Z)
              if(Z.class != "numeric" & Z.class != "integer" &  Z.class != "matrix" & Z.class != "data.frame") {
@@ -268,6 +348,10 @@ setGeneric("eco.correlog",
              Z <- as.data.frame(Z)
              nvar <- ncol(Z)
              
+             if(length(angle) > 1 && nvar > 1) {
+                 stop(aue.formatLine("bearing correlograms for multiple angles 
+                                     is only allowed for single variables"))
+               }
              
              if(method != "CC") {
                include.zero = FALSE
@@ -341,8 +425,29 @@ setGeneric("eco.correlog",
                                     row.sd = row.sd,
                                     bin = bin,
                                     cummulative = cummulative)
+            
+              if(!is.null(angle)) {
+                if(any(angle < 0)  || any(angle > 180)) {
+                  stop("angle must be a number between 0 and 180")
+                }
+                listanglew <- list()
+                # compute directional weights
+                for(i in seq_along(angle)) {
+                listanglew[[i]] <- eco.bearing(listaw, angle[i])
+                }
+              }
              
+             # unfold weights and create dummy iterators for
+             # lag selection during computations. This allows
+             # to select a list of lags for each angle
+             if(!is.null(angle)) {
+             lag <- lapply(listanglew, function(x) x@W)
+             dummylag <- seq_along(lag)
+             } else {
              lag <- listaw@W
+             dummylag <- rep(1, nvar)
+             }
+             
              breaks<- listaw@BREAKS
              
              d.max <- round(breaks[-1], 3)
@@ -353,32 +458,59 @@ setGeneric("eco.correlog",
              
              #output data frame/s construction
              
+             
+             
+             # create iterator to work around each angle with a single variable,
+             # and covering the other cases
+             if(length(angle) > 1) {
+               seqvar <- seq_along(angle)
+               seqdummy <- rep(1, length(angle))
+               table_length <- length(angle)
+             } else {
+               seqvar <- seq_len(nvar)
+               seqdummy <- seqvar
+               table_length <- nvar
+             }
+             
              counter <- 1          
              n.classes <- length(d.min)
+             # for the counter
+             N_counter <- length(seqvar)
              
              #bootstrap case
              if(test == "bootstrap") {
                
-               tabla <- data.frame(matrix(, length(d.min), 5))
+               tabla <- data.frame(matrix(0, length(d.min), 5))
                tabla[, 1] <- classint
                colnames(tabla) <- c("d.mean", "obs", "lwr", "uppr", "size")
                rownames(tabla) <- paste("d=", d.min, "-", d.max, sep = "")
-               lista <- replicate(nvar, tabla, simplify = FALSE)
-               names(lista) <- colnames(Z)
+               lista <- replicate(table_length, tabla, simplify = FALSE)
+               
+               if(!is.null(angle)) {
+                 names(lista) <- paste0(colnames(Z), " - ", angle, " degrees")
+               } else {
+                 names(lista) <- colnames(Z)
+               }
                
                #repetition of select_method for each run 
                
                
-               for(j in 1:nvar) {
+               for(j in seqvar) {
                  
-                 var.test <- Z[, j]
+                 var.test <- Z[, seqdummy[j]]
+                 thislag <- lag[[dummylag[j]]]
                  
-                 for(i in 1:n.classes)  {
+                 for(i in seq_len(n.classes))  {
                  
                    cat(paste("\r", "simulations...computed",
                              round(100 * i / n.classes), "%\t\t"))
                    
-                   lag2 <- lag[[i]]
+                   if(!is.null(angle)) {               
+                     lag2 <- thislag[[i]]
+                   } else {
+                     lag2 <- thislag
+                   }
+                   
                    est <- select_method(u = var.test, 
                                         con = lag2, 
                                         nsim = nsim,
@@ -401,7 +533,7 @@ setGeneric("eco.correlog",
                    lista[[j]][1, 5] <- nrow(Z) 
                  }
                  cat(paste("\r", "variable", counter, "--- total progress",
-                           round(100 * counter / nvar), "%    "))
+                           round(100 * counter / N_counter), "%    "))
                  counter <- counter + 1
                  cat("\n")
                 
@@ -415,22 +547,36 @@ setGeneric("eco.correlog",
                tabla[, 1] <- classint
                colnames(tabla) <- c("d.mean", "obs", "p.val", "size")
                rownames(tabla) <- paste("d=", d.min, "-", d.max, sep = "")
-               lista <- replicate(nvar, tabla, simplify = FALSE)
-               names(lista) <- colnames(Z)
+               lista <- replicate(table_length, tabla, simplify = FALSE)
+               
+               
+               if(!is.null(angle)) {
+                 names(lista) <- paste0(colnames(Z), " - ", angle, " degrees")
+               } else {
+                 names(lista) <- colnames(Z)
+               }
                
                #repetition of select_method for each run 
                
                
-               for(j in 1:nvar) {
-                 var.test <- Z[, j]
+               for(j in seqvar) {
+                 var.test <- Z[, seqdummy[j]]
                  
-                 for(i in 1:n.classes)  {
+                 if(!is.null(angle)) {    
+                 thislag <- lag[[dummylag[j]]]
+                 }
+                 
+                 for(i in seq_len(n.classes))  {
                    
                    cat(paste("\r", "simulations...computed",
                              round(100 * i / n.classes), "%\t\t"))
   
-                   
+                   if(!is.null(angle)) {               
+                   lag2 <- thislag[[i]]
+                   } else {
                    lag2 <- lag[[i]]
+                   }
+                   
                    est <- select_method(u = var.test, 
                                         con = lag2, 
                                         nsim = nsim,
@@ -452,20 +598,8 @@ setGeneric("eco.correlog",
                    lista[[j]][1, 4] <- nrow(Z)
                  }
                  
-                 #sequential P correction
-                 if(sequential) {
-                   for(i in 1:length(d.min)) {
-                     lista[[j]][i, 3] <- (p.adjust(lista[[j]][1:i, 3], 
-                                                   method= adjust))[i]
-                   }
-                   
-                 } else {
-                   #standard-multiple P correction 
-                   lista[[j]][ , 3] <- p.adjust(lista[[j]][ , 3], 
-                                                method = adjust)
-                 }
                  cat(paste("\r", "variable", counter, "--- total progress",
-                           round(100 * counter / nvar), "%"))
+                           round(100 * counter / N_counter), "%"))
                  counter <- counter + 1
                  cat("\n")
                }
@@ -474,8 +608,15 @@ setGeneric("eco.correlog",
              
              # Configuring the output
              
-             
+             if(length(angle) > 1 && as.deg) {
+             salida <- new("eco.correlogB")
+             bearing <- TRUE
+             lista <- int.corvarToDeg(lista, angle)
+             breaks <- angle
+             } else {
              salida <- new("eco.correlog")
+             bearing <- FALSE
+             }
 
              
              if(method == "I") {
@@ -485,18 +626,44 @@ setGeneric("eco.correlog",
              } else if(method == "CC") {
                outname <- "Moran's Ixy"
              }
+              
+ 
+             # p adjustment for permutation case
+             if(test == "permutation") {
+             for(j in seq_along(lista)) {
+               rowlen <- seq_len(nrow(lista[[1]]))
+               #sequential P correction
+               if(sequential) {
+                 for(i in rowlen) {
+                   lista[[j]][i, 3] <- (p.adjust(lista[[j]][1:i, 3], 
+                                                 method= adjust))[i]
+                 }
+                 
+               } else {
+                 #standard-multiple P correction 
+                 lista[[j]][ , 3] <- p.adjust(lista[[j]][ , 3], 
+                                              method = adjust)
+               }
+             }
+             }
+             # end p adjustment
              
              
              salida@OUT <- lista
              salida@IN <- list(XY = XY, Z = Z,  Y =Y)
              salida@NAMES <- names(lista)
              salida@BREAKS <- breaks
-             salida@CARDINAL <- cardinal
+             salida@CARDINAL <- as.numeric(lista[[1]][, 4])
              salida@METHOD <- outname
+             if(!is.null(angle)) {
+               salida@METHOD <- paste0(salida@METHOD, " (directional)")
+             }
              salida@DISTMETHOD <- listaw@METHOD
              salida@TEST <- test
              salida@NSIM <- nsim
              salida@PADJUST <- paste(adjust, "-sequential:", sequential)
+             salida@ANGLE <- angle
+             salida@BEARING <- bearing
 
              cat("\ndone!\n\n")
              
@@ -504,4 +671,3 @@ setGeneric("eco.correlog",
              salida
              
            })
-

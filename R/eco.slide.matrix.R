@@ -5,25 +5,25 @@
 #' using a moving window (circle area or square) and assigning
 #' the value to the focal pixel.
 #' @param mat Input raster matrix.
-#' @param r half a side for square, radius for circle, diagonal length for rhombus.
-#' @param slide number of elements between two focal pixels, for column 
+#' @param r Half a side for square, radius for circle, diagonal length for rhombus.
+#' @param slide Number of elements between two focal pixels, for column 
 #' and row dimension
 #' @param fun Function to apply in each focal pixel.
-#' @param window window type. Default "square".
-#' @param within should be computed the function in borders focal pixels only if 
+#' @param window Window type. Default "square".
+#' @param within Should be computed the function in borders focal pixels only if 
 #' the area is within the matrix? Default TRUE.
 #' @examples
 #' 
 #' \dontrun{
 #' 
 #' data(eco.test)
-#' ras <- matrix(eco[["P"]][,1],15,15)
+#' ras <- matrix(eco[["P"]][, 1], 15, 15)
 #' image(ras)
-#' ras.square <- eco.slidewindow(ras, 1, 1, mean, "square")
+#' ras.square <- eco.slide.matrix(ras, 1, 1, mean, "square")
 #' image(ras.square)
 #' 
 #' # or allowing more control over the function:
-#' ras.square <- eco.slide.matrix(ras, r = 3, slide = 1, function(x)mean(x, na.rm = TRUE), "diamond")
+#' ras.square <- eco.slide.matrix(ras, r = 3, slide = 1, function(x) mean(x, na.rm = TRUE), "square")
 #' image(ras.square)
 #'
 #'# sliding a circle:
@@ -84,5 +84,5 @@ eco.slide.matrix <- function(mat, r, slide, fun,
     }
     i.temp <- i.temp + 1
   }
-  out
+  t(out)
 }

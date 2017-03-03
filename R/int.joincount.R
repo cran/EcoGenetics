@@ -2,8 +2,6 @@
 #' 
 #' @param Z Vector, matrix or data frame.
 #' @param con Connection network.
-#' @param ncod number of elements coding each category (e.g., if x ncod =1, if xx, 
-#' ncod = 2, and so on).
 #' @param nsim Number of Monte-Carlo simulations. 
 #' @param test If test = "bootstrap", the program generates a bootstrap 
 #' resampling and the associated confidence intervals of the null hypothesis.
@@ -15,18 +13,21 @@
 #' if test == cross, for the first interval (d== 0) the p and CI are computed with cor.test.
 #' @param adjust.n Should be adjusted the number of individuals? (warning, this would
 #' change variances)
-#' @param adjust Method for multiple correction of P-values 
+#' @param adjustjc Method for multiple correction of P-values 
 #' passed to \code{\link[stats]{p.adjust}}.
 #' 
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' 
 #' @keywords internal
 
-int.joincount <- function(Z, con, ncod, ploidy, nsim,
+int.joincount <- function(Z, con, nsim,
                           alternative, test = "permutation", 
-                          adjust.n = FALSE, adjust) {
+                          adjust.n = FALSE, adjustjc = "none", 
+                          plotit) {
   
+
   con <- int.check.con(con)
+  con <- con[lower.tri(con)]
   con <- as.vector(con)
   
   if(test == "permutation") {
@@ -38,43 +39,68 @@ int.joincount <- function(Z, con, ncod, ploidy, nsim,
   
   #internal function 
   
-  jcfun <- function(input) {
-    
-    outmat <- outer(input, input, FUN = "paste", sep = "")
-    outmat <- as.matrix((aue.sort(outmat, ploidy = 2)))  #symmetric matrix
-    outmat <- as.factor(outmat)
-    
-    temp <- list()
-    for(i in seq(along = levels(outmat))) {
-      temp[[i]] <- as.integer(outmat == levels(outmat)[i])
-    }
-    
-    sapply(temp, function(x) sum(x * con) / 2) 
+  
+  outerMatrix <- function(input) {
+    input <- as.vector(as.matrix(input))
+    outmat <- outer(input, input, paste0)
+    outmat <- aue.sort(outmat, ploidy = 2)
+    outmat <- outmat[lower.tri(outmat)]
+    as.factor(outmat)
   }
   
-  obs <- jcfun(Z)
+    
+  jcfun <- function(x) {
+  xlev <- levels(x)
+  temp <- lapply(seq(along = xlev), function(i) {
+    as.integer(x == xlev[i])
+  })
+  out <- sapply(temp, function(x) sum(x * con)) 
+  names(out) <- xlev
+  out
+  }
+    
+  myOuter <- outerMatrix(Z)
+  obs <- jcfun(myOuter)
   
   #simulated datasets. permuting rows and columns, mantaining structure
-  monte.c <- matrix(0, nrow = nsim, ncol = length(obs))
-  for(i in 1:nsim) {
-    samp <- sample(length(Z), replace = replace)
-    outsamp <- Z[samp]
-    monte.c[i, ] <- jcfun(outsamp)
-  }
-  
+
+
+  cat("computing randomization test ...\n")
+  monte.c <- sapply(1:nsim, function(i) {
+    sample(myOuter, length(myOuter), replace = replace)
+  })
+  monte.c <- apply(monte.c, 2, function(x) jcfun(as.factor(x)))
+  #  outsamp <- Z[samp]
+  #  jcfun(outsamp)
+  #})
+  monte.c <- t(monte.c)
   ran <- int.random.test(repsim = monte.c, obs = obs, 
                          nsim = nsim, test = test,
                          alternative = alternative,
-                         adjust = adjust)
+                         adjust = adjustjc)
   
   
   #labeling rows
-  outmat <- outer(Z, Z, FUN = "paste", sep = "")
-  rownames(ran)<- levels(as.factor(aue.sort(outmat, ploidy = 2))) 
-  
+  #outmat <- outer(Z, Z, FUN = "paste", sep = "")
+  #rownames(ran)<- levels(as.factor(aue.sort(outmat, ploidy = 2))) 
+  ran <- data.frame(colnames(monte.c), ran)
+  colnames(ran)[1] <- "pairs"
   res <- list("analysis" = "Join-count", 
               "nsim" = nsim,
               "results" = ran)
+  
+  if(plotit) {
+    op <- par(no.readonly = TRUE)
+    on.exit(par(op))
+    graphics::layout(matrix(rep(c(1, 1, 2,2,2,2, 2), 7), 7,7, byrow=TRUE))
+    mycol <- ran$p.val < 0.05
+    mycol <- mycol + 1
+    mycol <- c("blue", "red")[mycol]
+    plot(1, type="n", axes=FALSE, xlab="", ylab="")
+    legend("topright", legend = c("P < 0.05", "NS"), fill = c("red", "blue"), cex = 1.2)
+    barplot(ran$obs, col = mycol, names.arg = ran$pairs, ylab = "Frequency",
+            xlab = "Pairs", cex.axis = 1.5, cex.names = 1.5, cex.lab = 1.5)
+  }
   
   res
   

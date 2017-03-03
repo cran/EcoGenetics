@@ -45,7 +45,17 @@
 #'@importFrom utils data
 #'@importFrom utils head
 #'@importFrom utils write.table
-
+#'@importFrom plotly ggplotly
+#'@importFrom networkD3 forceNetwork
+#'@importFrom edgebundleR edgebundle
+#'@importFrom igraph plot.igraph
+#'@importFrom igraph graph_from_adjacency_matrix
+#'@importFrom igraph V
+#'@importFrom igraph graph.data.frame
+#'@importFrom igraph E
+#'@importFrom grDevices heat.colors
+#'@importFrom graphics barplot legend
+#'@importFrom stats sd
 0
 
 #--------------------
@@ -184,3 +194,13 @@
 #' @keywords data
 
 0
+
+#' Pipe operator
+#'
+#' @name %>%
+#' @rdname pipe
+#' @keywords internal
+#' @export
+#' @importFrom magrittr %>%
+#' @usage lhs \%>\% rhs
+NULL

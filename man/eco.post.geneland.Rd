@@ -37,10 +37,10 @@ path.1 <- getwd()
 path <- paste(path.1,"/test/", sep="")
 dir.create(path) 
 setwd(path)
-eco.2geneland(eco, ploidy = 2)
+ecogen2geneland(eco, ploidy = 2)
 
 # Auxiliar function for running some repetitions with fixed K = 4.
-Each repetition is saved in the folder "test":
+# Each repetition is saved in the folder "test":
 simul <- function(i) {
  path <- getwd()
 path <- paste(path,"/",i, sep = "")
@@ -55,8 +55,8 @@ MCMC(coordinates = read.table("XY.txt"),
 # 5 repetitions with K = 4 
 lapply(1:5, simul)
 
-#Check that in the folder "test" are the simulated result.
-Your results must have that appearance.
+# Check that in the folder "test" are the simulated result.
+# Your results must have that appearance.
 
 # Plot of the repetition order number vs the corresponding
 # posterior probability, with a burn-in of 10 mcmc:

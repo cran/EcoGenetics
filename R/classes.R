@@ -16,6 +16,8 @@
 #' @slot TEST test method used (bootstrap, permutation)
 #' @slot NSIM number of simulations
 #' @slot PADJUST P-values adjust method for permutation tests
+#' @slot ANGLE angle used for the construction of correlogram
+#' @slot BEARING bearing correlogram (logical)
 #' @aliases eco.correlog-class
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
 #' @keywords internal
@@ -31,8 +33,19 @@ setClass("eco.correlog",
                         DISTMETHOD = "character",
                         TEST = "character",
                         NSIM = "numeric",
-                        PADJUST = "character")
+                        PADJUST = "character",
+                        ANGLE = "numericORnull",
+                        BEARING = "logical")
          )
+
+#-------------------------------------------------------------------------------#
+#' eco.correlogB
+#' @name eco.correlogB-class 
+#' @aliases eco.correlogB-class
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @keywords internal
+
+setClass("eco.correlogB", contains = "eco.correlog")
 
 
 #------------------------------------------------------------------------------#
@@ -157,6 +170,7 @@ setClass("eco.multilsa",
 #' with non-zero connections (as percentage)
 #' @slot AVERAGE average number of connection (as percentage)
 #' @slot AVG.DIST average distance between connected individuals
+#' @slot ANGLE angle used for the construction of correlogram
 #' @aliases eco.weight-class 
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @keywords internal
@@ -166,15 +180,16 @@ setClass("eco.weight",
          representation(W = "matrix",
                         XY = "data.frame",
                         METHOD = "character",
-                        PAR = "character",
-                        PAR.VAL = "numeric",
+                        PAR = "characterORnull",
+                        PAR.VAL = "numericORnull",
                         ROW.SD = "logical",
                         SELF ="logical",
                         NONZERO = "numeric",
                         NONZEROIND = "numeric",
                         CONNECTED = "numeric",
                         AVG = "numeric",
-                        AVG.DIST = "numeric")
+                        AVG.DIST = "numeric",
+                        ANGLE = "numericORnull")
          )
 
 
@@ -191,6 +206,7 @@ setClass("eco.weight",
 #' @slot CARDINAL number of elements in each class
 #' @slot BREAKS breaks
 #' @slot METHOD breaks construction method
+#' @slot ANGLE angle used for the construction of correlogram
 #' @aliases eco.lagweight-class
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @keywords internal
@@ -208,7 +224,8 @@ setClass("eco.lagweight",
                         LOGMEAN = "numeric",
                         CARDINAL = "numeric",
                         BREAKS = "numeric",
-                        METHOD = "character")
+                        METHOD = "character",
+                        ANGLE = "numericORnull")
          )
 
 
@@ -294,6 +311,16 @@ setClass("int.multiplot")
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @keywords internal
 
-setClass("eco.IBD", representation(SP = "list"), contains = "eco.correlog")
+setClass("eco.IBD", representation(GLOBALTEST = "character", SP = "list"), contains = "eco.correlog")
 
 #------------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------------------------------#
+#' ecolist class
+#' @aliases ecolist-class
+#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @keywords internal
+
+setClass("ecolist",  contains = "list")

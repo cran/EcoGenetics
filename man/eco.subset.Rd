@@ -4,14 +4,14 @@
 \alias{eco.subset}
 \title{Subsetting an ecogen object by group}
 \usage{
-eco.subset(eco, fact, grp, missing = c("0", "NA", "MEAN"))
+eco.subset(eco, hier, grp, missing = c("0", "NA", "MEAN"))
 }
 \arguments{
 \item{eco}{Object of class "ecogen".}
 
-\item{fact}{The name of the S slot column with labels assigning individuals to groups.}
+\item{hier}{The name of the S slot column with labels assigning individuals to groups.}
 
-\item{grp}{Label for the subset of individuals, contained in fact.}
+\item{grp}{Label for the subset of individuals, contained in hier.}
 
 \item{missing}{Missing data argument This can take three values ("0", "NA" or "MEAN"),
 as described in  \code{\link{ecogen}}.

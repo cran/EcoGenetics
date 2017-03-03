@@ -15,18 +15,18 @@
 #' 
 #' data(eco2)
 #' myMatrix <- eco2[["P"]]
-#' con <- eco.weight(XY=eco2[["XY"]], method="knearest", k=5)
-#' result <- eco.slide.con(myMatrix, con, function(x)mean(x, na.rm = TRUE))
+#' con <- eco.weight(XY = eco2[["XY"]], method = "knearest", k = 5)
+#' result <- eco.slide.con(myMatrix, con, function(x) mean(x, na.rm = TRUE))
 #'
-#' image(matrix(myMatrix[,1], 30, 30)) # original image
-#' image(matrix(result[,1], 30, 30)) # smoothed image
+#' image(matrix(myMatrix[, 1], 30, 30)) # original image
+#' image(matrix(result[, 1], 30, 30)) # smoothed image
 #' 
 #' data(eco3)
 #' myMatrix2 <- eco3[["P"]]
-#' con <- eco.weight(XY=eco3[["XY"]], method="knearest", k=5)
-#' plot(con)
+#' con <- eco.weight(XY = eco3[["XY"]], method="knearest", k = 5)
+#' eco.plotWeight(con)
 #' # smoothing values in myMatrix2 using the connection network:
-#' result <- eco.slide.con(myMatrix2, con, function(x)mean(x, na.rm = TRUE))
+#' result <- eco.slide.con(myMatrix2, con, function(x) mean(x, na.rm = TRUE))
 #' 
 #' }
 #' 
@@ -38,6 +38,8 @@ eco.slide.con <- function(x, con, fun) {
  var <- data.frame(x)
  nonzero <- lapply(1:nrow(con@W), function(i) which(con@W[i, ] != 0))
  res <- apply(var, 2, function(y) unlist(lapply(nonzero, function(z) fun(y[z]))))
+ rownames(res) <- rownames(var)
+ colnames(res) <- colnames(var)
  res
 }
   

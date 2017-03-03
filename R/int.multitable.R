@@ -19,7 +19,7 @@ int.multitable <- function(result,
     res [, 3] <- sapply(result, "[[", 2)
     res [, 4] <- sapply(result, "[[", 6)
     
-    colnames(res) <- c("obs", "exp", "alter", "pval")
+    colnames(res) <- c("obs", "exp", "alter", "p.val")
     rownames(res) <- names(result)
     res<-list(analysis = result[[1]]$analysis, 
               nsim = result[[1]]$nsim,  

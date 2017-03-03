@@ -2,14 +2,14 @@
 % Please edit documentation in R/eco.cormantel.R
 \name{eco.cormantel}
 \alias{eco.cormantel}
-\title{Mantel and partial Mantel correlograms}
+\title{Mantel and partial Mantel correlograms, omnidirectional and directional}
 \usage{
 eco.cormantel(M, XY, MC = NULL, int = NULL, smin = 0, smax = NULL,
   nclass = NULL, seqvec = NULL, size = NULL, bin = c("sturges", "FD"),
   nsim = 99, classM = c("dist", "simil"), method = c("pearson",
   "spearman", "kendall"), test = c("permutation", "bootstrap"),
   alternative = c("auto", "two.sided", "greater", "less"), adjust = "holm",
-  sequential = TRUE, latlon = FALSE, ...)
+  sequential = TRUE, latlon = FALSE, angle = NULL, as.deg = TRUE, ...)
 }
 \arguments{
 \item{M}{Distance or similarity matrix.}
@@ -62,6 +62,12 @@ the coordinates must be in a matrix/data frame with the longitude in the first
 column and latitude in the second. The position is projected onto a plane in
 meters with the function \code{\link[SoDA]{geoXY}}.}
 
+\item{angle}{for computation of bearing correlogram (angle between 0 and 180).
+Default NULL (omnidirectional).}
+
+\item{as.deg}{in case of bearing correlograms for multiple angles, 
+generate an output for each lag in function of the angle? Default TRUE.}
+
 \item{...}{Additional arguments passed to \code{\link[stats]{cor}}.}
 }
 \value{
@@ -109,21 +115,41 @@ or bootstrap confidence intervals.
 data(eco.test)
 require(ggplot2)
 
+###############################
+## Omnidirectional correlogram
+###############################
+
 corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
 nsim = 99)
-plot(corm)
+eco.plotCorrelog(corm)
 
 corm <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
 nsim = 99, test = "bootstrap")
-plot(corm)
+eco.plotCorrelog(corm)
+
+#######################################################
+## A directional approach based in bearing correlograms
+#######################################################
+
+corm_b <- eco.cormantel(M = dist(eco[["P"]]), size=1000,smax=7, XY = eco[["XY"]],
+nsim = 99, angle = seq(0, 170, 10))
+
+ # use eco.plotCorrelogB for this object
+eco.plotCorrelogB(corm_b)
+
+ # plot for the first distance class, 
+ use a number between 1 and the number of classes to select the corresponding class
+eco.plotCorrelogB(moran_b, interactivePlot = FALSE, var = 1) 
 
 # partial Mantel correlogram
 corm <- eco.cormantel(M = dist(eco[["P"]]), MC = dist(eco[["E"]]),
 size=1000, smax=7, XY = eco[["XY"]], nsim = 99)
-plot(corm)
+eco.plotCorrelog(corm)
 
-# correlogram plots support the use of ggplot2 syntax
-mantelplot <- plot(corm) + theme_bw() + theme(legend.position="none")
+# standard correlogram plots support the use of ggplot2 syntax
+require(ggplot2)
+mantelplot <- eco.plotCorrelog(corm, interactivePlot = FALSE)
+mantelplot <- mantelplot + theme_bw() + theme(legend.position="none")
 mantelplot
 
 
@@ -153,6 +179,9 @@ Elsevier Science, Amsterdam, Netherlands.
 
 Oden N., and R. Sokal. 1986. Directional autocorrelation: an extension 
 of spatial correlograms to two dimensions. Systematic Zoology, 35:608-617
+
+Rosenberg, M. 2000. The bearing correlogram: a new method of analyzing 
+directional spatial autocorrelation. Geographical Analysis, 32: 267-278.
 
 Sokal R. 1986. Spatial data analysis and historical processes. 
 In: E. Diday, Y. Escoufier, L. Lebart, J. Pages, Y. Schektman, and R. Tomassone,

@@ -26,18 +26,18 @@ The function uses a connection network generated with the function eco.weight.
 
 data(eco2)
 myMatrix <- eco2[["P"]]
-con <- eco.weight(XY=eco2[["XY"]], method="knearest", k=5)
-result <- eco.slide.con(myMatrix, con, function(x)mean(x, na.rm = TRUE))
+con <- eco.weight(XY = eco2[["XY"]], method = "knearest", k = 5)
+result <- eco.slide.con(myMatrix, con, function(x) mean(x, na.rm = TRUE))
 
-image(matrix(myMatrix[,1], 30, 30)) # original image
-image(matrix(result[,1], 30, 30)) # smoothed image
+image(matrix(myMatrix[, 1], 30, 30)) # original image
+image(matrix(result[, 1], 30, 30)) # smoothed image
 
 data(eco3)
 myMatrix2 <- eco3[["P"]]
-con <- eco.weight(XY=eco3[["XY"]], method="knearest", k=5)
-plot(con)
+con <- eco.weight(XY = eco3[["XY"]], method="knearest", k = 5)
+eco.plotWeight(con)
 # smoothing values in myMatrix2 using the connection network:
-result <- eco.slide.con(myMatrix2, con, function(x)mean(x, na.rm = TRUE))
+result <- eco.slide.con(myMatrix2, con, function(x) mean(x, na.rm = TRUE))
 
 }
 

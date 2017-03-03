@@ -1,9 +1,10 @@
 #' Spatial weights
 #' 
-#' @description Spatial weights for individuals with coordinates XY
+#' @description Spatial weights for individuals (nodes) with coordinates XY
 #' @param XY Matrix/data frame with projected coordinates.
 #' @param method Method of spatial weight matrix: "circle", "knearest", "inverse", 
 #' "circle.inverse", "exponential", "circle.exponential".
+#' @param W Custom weight matrix, with rownames and colnames identical to the XY data frame with coordinates
 #' @param k Number of neighbors for nearest neighbor distance. When equidistant
 #' neighbors are present, the program select them randomly.
 #' @param d1 Minimum distance for circle matrices.
@@ -11,7 +12,7 @@
 #' @param p Power for inverse distance. Default = 1.
 #' @param alpha Alpha value for exponential distance. Default = 1.
 #' @param dist.method Method of computing distance when XY is in metric
-#' units. If latlon is TRUE, the method is euclidean. 
+#' units. If latlon is TRUE, the method is euclidean.
 #' @param row.sd Logical. Should be row standardized the matrix? Default FALSE 
 #' (binary weights).
 #' @param max.sd Logical. Should be divided each weight by the maximum of the matrix?
@@ -59,16 +60,35 @@
 #'  binary matrix, and an "exponential" matrix.
 #'  This distance requires the parameters alpha, d1 and d2 (default alpha = 1, d1 = 0).
 #'  
+#'  In addition to these methods, a spatial weight object can be created
+#'  assigning a custom W matrix ("W" argument). In this case, the "method"
+#'  is argument automatically set by the program to "custom" (see te example).
+#'  
+#'  ----------------------------------
+#'  
 #'  In row standardization, each weight wij for the individual i, is divided by the
 #'  sum of the row weights (i.e., wij / sum(wij), where sum(wij) is computed over an
 #'  individual i and all individuals j). 
 #'  
 #'  When self is TRUE, the connection j = i is also included.
 #'  
-#'  A plot method is availble showing the connections in an X-Y graph, 
-#'  showing the individuals as points representing the original coordinates and
-#'  the coordinates transformed as ranks (i.e., each coordinate takes an ordered
+#'  ----------------------------------
+#'  
+#'  PLOTS FOR ECO.WEIGHT OBJECTS:
+#'  
+#'  A plot method is availble (function "eco.plotWeight") showing static or interactive plots,
+#'  In the case of using the function eco.plotWeight for the argument type="simple", 
+#'  the connections are shown in two plots: an X-Y graph, 
+#'  with the individuals as points, representing the original coordinates, and in a plot
+#'  with coordinates transformed as ranks (i.e., each coordinate takes an ordered
 #'  value from 1 to the number of individuals).
+#'  The other static method (type="igraph") uses the igraph package to generate 
+#'  a visual attractive graph (force network).
+#'  Two interactive methods are available: type = "network", to plot an interactive force network,
+#'  and type = "edgebundle" to plot a circular network.
+#'  For the cases type = "inverse" or type = "exponential", the program generates a 
+#'  plot of weights values vs distance 
+#'  See the examples below.
 #'  
 #' @return An object of class eco.weight with the following slots:
 #' @return > W weights matrix
@@ -99,36 +119,109 @@
 #' 
 #' data(eco3)
 #' 
-#' # "circle" method
+#' # 1)  "circle" method
 #' 
 #' con <- eco.weight(eco3[["XY"]], method = "circle", d1 = 0, d2 = 500)
-#' plot(con) 
+#' 
+#' 
+#' #---- Different plot styles for the graph ----#
+#' 
+#' # simple
+#' eco.plotWeight(con, type = "simple") 
 #'             
-#' # "knearest" method
+#' # igraph
+#' eco.plotWeight(con, type = "igraph", group = eco3[["S"]]$structure)
+#' 
+#' # network (interactive)
+#' ## click in a node to see the label
+#' eco.plotWeight(con, type = "network", bounded = TRUE, group = eco3[["S"]]$structure)
+#' 
+#' # edgebundle (interactive)
+#' ## in the following plot, the assignment a group factor, 
+#' ## generates clustered nodes.
+#' ## hover over the nodes to see the individual connections
+#' eco.plotWeight(con, type = "edgebundle", fontSize=8, group = eco3[["S"]]$structure)
+#' 
+#' 
+#' # 2) "knearest" method
 #'
 #' con <- eco.weight(eco3[["XY"]], method = "knearest", k = 10)
-#' plot(con) 
+#' eco.plotWeight(con) 
+#' eco.plotWeight(con, type = "network", bounded = TRUE, group = eco3[["S"]]$structure)
 #' 
-#' # "inverse" method
+#' # 3)  "inverse" method
 #' ## scale dependent. In the example, the original coordinates (in km) are converted into m
 #' con <- eco.weight(eco3[["XY"]]/1000, method = "inverse", max.sd = TRUE, p = 0.1)
 #' con
-#' plot(con)
+#' eco.plotWeight(con)
 #' 
-#' # "circle.inverse" method
+#' # 4) "circle.inverse" method
 #' con <- eco.weight(eco3[["XY"]], method = "circle.inverse", d2 = 1000)
 #' con
-#' plot(con)
+#' eco.plotWeight(con)
 #' 
-#' # "exponential" method
+#' # 5) "exponential" method
 #' ## scale dependent. In the example, the original coordinates (in km) are converted into m
 #' con <- eco.weight(eco3[["XY"]]/1000, method = "exponential", max.sd = TRUE, alpha = 0.1)
-#' plot(con)
+#' eco.plotWeight(con)
 #' 
-#' # "circle.exponential" method
-#' con <- eco.weight(eco[["XY"]], method = "circle.exponential", d2 = 2)
+#' # 6) "circle.exponential" method
+#' con <- eco.weight(eco3[["XY"]], method = "circle.exponential", d2 = 2000)
 #' con
-#' plot(con)
+#' eco.plotWeight(con)
+#' 
+#' 
+#' # 7) CUSTOM WEIGHT MATRIX
+#' 
+#' ## A eco.weight object can be created with a custom W matrix. In this case,
+#' ## the rows and the columns of W (weight matrix) must have names, 
+#' ## that must coincide (also in order) with the name of the XY (position) matrix.
+#' 
+#' require(igraph)
+#' ## this example generates a network with the package igraph
+#' tr <- make_tree(40, children = 3, mode = "undirected")
+#' plot(tr, vertex.size = 10, vertex.label = NA) 
+#'
+#' ## conversion from igraph to weight matrix 
+#' weights <- as.matrix(as_adj(tr))
+#' 
+#' ## weight matrix requires named rows and columns
+#' myNames <- 1:nrow(weights)
+#' rownames(weights) <- colnames(weights) <-  myNames
+#'
+#' ## extract coordinates from the igraph object 
+#' coord <- layout.auto(tr)
+#' rownames(coord) <- myNames
+#' plot(layout.auto(tr))
+#'
+#' ## custom weight object
+#' customw <- eco.weight(XY = coord, W = weights)
+#' 
+#' ## simple plot of the object
+#' eco.plotWeight(customw, type = "simple")
+#'
+#' ## create a vector with groups to have coloured plots
+#' myColors <- c(rep(1,13), rep(2, 9), rep(3, 9), rep(4, 9))
+#' 
+#' eco.plotWeight(customw, type = "igraph",group = myColors)
+#' 
+#' ## in the following plot, the argument bounded is set to FALSE, 
+#' ## but if you have many groups, it probably should be set to TRUE.
+#' # click in a node to see the label
+#' eco.plotWeight(customw,type = "network", bounded = FALSE, group = myColors)
+#' 
+#' ## in the following plot, the assignment a group factor, 
+#' # generates clustered nodes.
+#' # hover over the name of the nodes to see the individual connections
+#' eco.plotWeight(customw,  type = "edgebundle", group = myColors)
+#' 
+#' 
+#' #### CONVERSION FROM LISTW OBJECTS #####
+#' require(adegenet)
+#' # Delaunay triangulation
+#' temp <-chooseCN(eco3[["XY"]], type = 1, result.type = "listw", plot.nb = FALSE)
+#' con <- eco.listw2ew(temp)
+#' eco.plotWeight(con, "network", bounded = TRUE, group = eco3[["S"]]$structure)
 #' 
 #' 
 #' #-----------------------
@@ -151,20 +244,60 @@
 setGeneric("eco.weight", function(XY,
                                   method = c("circle", "knearest", "inverse",  
                                              "circle.inverse", "exponential", 
-                                             "circle.exponential"),
+                                             "circle.exponential"), W = NULL,
                                   d1 = 0, d2 = NULL,  k = NULL,  p = 1, alpha = 1, 
                                   dist.method = "euclidean",
-                                  row.sd = FALSE, max.sd = FALSE,  self = FALSE, latlon = FALSE,
+                                  row.sd = FALSE, max.sd = FALSE,  
+                                  self = FALSE, latlon = FALSE,
                                   ties = c("unique", "min", "random", "ring", "first")) {
   
   method <- match.arg(method)
   dist.method <- match.arg(dist.method)
   ties <- match.arg(ties)
 
+  #// custom matrix W configuration
+  if(!is.null(W)) {
+    if(!is.null(method)) {
+      message("Custom W matrix detected. Method argument set as 'customW'\n")
+      method <- "customW"
+    }
+    if(is.null(rownames(XY)) || is.null(rownames(W)) || is.null(colnames(W))) {
+      stop("The use of a W custom matrix requires non null rownames and colnames, which must
+           coincide between them and with the rownames of the XY matrix")
+    } else {
+      nombresXY <- rownames(XY)
+      nombresRW <- rownames(W)
+      nombresCR <- colnames(W)
+      if(!all(nombresXY == nombresRW) || !all(nombresXY == nombresCR) || !all(nombresRW == nombresCR)) {
+        stop("The use of a W custom matrix requires non null rownames and colnames, which must
+           coincide with the rownames of the XY matrix")
+      }
+    }
+    # check positive 
+      
+    
+      if(!all(W >= 0)) {
+        stop("The values of W must all be >= 0, some negative values were found")
+      }
+    # symmetric if x  = xt
+      #if (!all(W == t(W))) {  
+      #  stop("Non symmetric W matrix detected")
+      #}
+    y <- W
+    param <- NULL
+    param.values <- NULL
+    
+    
+  } # end W configuration //
+    
+    # colnames and rownames must coincide with XY
+    
   if(row.sd == TRUE && max.sd == TRUE) {
-    stop("must be selected one standardization argument of <row.sd> or <max.sd>, or none")
+    stop("It must be selected one standardization argument of <row.sd> or <max.sd>, or none")
   }
-    #distance configuration
+    
+    
+  # // distance configuration
   if(latlon == FALSE) {
     distancia <- as.matrix(dist(XY), upper = T, method = dist.method)
   } else {
@@ -185,7 +318,7 @@ setGeneric("eco.weight", function(XY,
   } else if(method == "circle") {
     
     if(is.null(d2)) {
-      stop("a d2 argument must be given")
+      stop("A d2 argument must be given")
     }
     temp <- which((distancia <= d2) & (distancia > d1))
     y <- distancia
@@ -200,7 +333,7 @@ setGeneric("eco.weight", function(XY,
     
   } else if(method == "circle.inverse") {
     if(is.null(d2)) {
-      stop("the argument d2 is missing")
+      stop("The argument d2 is missing")
     }
     
     temp <- which((distancia <= d2) & (distancia >= d1))
@@ -222,7 +355,7 @@ setGeneric("eco.weight", function(XY,
   } else if(method == "circle.exponential") {
     
     if(is.null(d2)) {
-      stop("the argument d2 is missing")
+      stop("The argument d2 is missing")
     }
     
     temp <- which((distancia <= d2) & (distancia > d1))
@@ -244,7 +377,7 @@ setGeneric("eco.weight", function(XY,
  }
 
     if(is.null(k)) {
-      stop("the argument k is missing")
+      stop("The argument k is missing")
     }
     
  y <- t(apply(distancia, 1, 
@@ -287,6 +420,7 @@ setGeneric("eco.weight", function(XY,
   
   #output construction
   out <- new("eco.weight")
+  
   if(method == "knearest") {
     method <- paste(method, "-", ties.method)
   }
@@ -305,12 +439,13 @@ setGeneric("eco.weight", function(XY,
   out@CONNECTED <- which(apply(y, 1, sum, na.rm=TRUE) != 0)
   out@NONZERO <- round(100* sum(y2 != 0) / (nrow(y2)^2 - nrow(y2)), 1)
   out@NONZEROIND <- round(100 * sum(apply(y2, 1, sum) != 0) / nrow(y2), 1)
-  out@AVG <- round(sum(apply(y2, 1, sum))  / nrow(y2), 1)
+  out@AVG <- round(sum(apply(y2, 1, function(x)sum (x != 0)))  / nrow(y2), 1)
   out@PAR <- param
   out@PAR.VAL <- param.values
   avgdist <- y*as.matrix(dist(XY))
   avgdist <- mean(avgdist[avgdist != 0])
   out@AVG.DIST <- round(avgdist, 3)
+  out@ANGLE <- NULL
   
   out
   

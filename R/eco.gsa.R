@@ -7,15 +7,14 @@
 #' The program allows the analysis of a single variable or multiple variables. 
 #' in the last case, the variables must be in columns and the individuals in rows.
 #' 
-#' For join-count analysis, a ncod argument must be supplied, and in the case
-#' of genetic data, an additional ploidy argument. The data is then ordered with the 
+#' For join-count analysis, a ploidy argumen must be supplied. The data is then ordered with the 
 #' function \code{\link{aue.sort}}. This step is required in the analysis of
 #' genotypes. An individual with the alleles A and B, coded as AB, is identical 
 #' to other coded as BA. The ordination step ensures that both are considered
 #' in a single category. For the analysis of frequencies of single alleles, the input 
 #' is count data (ploidy-times the frequency, as provided by the slot
 #' A of an ecogen object: the count data A' can be obtained as A' <- ploidy * A),
-#' using the function with the arguments ploidy = 1 and ncod = 1. 
+#' using the function with the arguments ploidy = 1. 
 #'  
 #' 
 #' @param Z Vector with a variable, or matrix/data frame with variables in columns. 
@@ -27,19 +26,16 @@
 #' an attribute "xy" including the projected coordinates is required. 
 #' @param method Method of analysis: "I" for Moran's I, "C" for Geary's C, "CC" for
 #' the Bivariate Moran's or "JC" for Join-count.
-#' @param ncod Number of elements coding each category (e.g., if x ncod =1, if xx, 
-#' ncod = 2, and so on). Only for Join-count analysis.
-#' @param ploidy Ploidy of genetic data. Only for for Join-count analysis.
+#' @param ploidy For join count analysis: number of elements for the values of the vector passed, given value: for example,
+#'  if ploidy=1, "13" and "31" are considered a same level ("31" is sorted by the program as "13"); 
+#'  if ploidy = 1, "13" and "31" represent two different levels.  
 #' @param nsim Number of Monte-Carlo simulations. 
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the alternative hypothesis.
 #' Other options are: "two.sided", "greater" and "less".  
 #' @param adjust Correction method of P-values for multiple tests, 
 #' passed to \code{\link[stats]{p.adjust}}. Defalut is "fdr".
-#' @param row.sd Logical. should be row standardized the matrix? Default FALSE 
-#' (binary weights).
-#' @param plotit Should be printed a histogram of the simulation? Defalut TRUE.
-#' 
+#' @param plotit should be generated a plot for univariate results?
 #' @return The program returns an object of class "eco.gsa" with the following slots:
 #' @return > METHOD method used in the analysis 
 #' @return > OBS observed value when a single variable is tested
@@ -69,12 +65,12 @@
 #' 
 #' ### one test
 #' con <- eco.weight(eco[["XY"]], method = "circle", d1 = 0, d2 = 2)
-#' global <- eco.gsa(Z = eco[["P"]][, 1], con = con, , method = "I", nsim = 200)
+#' global <- eco.gsa(Z = eco[["P"]][, 1], con = con, method = "I", nsim = 200)
 #' global
 #' 
 #' require(adegenet)
 #' con2<-chooseCN(eco[["XY"]], type = 1, result.type = "listw", plot.nb = FALSE)
-#' global <- eco.gsa(Z = eco[["P"]][, 1], con = con2, , method = "I", nsim = 200)
+#' global <- eco.gsa(Z = eco[["P"]][, 1], con = con2, method = "I", nsim = 200)
 #' global
 #' 
 #' #-----------------------
@@ -94,10 +90,12 @@
 #' #----------------
 #' # multiple tests
 #' #----------------
-#' 
-#' con <- eco.weight(eco[["XY"]], method = "circle", d1 = 0, d2 = 2)
-#' global <- eco.gsa(Z = eco[["P"]], con = con, , method = "I", nsim = 200)
+#' data(eco3)
+#' con <- eco.weight(eco3[["XY"]], method = "circle", d1 = 0, d2 = 500)
+#' global <- eco.gsa(Z = eco3[["P"]], con = con, method = "I", nsim = 200)
 #' global 
+#' # Plot method for multivariable eco.gsa objects:
+#' eco.plotGlobal(global)
 #' 
 #' #--------------------------------
 #' # accessor use in multiple tests
@@ -133,16 +131,22 @@
 #' 
 #' Z = 2* eco[["A"]]
 #' 
-#' con <- eco.weight(eco[["XY"]], method = "circle", d1 = 0, d2 = 2)
 #' 
-#' # using the first allele of the matrix
-#' global.JC <- eco.gsa(Z[, 1], ncod = 1, con = con, method = "JC", nsim = 5)
-#' global.JC
-#' # Note that with large data sets, join-count estimation can be slow. 
+#' jc <- eco.gsa(Z[, 1], con = con, method = "JC")
+#' eco.plotGlobal(jc)
 #' 
-#' # counting joins between genotypes of the locus 1:
-#' global.JC <- eco.gsa(Z = eco[["G"]][,1], ploidy = 2, con = con, method = "JC", nsim = 1)
+#' # multiple tests
+#' # using the first ten alleles of the matrix
+#' global.JC <- eco.gsa(Z[, 1:10], ncod = 1, con = con, method = "JC", nsim = 99)
 #' global.JC
+#' # plot method for multivariable join-count
+#' eco.plotGlobal(global.JC)
+#' 
+#' # counting joins between genotypes in the first locus the G matrix:
+#' global.JC <- eco.gsa(Z = eco[["G"]][, 1], ploidy = 2, con = con, method = "JC", nsim = 99)
+#' global.JC
+#' eco.plotGlobal(global.JC)
+#' 
 #'}
 #'
 #' @references 
@@ -169,15 +173,13 @@
 
 
 setGeneric("eco.gsa",
-           function(Z, Y = NULL, con, 
+           function(Z, con, Y = NULL, 
                     method =c("I", "C", "CC", "JC"),
-                    ncod = NULL,
-                    ploidy = 1,
                     nsim = 99, 
                     alternative = c("auto", "two.sided", 
                                     "greater", "less"),
+                    ploidy = 1,
                     adjust = "fdr",
-                    row.sd = FALSE,
                     plotit =TRUE) {
              
              
@@ -189,6 +191,9 @@ setGeneric("eco.gsa",
              } else {
                XY <- attr(con, "xy")
                con <- int.check.con(con)
+             }
+             if(u <- nrow(as.data.frame(Z)) != nrow(con)) {
+               stop(paste0("incompatible dimension between <Z> (", u, ") and <XY> (",  nrow(con), ")"))
              }
              
              Z.class <- class(Z)
@@ -232,28 +237,52 @@ setGeneric("eco.gsa",
              multiple <- NULL
              if(ncol(as.matrix(Z)) == 1) {
                multiple <- FALSE
+               
+               if(length(ploidy) > 1) {
+                 stop("ploidy argument of length > 1 for a unique variable")
+               }
              } else {
                multiple <- TRUE
                plotit <- FALSE
+               
+               if(method == "JC") {
+                 if(length(ploidy) == 1) {
+                   message("Only one ploidy value was passed. The ploidy was set as <", ploidy, "> for all the variables. ")
+                   ploidy <- rep(ploidy, nvar)
+                   #test
+                 } else {
+                   if(length(ploidy) != length(nvar)) {
+                     stop("The length of ploidy argument and the number of variables is different")
+                   }
+                 }
+               }
              }
              
              ###test#####
              
              # Funtion to estimate the stat in each iteration
              
-             select_method <- function(u, ...) {
+             select_method <- function(u, Y = NULL,  
+                                       ploidy = ploidy, 
+                                       adjust = "none",
+                                       plotit = TRUE,
+                                       ...) {
                
                if(method == "I") {
-                 out <- int.moran(Z = u, plotit = plotit,  ...)
+                 out <- int.moran(Z = u, plotit = plotit, ...)
                } else if(method == "C") {
-                 out <- int.geary(Z = u, plotit = plotit,  ...)
+                 out <- int.geary(Z = u, plotit = plotit, ...)
                } else if(method == "CC") {
-                 out <- int.crosscor(Z = u, Y = Y, plotit = plotit, ...)
+                 out <- int.crosscor(Z = u, Y = Y, plotit = plotit,  ...)
                } else if(method == "JC") {
                  if(ploidy > 1) {
-                   u <- aue.sort(X = u, ncod = ncod, ploidy = ploidy)
+                   # just in case of the presence of cases such as "AB", "BA"
+                   u <- aue.sort(X = u, ploidy = ploidy)
                  }
-                 out <- int.joincount(Z = u, adjust = adjust, ...)
+                 out <- int.joincount(Z = u,  
+                                      adjustjc = adjust,
+                                      plotit = plotit,
+                                      ...)
                }
                out
              }
@@ -267,12 +296,25 @@ setGeneric("eco.gsa",
              #one test
              if(!multiple) {
                
-               res <- select_method(Z, con = con, nsim = nsim,
-                                    alternative = alternative) 
-             } 
-             
+               res <- select_method(Z,con = con, 
+                                    Y = Y, 
+                                    nsim = nsim,
+                                    alternative = alternative,
+                                    ploidy = ploidy,
+                                    adjust = adjust,
+                                    plotit = plotit) 
+
              #rearranging no JC
-             if(!multiple & method != "JC") {
+               
+            if(method == "JC") {
+                 salida@METHOD <- name
+                 salida@NSIM <- nsim
+                 salida@ADJUST <- adjust
+                 salida@MULTI <- res$results
+                 #eco.plotGlobal(salida)
+                 
+               
+              } else {
                
                salida@METHOD <- name
                salida@OBS <- res$obs
@@ -280,38 +322,64 @@ setGeneric("eco.gsa",
                salida@PVAL <- res$p.val
                salida@ALTER <- res$alter
                salida@NSIM <- res$nsim
+              }
              }
-             
              
              if(multiple) {
                #multiple tests
+               #plotit was defined as FALSE above
                
-               res <- list()
+               if(method == "JC") {
+                 
+                 res <- lapply(1:nvar, function(i) {
+                   
+                   select_method(Z[, i], 
+                                 con = con,
+                                 nsim = nsim,
+                                 alternative = alternative,
+                                 ploidy = ploidy[i], 
+                                 plotit = plotit,
+                                 adjust = adjust) 
+                   
+                 })
+                 
+                 names(res) <- paste0(colnames(Z), "###")
+                 salida@METHOD <- name
+                 salida@NSIM <- nsim
+                 salida@ADJUST <- adjust
+                 # generate a tidy matrix
+                 
+                 outmat <- do.call("rbind", lapply(res, function(x) x$results))[, 1:5]
+                 theNames <- gsub("###.*", "", rownames(outmat))
+                 rownames(outmat)<- gsub("###", "", rownames(outmat))
+                 outmat <- cbind(theNames, outmat)
+                 colnames(outmat)[1] <- "var"
+                 salida@MULTI <- outmat
                
-               #test
-               for(i in 1:nvar) {
+               } else {
                  
-                 res[[i]] <- select_method(Z[, i], con = con, nsim = nsim,
-                                           alternative = alternative) 
                  
-               }
-               if(method != "JC") {
+                 res <- lapply(1:nvar, function(i) {
+                   
+                   select_method(Z[, i],
+                                 Y = Y,
+                                 con = con, 
+                                 nsim = nsim,
+                                 alternative = alternative,
+                                 plotit = plotit) 
+                   
+                 })
+                 
+                 names(res) <- paste0(colnames(Z))
                  res <- int.multitable(res)
                  salida@METHOD <- name
                  salida@NSIM <- nsim
                  salida@ADJUST <- adjust
                  salida@MULTI <- res$results
-               }
+                 
+                  } 
              }
-             
-             #rearranging JC
-             if(method == "JC") {
-               salida@METHOD <- name
-               salida@NSIM <- nsim
-               salida@ADJUST <- adjust
-               salida@MULTI <- res$results[,1:4]
-             }
-             
+
              salida
              })
 

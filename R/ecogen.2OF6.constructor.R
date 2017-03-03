@@ -32,8 +32,21 @@
 #' @param NA.char Character simbolizing missing data in the input. Default is "NA".
 #' @param poly.level Polymorphism threshold in percentage (0 - 100), 
 #' for remotion of non polymorphic loci (for dominant data). Default is 5 (5\%).
-#' @param rm.empty.ind Remotion of noninformative individuals (row of "NAs").
+#' @param rm.empty.ind Remotion of noinformtive individuals (row of "NAs").
 #' Default if FALSE.
+#' @param order.df Order data frames rows (all data frames with a same row names order). This 
+#' option works when the names of the data frames are used 
+#' (i.e., set.names and valid.names are NULL), otherwise order.df  = TRUE/FALSE has no effect
+#' in the function. 
+#' Defalut TRUE. If FALSE, row names of all data frames must be ordered. The use of data frames 
+#' with row names in different order will return an error.
+#' In both cases, the program sets an internal names attribute of the object
+#' as the row names of the first non-empty data frame found in the following order: 
+#' XY, P, G, E, S, C. This attribute is used as reference to order rows when order.df = TRUE. 
+#' @param set.names Character vector with names for the rows of the non-empty data frames. 
+#' This argument is incompatible with valid.names
+#' @param valid.names Logical. Create valid row names? This argument is incompatible with 
+#' set.names. The program will name individuals with valid tags I.1, I.2, etc.
 #' 
 #' @details This is a generic function for creating an ecogen object.
 #' In default option, the missing data input value is "NA", but any missing 
@@ -152,30 +165,40 @@ setGeneric("ecogen",
                     order.G = FALSE,
                     type = c("codominant", "dominant"),
                     ploidy = 2,
-                    sep, 
+                    sep = "", 
                     ncod = NULL,
                     missing = c("0", "NA", "MEAN"),
                     NA.char = "NA", 
                     poly.level = 5,
-                    rm.empty.ind = FALSE) {				
+                    rm.empty.ind = FALSE,
+                    order.df = TRUE,
+                    set.names = NULL,
+                    valid.names = FALSE) {				
+             
+          
              
              # general configuration
              type <- tolower(type)
              type <- match.arg(type)
              missing <- toupper(as.character(missing))
              missing <- match.arg(missing)
-             if(missing(sep)) {
-               sep <- ""
+
+             # names configuration
+             if(!is.null(set.names) && valid.names) {
+               stop("incompatible arguments: only one of <valid.names, set.names> can be set")
              }
              
              # creating a new ecogen object
              object <- new("ecogen")
+             # set object environment
+             object@ATTR$whereIs <- parent.frame()
+             object@ATTR$.call <- match.call()
              
              # G configuration-------------------------------------------------#
              
              if(any(dim(G) == 0)) { # empty G
                object@G <- data.frame()
-               object@A <- data.frame()
+               object@A <- matrix(nrow = 0, ncol = 0)
                object@INT <- new("int.gendata")
                
                
@@ -198,7 +221,9 @@ setGeneric("ecogen",
                ## if marker type is "dominant", A is a pointer to G for assignments
                ## and extraction methods, and the slot is empty
                if(tempo@type == "codominant") {
-               object@A <- as.data.frame(tempo@tab)
+                 
+               # matrix is lighter than data frame. LR 9/12/2016
+               object@A <- tempo@tab
                } 
  
                object@INT <- int.genind2gendata(tempo)
@@ -242,13 +267,104 @@ setGeneric("ecogen",
              # all S columns as factors
              S <- as.data.frame(S)
              if(dim(S)[1] != 0) {
-               for(i in 1:(ncol(S))) {
-                 S[, i] <- factor(S[, i])
-               }
+               # better this way. 2016/01/04 L.R.
+               # 'factor' is better than 'as.factor' because
+               # it drops unused levels.
+             S[] <- lapply(S, factor)
+            #   for(i in 1:(ncol(S))) {
+            #     S[, i] <- factor(S[, i])
+            #   }
              }
              object@S <- S
              object@C <- as.data.frame(C)
              
-             return(object)
+
+             # set names--------------------------------------------
+             # case: use data frames names---->
+             if(is.null(set.names) && !valid.names) {
+               
+               while(TRUE) {
+                 
+                 if(nrow(object@XY) != 0) {
+                   object@ATTR$names <- rownames(object@XY)
+                   break
+                 }
+                 if(nrow(object@P) != 0) {
+                   object@ATTR$names <- rownames(object@P)
+                   break
+                 }
+                 if(nrow(object@G) != 0) {
+                   object@ATTR$names <- rownames(object@G)
+                   break
+                 }
+                 if(nrow(object@E) != 0) {
+                   object@ATTR$names <- rownames(object@E)
+                   break
+                 }
+                 if(nrow(object@S) != 0) {
+                   object@ATTR$names <- rownames(object@S)
+                   break
+                 }
+                 if(nrow(object@C) != 0) {
+                   object@ATTR$names <- rownames(object@C)
+                   break
+                 }
+                 object@ATTR$names <- character(0)
+                 break
+               }
+               
+             # order rows
+             if(order.df) {
+               object <- int.order(object)
+             }
+               
+            # case: use set.names or valid.names---->
+             } else {
+               # use nrow method
+               
+            
+               object.names <- list(XY=rownames(object@XY), P=rownames(object@P), G=rownames(object@G), 
+                                    A=rownames(object@A), E=rownames(object@E), S=rownames(object@S), 
+                                    C=rownames(object@C))
+               
+               object.names <- object.names[unlist(lapply(object.names, function(x) length(x)  != 0))]
+               
+               if(length(object.names) != 0) {
+                 rownumber <- unique(unlist(lapply(object.names, length)))
+                 # check nrow consistency
+                 if(length(rownumber)> 1) {
+                   stop("Non unique row number found")
+                 }
+                 
+                 # set.names case --
+                 if(!is.null(set.names)) {
+  
+                    #check length consistency
+                   if(length(set.names) != rownumber) {
+                     stop("the length of valid.names do not match 
+                          with the number of rows in the object")
+                   }
+                   
+                   the.names <- set.names
+                   
+                   # valid.names case --
+                 } else if(valid.names) {
+                   the.names <- paste0("I.", seq_len(rownumber))
+                 }
+                  
+                 # set data frames names and object names --
+                 for(i in names(object.names)) {
+                  eval(expr = parse(text=paste0("rownames(object@", i, ") <- the.names")))
+                 }
+
+                 object@ATTR$names <- the.names
+                 
+               } 
+             } # end set names
+              
+             # check validity 
+             validObject(object)
+             
+             object
              
            })

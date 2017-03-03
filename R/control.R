@@ -274,3 +274,9 @@ int.check.group <- function(X, grp = NULL, dummy = TRUE, exp.l = NULL) {
   return(X[grp][[1]])
 }
 
+#---------------------------------------------------
+#' test whole number
+#' @keywords  internal
+is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol
+
+

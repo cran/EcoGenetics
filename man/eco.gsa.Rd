@@ -4,28 +4,23 @@
 \alias{eco.gsa}
 \title{Global spatial analysis}
 \usage{
-eco.gsa(Z, Y = NULL, con, method = c("I", "C", "CC", "JC"), ncod = NULL,
-  ploidy = 1, nsim = 99, alternative = c("auto", "two.sided", "greater",
-  "less"), adjust = "fdr", row.sd = FALSE, plotit = TRUE)
+eco.gsa(Z, con, Y = NULL, method = c("I", "C", "CC", "JC"), nsim = 99,
+  alternative = c("auto", "two.sided", "greater", "less"), ploidy = 1,
+  adjust = "fdr", plotit = TRUE)
 }
 \arguments{
 \item{Z}{Vector with a variable, or matrix/data frame with variables in columns.}
-
-\item{Y}{Vector with the second variable for Moran's Ixy.
-If Z has multiple variables, the program will compute the coefficent 
-for each with Y.}
 
 \item{con}{An object of class eco.weight obtained with the function \code{\link{eco.weight}},
 a listw object or a matrix, giving the spatial weights for the analysis. If "con" is a matrix,
 an attribute "xy" including the projected coordinates is required.}
 
+\item{Y}{Vector with the second variable for Moran's Ixy.
+If Z has multiple variables, the program will compute the coefficent 
+for each with Y.}
+
 \item{method}{Method of analysis: "I" for Moran's I, "C" for Geary's C, "CC" for
 the Bivariate Moran's or "JC" for Join-count.}
-
-\item{ncod}{Number of elements coding each category (e.g., if x ncod =1, if xx, 
-ncod = 2, and so on). Only for Join-count analysis.}
-
-\item{ploidy}{Ploidy of genetic data. Only for for Join-count analysis.}
 
 \item{nsim}{Number of Monte-Carlo simulations.}
 
@@ -33,13 +28,14 @@ ncod = 2, and so on). Only for Join-count analysis.}
 program determines the alternative hypothesis.
 Other options are: "two.sided", "greater" and "less".}
 
+\item{ploidy}{For join count analysis: number of elements for the values of the vector passed, given value: for example,
+if ploidy=1, "13" and "31" are considered a same level ("31" is sorted by the program as "13"); 
+if ploidy = 1, "13" and "31" represent two different levels.}
+
 \item{adjust}{Correction method of P-values for multiple tests, 
 passed to \code{\link[stats]{p.adjust}}. Defalut is "fdr".}
 
-\item{row.sd}{Logical. should be row standardized the matrix? Default FALSE 
-(binary weights).}
-
-\item{plotit}{Should be printed a histogram of the simulation? Defalut TRUE.}
+\item{plotit}{should be generated a plot for univariate results?}
 }
 \value{
 The program returns an object of class "eco.gsa" with the following slots:
@@ -75,15 +71,14 @@ Join-count statistics with P-values.
 The program allows the analysis of a single variable or multiple variables. 
 in the last case, the variables must be in columns and the individuals in rows.
 
-For join-count analysis, a ncod argument must be supplied, and in the case
-of genetic data, an additional ploidy argument. The data is then ordered with the 
+For join-count analysis, a ploidy argumen must be supplied. The data is then ordered with the 
 function \code{\link{aue.sort}}. This step is required in the analysis of
 genotypes. An individual with the alleles A and B, coded as AB, is identical 
 to other coded as BA. The ordination step ensures that both are considered
 in a single category. For the analysis of frequencies of single alleles, the input 
 is count data (ploidy-times the frequency, as provided by the slot
 A of an ecogen object: the count data A' can be obtained as A' <- ploidy * A),
-using the function with the arguments ploidy = 1 and ncod = 1.
+using the function with the arguments ploidy = 1.
 }
 \examples{
 
@@ -95,12 +90,12 @@ data(eco.test)
 
 ### one test
 con <- eco.weight(eco[["XY"]], method = "circle", d1 = 0, d2 = 2)
-global <- eco.gsa(Z = eco[["P"]][, 1], con = con, , method = "I", nsim = 200)
+global <- eco.gsa(Z = eco[["P"]][, 1], con = con, method = "I", nsim = 200)
 global
 
 require(adegenet)
 con2<-chooseCN(eco[["XY"]], type = 1, result.type = "listw", plot.nb = FALSE)
-global <- eco.gsa(Z = eco[["P"]][, 1], con = con2, , method = "I", nsim = 200)
+global <- eco.gsa(Z = eco[["P"]][, 1], con = con2, method = "I", nsim = 200)
 global
 
 #-----------------------
@@ -120,10 +115,12 @@ ecoslot.PVAL(global)
 #----------------
 # multiple tests
 #----------------
-
-con <- eco.weight(eco[["XY"]], method = "circle", d1 = 0, d2 = 2)
-global <- eco.gsa(Z = eco[["P"]], con = con, , method = "I", nsim = 200)
+data(eco3)
+con <- eco.weight(eco3[["XY"]], method = "circle", d1 = 0, d2 = 500)
+global <- eco.gsa(Z = eco3[["P"]], con = con, method = "I", nsim = 200)
 global 
+# Plot method for multivariable eco.gsa objects:
+eco.plotGlobal(global)
 
 #--------------------------------
 # accessor use in multiple tests
@@ -159,16 +156,22 @@ global.Ixy
 
 Z = 2* eco[["A"]]
 
-con <- eco.weight(eco[["XY"]], method = "circle", d1 = 0, d2 = 2)
 
-# using the first allele of the matrix
-global.JC <- eco.gsa(Z[, 1], ncod = 1, con = con, method = "JC", nsim = 5)
-global.JC
-# Note that with large data sets, join-count estimation can be slow. 
+jc <- eco.gsa(Z[, 1], con = con, method = "JC")
+eco.plotGlobal(jc)
 
-# counting joins between genotypes of the locus 1:
-global.JC <- eco.gsa(Z = eco[["G"]][,1], ploidy = 2, con = con, method = "JC", nsim = 1)
+# multiple tests
+# using the first ten alleles of the matrix
+global.JC <- eco.gsa(Z[, 1:10], ncod = 1, con = con, method = "JC", nsim = 99)
 global.JC
+# plot method for multivariable join-count
+eco.plotGlobal(global.JC)
+
+# counting joins between genotypes in the first locus the G matrix:
+global.JC <- eco.gsa(Z = eco[["G"]][, 1], ploidy = 2, con = con, method = "JC", nsim = 99)
+global.JC
+eco.plotGlobal(global.JC)
+
 }
 
 }

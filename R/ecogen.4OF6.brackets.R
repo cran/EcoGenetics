@@ -14,7 +14,7 @@
 # DEPRECTED
 
 setMethod("$","ecogen",
-          function(x,name) {	
+          function(x, name) {	
 mess <- message(
 paste("NOTE: This method has been deprecated in EcoGenetics 1.2.0-2.\n",
 "     Use instead the accessor", aue.access(name, deparse(substitute(x))), "or double square brackets,\n",
@@ -53,10 +53,19 @@ setMethod("$<-","ecogen",
 #' @aliases [,ecogen,numeric,missing,ANY-method 
 #' @exportMethod [
 
-setMethod("[", c("ecogen", "numeric", "missing", "ANY"), 
+setMethod("[", c("ecogen", "numericORmissing", "missing", "ANY"), 
           
           function(x, i, j, ..., drop = FALSE) {
             
+            # empty i, return x
+            if(missing(i)) {
+              return(x)
+            }
+            
+            # length(i) == 0 or i == 0, return empty object
+            if(length(i) == 0 || i == 0) {
+             return(new("ecogen"))
+            }
             
             # create an int.genind object if nrow(G) != 0
             if(all(dim(x@G) != 0)) {
@@ -88,7 +97,7 @@ setMethod("[", c("ecogen", "numeric", "missing", "ANY"),
             # IF TYPE == DOMINANT -> A is empty
             if(x@INT@type == "codominant") {
             if(all(dim(x@A) != 0)) {
-            z@A <- data.frame(tempo@tab)
+            z@A <- tempo@tab
             }
             }
             
@@ -96,12 +105,14 @@ setMethod("[", c("ecogen", "numeric", "missing", "ANY"),
             z@E <- x@E[i, , drop =FALSE]
             }
             
-            #all S columns as factors
+            # all S columns as factors
             if(all(dim(x@S) != 0)) {
               Sout <- x@S[i, , drop = FALSE]
-              for(n in 1:(ncol(Sout))) {
-                Sout[, n] <- factor(Sout[, n])
-              }
+              # better this way. 2016/04/01 L.R.
+              Sout[] <- lapply(Sout, factor)
+              #for(n in 1:(ncol(Sout))) {
+              #  Sout[, n] <- factor(Sout[, n])
+              #}
             } else {
               Sout <- data.frame()
             }
@@ -112,9 +123,116 @@ setMethod("[", c("ecogen", "numeric", "missing", "ANY"),
             }
             z@OUT  <- list()
             z@INT <- int.genind2gendata(tempo)
+            z@ATTR$names <- x@ATTR$names[i]
+            
+            # check validity
+            validObject(z)
             
            z
           
+          })
+
+
+#' [ 
+#' @rdname ecogen-methods 
+#' @aliases [,ecogen,logical,missing,ANY-method 
+#' @exportMethod [
+
+setMethod("[", c("ecogen", "logicalORmissing", "missing", "ANY"), 
+          
+          
+          function(x, i, j, ..., drop = FALSE) {
+            
+            # empty i, return x
+            if(missing(i)) {
+              return(x)
+            }
+            
+            # length(i) == 0 or all i == FALSE, return empty object
+            if(length(i) == 0 || all(i == FALSE)) {
+              return(new("ecogen"))
+            }
+            
+            # check row number with the nrow ecogen method
+            nrow_x <- nrow(x)
+            nrow_x <- unique(nrow_x)
+            
+            # if empty, return an empty object
+            if(length(nrow_x == 1) && nrow(x) == 0) {
+              return(x)
+            # else, check if length i is adequate
+            } else {
+              len_i <- length(i)
+              nrow_x <- max(nrow_x)
+              if(nrow_x != len_i) {
+                stop(paste0("invalid logical vector of length = ", len_i,", but 
+                            non empty slots with nrow = ", nrow_x))  
+              }
+            }
+              
+            # create an int.genind object if nrow(G) != 0
+            if(all(dim(x@G) != 0)) {
+              tempo <- int.df2genind(x@G[i, , drop = FALSE], 
+                                     missing = x@INT@missing,
+                                     ploidy = x@INT@ploidy,
+                                     type =  x@INT@type,
+                                     ...)
+            } else {
+              tempo <- new("int.genind")
+            }
+            
+            z <- new("ecogen")
+            
+            # if(all...) condition required because subsetting over matrices of 
+            # dimension 0 generates a matrix of dimension i x 0 (undesired)
+            if(all(dim(x@XY) != 0)) {
+              z@XY <- x@XY[i, , drop =FALSE]
+            }
+            if(all(dim(x@P) != 0)) {
+              z@P <- x@P[i, , drop =FALSE]
+            }
+            
+            if(all(dim(x@G) != 0)) {
+              z@G <- as.data.frame(int.genind2df(tempo), 
+                                   stringsAsFactors = FALSE)
+            }
+            
+            # IF TYPE == DOMINANT -> A is empty
+            if(x@INT@type == "codominant") {
+              if(all(dim(x@A) != 0)) {
+                z@A <- tempo@tab
+              }
+            }
+            
+            if(all(dim(x@E) != 0)) {
+              z@E <- x@E[i, , drop =FALSE]
+            }
+            
+            # all S columns as factors
+            if(all(dim(x@S) != 0)) {
+              Sout <- x@S[i, , drop = FALSE]
+              # better this way. 2016/04/01 L.R.
+              Sout[] <- lapply(Sout, factor)
+              #for(n in 1:(ncol(Sout))) {
+              #  Sout[, n] <- factor(Sout[, n])
+              #}
+            } else {
+              Sout <- data.frame()
+            }
+            z@S <- Sout
+            
+            if(all(dim(x@C) != 0)) {
+              z@C  <- x@C[i, , drop =FALSE]
+            }
+            z@OUT  <- list()
+            z@INT <- int.genind2gendata(tempo)
+            z@ATTR$names <- x@ATTR$names[i]
+            
+            # check validity
+            validObject(z)
+          
+            z
+            
           })
 
 ## [<--------------------------------------------------------------------------#

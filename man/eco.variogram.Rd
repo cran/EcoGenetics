@@ -6,7 +6,7 @@
 \usage{
 eco.variogram(Z, XY, int = NULL, smin = 0, smax = NULL, nclass = NULL,
   seqvec = NULL, size = NULL, bin = c("sturges", "FD"), row.sd = FALSE,
-  latlon = FALSE)
+  latlon = FALSE, angle = NULL)
 }
 \arguments{
 \item{Z}{Vector for the analysis.}
@@ -36,6 +36,9 @@ option is Freedman-Diaconis method (Freedman and Diaconis, 1981).}
 the coordinates must be in a matrix/data frame with the longitude in the first
 column and latitude in the second. The position is projected onto a plane in
 meters with the function \code{\link[SoDA]{geoXY}}.}
+
+\item{angle}{direction for computation of bearing correlogram (angle between 0 and 180).
+Default NULL (omnidirectional).}
 }
 \value{
 The program returns an object of class "eco.correlog" 
@@ -74,7 +77,8 @@ variog <- eco.variogram(Z = eco[["P"]][, 2],XY =  eco[["XY"]])
 plot(variog)
 
 # variogram plots support the use of ggplot2 syntax
-variogplot <- plot(variog) + theme_bw() + theme(legend.position="none")
+require(ggplot2)
+variogplot <- eco.plotCorrelog(variog) + theme_bw() + theme(legend.position="none")
 variogplot
 
 #-----------------------
@@ -100,5 +104,9 @@ Springer Science & Business Media.
 
 Legendre P., and L. Legendre. 2012. Numerical ecology. Third English edition.
 Elsevier Science, Amsterdam, Netherlands.
+
+Rosenberg, M. 2000. The bearing correlogram: a new method 
+of analyzing directional spatial autocorrelation. 
+Geographical Analysis, 32: 267-278.
 }
 

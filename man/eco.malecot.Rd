@@ -8,11 +8,11 @@ eco.malecot(eco, method = c("global", "local"), kinmatrix = NULL,
   int = NULL, smin = 0, smax = NULL, nclass = NULL, kmax = NULL,
   seqvec = NULL, size = NULL, type = c("knearest", "radialdist"),
   cubic = TRUE, testclass.b = TRUE, testmantel.b = TRUE,
-  jackknife = TRUE, cummulative = FALSE, nsim = 99,
+  jackknife = TRUE, cummulative = FALSE, normLocal = TRUE, nsim = 99,
   test = c("permutation", "bootstrap"), alternative = c("auto", "two.sided",
   "greater", "less"), sequential = TRUE, conditional = c("AUTO", "TRUE",
   "FALSE"), bin = c("sturges", "FD"), row.sd = FALSE, adjust = "holm",
-  latlon = FALSE)
+  latlon = FALSE, angle = NULL)
 }
 \arguments{
 \item{eco}{Object of class ecogen.}
@@ -52,6 +52,8 @@ the standard deviation (SD) of the coancestry (class) values? Defalut TRUE.}
 
 \item{cummulative}{Should be construced a cummulative correlogram?.}
 
+\item{normLocal}{Normalize the local kinship values ([local_kinship-mean]/sd)? Default TRUE}
+
 \item{nsim}{Number of Monte-Carlo simulations.}
 
 \item{test}{If test = "bootstrap", the program generates a bootstrap 
@@ -83,6 +85,9 @@ passed to \code{\link[stats]{p.adjust}}. Defalut is "holm".}
 the coordinates must be in a matrix/data frame with the longitude in the first
 column and latitude in the second. The position is projected onto a plane in
 meters with the function \code{\link[SoDA]{geoXY}}.}
+
+\item{angle}{direction for computation of bearing correlogram (angle between 0 and 180).
+Default NULL (omnidirectional).}
 }
 \value{
 For the global analysis, the program returns an object of class "eco.IBD" 
@@ -112,6 +117,12 @@ and confidence intervals for the statistic;
 - null.lwr, nul.uppr: lower and upper bound of the jackknife
  confidence interval for the statistic;
 - cardinal: number of individuals in each class;
+
+> GLOBALTEST Oden's (1984) global test of significance for the correlogram.
+The test consists in checking if the most significant kinship coefficent is 
+significant at a Bonferroni- corrected significance level of alpha' = alpha/k, where
+k is the number of distance classes of the correlogram; alpha is set to 0.05.
+The program return the values: "SIGNIFICANT" or "NOT-SIGNIFICANT"
 
 > IN analysis input data
 
@@ -201,7 +212,9 @@ section below.
 \description{
 The program computes a global multilocus correlogram, or a local analysis, using a 
 kinship matrix. When a kinship matrix is not given as input, the program
-computes the Loiselle's Fij (Kalisz et al., 2001; Loiselle et al., 1995).
+computes the Loiselle's Fij (Kalisz et al., 2001; Loiselle et al., 1995). 
+The program can compute a bearing correlogram (Rosenberg 2000, Born et al.
+2012) for the obtention of a directional approach to the global test.
 }
 \details{
 The GLOBAL ANALYSIS mode, computes a multilocus correlogram, with a detailed
@@ -214,9 +227,16 @@ and ln(dij)
 - The Sp statistic (Vekemans and Hardy, 2004) with confidence intervals
 - A cubic interpolation of (kinship)ij ~ ln(dij) residuals vs ln(dij)
 
+A directional approach is based in bearing analysis method. This compute the 
+directional correlogram using the method of Rosenberg (2000). The 
+slope is computed for the logarithm of D' (Born et al 2012), where D' is the distance matrix
+between individuals weighted by cos(alpha - B)^2, being alpha the angle
+between individuals and B the desired direction angle, with B = 0
+ the positive x axis, B = 0 the positive y axis, and B = 180 the negative x axis.
+
 
 The LOCAL ANALYSIS mode, computes a local kinship estimate, based in a weighted 
-mean (for the each individual). The signification of each local statistic
+mean (for each individual). The signification of each local statistic
 is computed using a permutation test, as in eco.lsa (see ?"eco.lsa"). 
 Default option do not adjust the individual P values 
 for multiple corrections.
@@ -231,7 +251,7 @@ data(eco.test)
 
 globaltest <- eco.malecot(eco=eco, method = "global", smax=10,
                          size=1000)
-plot(globaltest)    # Significant mean class coancestry classes at   
+eco.plotCorrelog(globaltest)    # Significant mean class coancestry classes at   
                     # individual level (alpha = 0.05, 
                     # out of the red area), 
                     # and family-wise P corrected values (red-blue
@@ -258,6 +278,12 @@ plot(globaltest)    # Significant mean class coancestry classes at
 #   jackknife statistics (jackknifed mean, jackknifed SD, and
 #                         CI for the class statistic)
 
+
+A directional approach based in bearing correlograms, 30 degrees
+globaltest_30 <- eco.malecot(eco=eco, method = "global", smax=10,
+                         size=1000, angle = 30)
+eco.plotCorrelog(globaltest, angle = 30) 
+
 #----------------------------------------------------------#
 # ---local analysis---
 
@@ -271,7 +297,7 @@ plot(globaltest)    # Significant mean class coancestry classes at
 localktest <- eco.malecot(eco=eco, method = "local",
                          type = "knearest", kmax = 5, 
                          adjust = "none")
-plot(localktest)
+eco.plotLocal(localktest)
 
 
 # ---local analysis with radial distance---
@@ -280,16 +306,16 @@ localdtest <- eco.malecot(eco=eco, method = "local",
                         type = "radialdist", smax = 3, 
                         adjust = "none")
                         
-plot(localdtest)                         # rankplot graphic (see ?"eco.rankplot")
+eco.plotLocal(localdtest)                    # rankplot graphic (see ?"eco.rankplot")
 
                                          # Significant values
                                          # in blue-red scale, 
                                          # non significant 
                                          # values in yellow
 
-plot(localktest, significant = FALSE)    # significant and non
-                                         # signficant values
-                                         # in blue-red scale
+eco.plotLocal(localktest, significant = FALSE)    # significant and non
+                                              # signficant values
+                                              # in blue-red scale
 
 # The slot OUT of localktest (ecoslot.OUT(localktest)) and localdtest 
 # (ecoslot.OUT(localdtest)) contains:
@@ -304,6 +330,10 @@ plot(localktest, significant = FALSE)    # significant and non
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \references{
+Born C., P. le Roux, C. Spohr, M. McGeoch, B. Van Vuuren. 2012.
+Plant dispersal in the sub-Antarctic inferred from anisotropic genetic structure.
+Molecular Ecology 21: 184-194.
+
 Double M., R. Peakall, N. Beck, and Y. Cockburn. 2005. 
 Dispersal, philopatry, and infidelity: dissecting 
 local genetic structure in superb fairy-wrens (Malurs cyaneus). 
@@ -318,6 +348,13 @@ Loiselle B., V. Sork, J. Nason, and C. Graham. 1995.
 Spatial genetic structure of a tropical understory shrub, 
 Psychotria officinalis (Rubiaceae). 
 American Journal of Botany 1420-1425.
+
+Oden, N., 1984. Assessing the significance of a spatial correlogram. 
+Geographical Analysis, 16: 1-16.
+
+Rosenberg, M. 2000. The bearing correlogram: a new method 
+of analyzing directional spatial autocorrelation. 
+Geographical Analysis, 32: 267-278.
 
 Vekemans, X., and O. Hardy. 2004. New insights from fine-scale 
 spatial genetic structure analyses in plant populations. 

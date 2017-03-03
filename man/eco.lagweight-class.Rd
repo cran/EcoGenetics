@@ -31,6 +31,8 @@ eco.lagweight class
 \item{\code{BREAKS}}{breaks}
 
 \item{\code{METHOD}}{breaks construction method}
+
+\item{\code{ANGLE}}{angle used for the construction of correlogram}
 }}
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}

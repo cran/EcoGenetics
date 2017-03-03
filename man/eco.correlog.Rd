@@ -2,14 +2,15 @@
 % Please edit documentation in R/eco.correlog.R
 \name{eco.correlog}
 \alias{eco.correlog}
-\title{Moran's I, Geary's C and bivariate Moran's I correlograms}
+\title{Moran's I, Geary's C and bivariate Moran's I correlograms, omnidirectional and directional}
 \usage{
 eco.correlog(Z, XY, Y = NULL, int = NULL, smin = 0, smax = NULL,
   nclass = NULL, size = NULL, seqvec = NULL, method = c("I", "C", "CC"),
   nsim = 99, test = c("permutation", "bootstrap"), alpha = 0.05,
   alternative = c("auto", "two.sided", "greater", "less"), adjust = "holm",
   sequential = TRUE, include.zero = TRUE, cummulative = FALSE,
-  bin = c("sturges", "FD"), row.sd = FALSE, latlon = FALSE)
+  bin = c("sturges", "FD"), row.sd = FALSE, latlon = FALSE,
+  angle = NULL, as.deg = TRUE)
 }
 \arguments{
 \item{Z}{Vector, matrix or data frame with variable/s
@@ -73,6 +74,12 @@ option is Freedman-Diaconis method (Freedman and Diaconis, 1981).}
 the coordinates must be in a matrix/data frame with the longitude in the first
 column and latitude in the second. The position is projected onto a plane in
 meters with the function \code{\link[SoDA]{geoXY}}.}
+
+\item{angle}{for computation of bearing correlogram (angle between 0 and 180).
+Default NULL (omnidirectional).}
+
+\item{as.deg}{in case of bearing correlograms for multiple angles, 
+generate an output for each lag in function of the angle? Default TRUE.}
 }
 \value{
 The program returns an object of class "eco.correlog" 
@@ -110,6 +117,8 @@ section below.
 \description{
 This program computes Moran's, Geary's and bivariate Moran's correlograms, 
 for single or multiple variables, with P-values or bootstrap confidence intervals.
+Correlograms can be omnidirectional or directional, the latter based in the bearing method 
+(Rosenberg, 2000).
 The program allows high flexibility for the construction of intervals. For detailed
 information about the range partition methods see \code{\link{eco.lagweight}}
 }
@@ -128,31 +137,90 @@ require(ggplot2)
 ## single test with phenotypic traits
 moran <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], 
 method = "I", smax=10, size=1000)
-plot(moran)
+
+# interactive plot via plotly
+eco.plotCorrelog(moran)
+
+# standard plot via ggplot2
+eco.plotCorrelog(moran, interactivePlot = FALSE)
+
+
+#-------------------------------------------------------
+## A directional approach based in bearing correlograms
+#-------------------------------------------------------
+
+moran_b <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], 
+method = "I", smax = 10, size = 1000, angle  = seq(0, 175, 5))
+
+ # use eco.plotCorrelogB for this object
+eco.plotCorrelogB(moran_b)
+
+ # plot for the first distance class, 
+ use a number between 1 and the number of classes to select the corresponding class
+eco.plotCorrelogB(moran_b, var = 1) 
+
+#-----------------------------
+## Multivariable correlograms
+#-----------------------------
 
 ## multiple tests with phenotypic traits
 moran2 <- eco.correlog(Z=eco[["P"]], XY = eco[["XY"]],
 method = "I", smax=10, size=1000)
 
-plot(moran2, var ="P2") ## single plots
-plot(moran2, var ="P3") ## single plots
+eco.plotCorrelog(moran2, var ="P2") ## single plots
+eco.plotCorrelog(moran2, var ="P3") ## single plots
 
 
- ## multiple plot with mean correlogram 
+ ## Multivariable interactive plot with mean correlogram 
  ## and jackknifed confidence intervals.
  
- graf <- plot(moran2, meanplot = TRUE)
+ graf <- eco.plotCorrelog(moran2, meanplot = TRUE)
  
- plot(graf[[1]])
- plot(graf[[2]])
+ # Only mean
+ graf$mean.correlog
+ 
+ # Mean and variables
+ graf$multi.correlog
+ 
+ # Information
+ - correlogram data for individual variables
+ - manhattan distance matrix
+ - mean correlogram data
+ - method used for analysis
+ - names and numbers (column in data frame) of significant variables 
+ 
+ 
+ 
+ graf$data
+ 
+ 
+ # plot only alleles
+ graf <- eco.plotCorrelog(moran2, meanplot = FALSE)
+ graf
+ 
+ # Both plots can also be constructed using ggplot2
+ 
+ gg_graf <- eco.plotCorrelog(moran2, meanplot = TRUE, interactivePlot = FALSE)
+ gg_graf[[1]]
+ gg_graf[[2]]
+ 
+ gg_graf <- eco.plotCorrelog(moran2, meanplot = FALSE, interactivePlot = FALSE)
+ gg_graf
 
-# correlogram plots support the use of ggplot2 syntax
-moranplot <- plot(moran2, var ="P3") + theme_bw() + theme(legend.position="none")
+
+# standard ggplot2 correlograms support the use of ggplot2 syntax
+require(ggplot2)
+moranplot <- eco.plotCorrelog(moran2, var ="P3", interactivePlot = FALSE) 
+moranplot <- moranplot + theme_bw() + theme(legend.position="none")
 moranplot
 
-moranplot2 <- graf[[2]] + theme_bw() + theme(legend.position="none")
+moranplot2 <- gg_graf[[2]] + theme_bw() + theme(legend.position="none")
 moranplot2
 
+
+#-----------------------
+Analyzing genetic data
+#-----------------------
 
 # single test with genotypic traits
 
@@ -165,7 +233,7 @@ head(eco[["A"]])      # head of the matrix
 # analyzing allele 1
 moran <- eco.correlog(Z=[["A"]][,1], XY = eco[["XY"]], method = "I",
 smax=10, size=1000)                
-plot(moran)
+eco.plotCorrelog(moran)
 
 # multiple tests with genotypic traits. 
 # nsim is set to 10 only for speed in the example
@@ -177,7 +245,7 @@ method = "I",smax=10, size=1000, nsim=99)
 ## correlogram and jackknifed 
 ## confidence intervals.
 
-graf <- plot(moran2, meanplot = TRUE)
+graf <- eco.plotCorrelog(moran2, meanplot = TRUE)
 
 ## the same example, but with nsim = 99. 
 moran3 <- eco.correlog(Z = eco[["A"]], XY = eco[["XY"]], method = "I", 
@@ -188,7 +256,7 @@ smax=10, size=1000, nsim=99)
 ## (set adjust "none" for no family-wise 
 ## P correction in "eco.correlog")
 
-plot(moran3, meanplot = TRUE, significant = TRUE)
+eco.plotCorrelog(moran3, meanplot = TRUE, significant.M = TRUE)
 
 #-----------------------
 # ACCESSORS USE EXAMPLE
@@ -209,7 +277,10 @@ ecoslot.BREAKS(moran)   # slot BREAKS
 
 geary <- eco.correlog(Z = eco[["P"]][,1], XY = eco[["XY"]], method = "C",
 smax=10, size=1000)
-plot(geary)
+# Interactive plot
+eco.plotCorrelog(geary)
+# ggplot2 plot
+eco.plotCorrelog(geary, interactivePlot = FALSE)
 
 #---------------------------------------------------------------------------#
 
@@ -219,7 +290,10 @@ plot(geary)
 
 cross <- eco.correlog(Z=eco[["P"]][,1], XY = eco[["XY"]], Y = eco[["P"]][, 1],
 method = "CC", int= 2, smax=15)
-plot(cross)
+# Interactive plot
+eco.plotCorrelog(cross)
+# ggplot2 plot
+eco.plotCorrelog(cross, interactivePlot = FALSE)
 
 }
 
@@ -242,6 +316,10 @@ Moran P. 1950. Notes on continuous stochastic phenomena. Biometrika, 17-23.
 Reich R., R. Czaplewski and W. Bechtold. 1994. 
 Spatial cross-correlation of undisturbed, natural shortleaf pine stands 
 in northern Georgia. Environmental and Ecological Statistics, 1: 201-217.
+
+Rosenberg, M. 2000. The bearing correlogram: a new method 
+of analyzing directional spatial autocorrelation. 
+Geographical Analysis, 32: 267-278.
 
 Sokal R. and N. Oden 1978. Spatial autocorrelation in biology: 
 1. Methodology. Biological journal of the Linnean Society, 10: 199-228.

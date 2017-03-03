@@ -6,19 +6,18 @@
 \alias{plot,eco.listlsa-method}
 \title{listplot}
 \usage{
-\S4method{plot}{eco.listlsa,ANY}(x, significant = TRUE, rescaled = FALSE,
-  legend = TRUE, n = 4, nrow = 2, byrow = TRUE, ...)
+\S4method{plot}{eco.listlsa,ANY}(x)
 }
 \arguments{
 \item{x}{list of ggplot objects}
-
-\item{significant}{plot only significant individuals?}
 
 \item{n}{number of plot in layout}
 
 \item{nrow}{Number of rows in layout}
 
 \item{byrow}{plot by row?}
+
+\item{significant}{plot only significant individuals?}
 }
 \description{
 Plot method for local spatial analysis as list

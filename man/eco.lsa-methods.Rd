@@ -6,7 +6,7 @@
 \alias{plot,eco.lsa-method}
 \title{plot eco.lsa}
 \usage{
-\S4method{plot}{eco.lsa,ANY}(x, rescaled = FALSE, ...)
+\S4method{plot}{eco.lsa,ANY}(x)
 }
 \description{
 plot eco.lsa

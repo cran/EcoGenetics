@@ -7,7 +7,6 @@
 \alias{eco.rankplot,eco.lsa-method}
 \alias{eco.rankplot,factor,dataframeORmatrix,missing-method}
 \alias{eco.rankplot,factor-method}
-\alias{eco.rankplot,genetic-method}
 \alias{eco.rankplot,numeric,dataframeORmatrix,missing-method}
 \alias{eco.rankplot,numeric-method}
 \title{Rankplot graphs}
@@ -17,13 +16,15 @@ eco.rankplot(input, XY, xlabel = NULL, ylabel = NULL, title = NULL,
 
 \S4method{eco.rankplot}{eco.lsa,missing,missing}(input, XY, xlabel, ylabel,
   title, legendlabel, background = c("grey", "white"), significant = TRUE,
-  rescaled = FALSE, ns = NULL)
+  rescaled = FALSE, ns = NULL, interactivePlot = TRUE)
 
 \S4method{eco.rankplot}{numeric,dataframeORmatrix,missing}(input, XY, xlabel,
-  ylabel, title, legendlabel, background = c("grey", "white"))
+  ylabel, title, legendlabel, background = c("grey", "white"),
+  interactivePlot = TRUE)
 
 \S4method{eco.rankplot}{factor,dataframeORmatrix,missing}(input, XY, xlabel,
-  ylabel, title, legendlabel, background = c("grey", "white"))
+  ylabel, title, legendlabel, background = c("grey", "white"),
+  interactivePlot = TRUE)
 }
 \arguments{
 \item{input}{Numeric/factor variable.}
@@ -50,6 +51,8 @@ Default TRUE}
 
 \item{ns}{color for non significant individuals, when significant = TRUE.
 This argument can be used with \code{\link{eco.lsa}} results.}
+
+\item{interactivePlot}{Show an interactive plot via plotly? (default: TRUE)}
 }
 \description{
 This function generates a plot for a numeric or
@@ -63,7 +66,7 @@ data(eco3)
 
 # The data set eco3 has  50 points in two sites, 
 # but they are not visible in a usual X-Y plot 
-due to the small distance among them
+# due to the small distance among them
 
 var <- eco3[["P"]][,1]
 plot(eco3[["XY"]], col = var)
@@ -75,7 +78,9 @@ y <- sample(1:100, 30)
 rankeco3 <- eco.rankplot(var, eco3[["XY"]])
 rankeco3
 
-# the rankplot method support the use of ggplot2 syntax
+# the rankplot method support the use of ggplot2 syntax with ggplot2 graphs
+require(ggplot2)
+rankeco3 <- eco.rankplot(var, eco3[["XY"]], interactivePlot = FALSE)
 rankeco3 <- rankeco3 + theme_bw() + theme(legend.position="none")
 rankeco3
 }

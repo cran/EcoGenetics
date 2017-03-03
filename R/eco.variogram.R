@@ -22,6 +22,8 @@
 #' the coordinates must be in a matrix/data frame with the longitude in the first
 #' column and latitude in the second. The position is projected onto a plane in
 #' meters with the function \code{\link[SoDA]{geoXY}}.
+#' @param angle direction for computation of bearing correlogram (angle between 0 and 180).
+#' Default NULL (omnidirectional).
 #' 
 #' @return The program returns an object of class "eco.correlog" 
 #' with the following slots:
@@ -49,7 +51,8 @@
 #' plot(variog)
 #' 
 #' # variogram plots support the use of ggplot2 syntax
-#' variogplot <- plot(variog) + theme_bw() + theme(legend.position="none")
+#' require(ggplot2)
+#' variogplot <- eco.plotCorrelog(variog) + theme_bw() + theme(legend.position="none")
 #' variogplot
 #' 
 #' #-----------------------
@@ -72,6 +75,10 @@
 #' Legendre P., and L. Legendre. 2012. Numerical ecology. Third English edition.
 #' Elsevier Science, Amsterdam, Netherlands.
 #' 
+#' Rosenberg, M. 2000. The bearing correlogram: a new method 
+#' of analyzing directional spatial autocorrelation. 
+#' Geographical Analysis, 32: 267-278.
+#' 
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' 
 #' @export
@@ -86,7 +93,8 @@ setGeneric("eco.variogram",
                     size = NULL,
                     bin = c("sturges", "FD"),
                     row.sd = FALSE,
-                    latlon = FALSE) {
+                    latlon = FALSE,
+                    angle = NULL) {
              
              bin <- match.arg(bin)
              
@@ -115,6 +123,13 @@ setGeneric("eco.variogram",
                                      seqvec = seqvec,
                                      row.sd = row.sd,
                                      bin = bin)
+             
+             if(!is.null(angle)) {
+               if(angle < 0  || angle > 180) {
+                 stop("angle must be a number between 0 and 180")
+               }
+               listaw <- eco.bearing(listaw, angle)
+             }
              
              wg <- listaw@W
              
@@ -147,8 +162,14 @@ setGeneric("eco.variogram",
              salida@BREAKS <- breakpoints
              salida@CARDINAL <- cardinal
              salida@METHOD <- "empirical variogram"
+             
+             if(!is.null(angle)) {
+               salida@METHOD <- paste0(salida@METHOD, " (directional)")
+             }
+             
              salida@DISTMETHOD <- listaw@METHOD
              salida@TEST <- "none"
+             salida@ANGLE <- angle
              
              salida
              

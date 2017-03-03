@@ -30,6 +30,14 @@
 #' for remotion of non polymorphic loci (for dominant data). Default is 5 (5\%).
 #' @param rm.empty.ind Remotion of noninformative individuals (rows of "NAs").
 #' Default if FALSE.
+#' @param use.object.names Logical. Use the names stored in the object 
+#' for the assigned data frame? This argument can be combined with order.rows 
+#' if the order of the individuals do not match to the order of the 
+#' other elements in the object. If the names stored in the object are empty, 
+#' in all the cases they will be set to the names of the assigned data frame.
+#' @param order.rows Order rows of the object after assignnment to align individuals?
+#' This argument can be used when use.object.names is TRUE. Otherwise, it will not have
+#' effect in the function.
 #' @export 
 
 
@@ -43,14 +51,31 @@ setMethod("ecoslot.XY", "ecogen", function(X) X@XY)
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-setGeneric("ecoslot.XY<-", function(object, value) standardGeneric("ecoslot.XY<-"))
+setGeneric("ecoslot.XY<-", function(object, use.object.names =FALSE, order.rows = FALSE, value) standardGeneric("ecoslot.XY<-"))
 
 #' @rdname EcoGenetics-accessors
 #' @exportMethod ecoslot.XY
 
-setReplaceMethod("ecoslot.XY", "ecogen", function(object, value) {
-  slot(object, "XY") <- value
+setReplaceMethod("ecoslot.XY", "ecogen", function(object, 
+                                                 use.object.names = FALSE, 
+                                                 order.rows = FALSE,
+                                                 value) {
+  
+  
+  object@XY <- as.data.frame(value)
+  
+  if(length(object@ATTR$names) != 0 && use.object.names && !order.rows) {
+    rownames(object@XY) <- object@ATTR$names
+  } else if(length(object@ATTR$names) != 0 && use.object.names && order.rows) {
+    object <- int.order(object)
+  } else if(length(object@ATTR$names) == 0) {
+    object@ATTR$names <- rownames(value)
+  }
+  #check validity
+  validObject(object)
+  
   object
+  
 })
 
 #--------------------------------------------------------------------#
@@ -67,14 +92,31 @@ setMethod("ecoslot.P", "ecogen", function(X) X@P)
 #' @rdname EcoGenetics-accessors
 #' @export 
 
-setGeneric("ecoslot.P<-", function(object, value) standardGeneric("ecoslot.P<-"))
+setGeneric("ecoslot.P<-", function(object, use.object.names = FALSE, order.rows = FALSE, value) standardGeneric("ecoslot.P<-"))
 
 #' @rdname EcoGenetics-accessors
 #' @exportMethod ecoslot.P
 
-setReplaceMethod("ecoslot.P", "ecogen", function(object, value) {
-  slot(object, "P") <- value
+setReplaceMethod("ecoslot.P", "ecogen", function(object, 
+                                                 use.object.names = FALSE, 
+                                                 order.rows = FALSE,
+                                                 value) {
+  
+  
+  object@P <- as.data.frame(value)
+  
+  if(length(object@ATTR$names) != 0 && use.object.names && !order.rows) {
+    rownames(object@P) <- object@ATTR$names
+  } else if(length(object@ATTR$names) != 0 && use.object.names && order.rows) {
+    object <- int.order(object)
+  } else if(length(object@ATTR$names) == 0) {
+    object@ATTR$names <- rownames(value)
+  }
+  #check validity
+  validObject(object)
+  
   object
+  
 })
 
 
@@ -97,7 +139,9 @@ setGeneric("ecoslot.G<-", function(object, G.processed = TRUE, order.G = FALSE,
                                    ploidy = 2,sep,  ncod = NULL,
                                    missing = c("0", "NA", "MEAN"),
                                    NA.char = "NA", poly.level = 5,
-                                   rm.empty.ind = FALSE, value) 
+                                   rm.empty.ind = FALSE,
+                                   use.object.names = FALSE, order.rows = FALSE,
+                                   value) 
   standardGeneric("ecoslot.G<-"))
 
 
@@ -105,13 +149,24 @@ setGeneric("ecoslot.G<-", function(object, G.processed = TRUE, order.G = FALSE,
 #' @exportMethod ecoslot.G
 
 setReplaceMethod("ecoslot.G", "ecogen",
-                 function(object, G.processed = TRUE, order.G = FALSE, type = c("codominant", "dominant"),
+                 function(object, G.processed = TRUE, order.G = FALSE, 
+                          type = c("codominant", "dominant"),
                           ploidy = 2,sep,  ncod = NULL, missing = c("0", "NA", "MEAN"),
-                          NA.char = "NA", poly.level = 5, rm.empty.ind = FALSE, value) {
+                          NA.char = "NA", poly.level = 5, rm.empty.ind = FALSE, 
+                          use.object.names = FALSE, order.rows = FALSE,
+                          value) {
                    
-                   
+                   # give flexibility to missing argument
+                   if(length(missing) == 1 && is.na(missing)) {
+                     missing <- "NA"
+                   } 
+                   if(length(missing) == 1 && missing == 0) {
+                     missing <- "0"
+                   }
                    missing <- match.arg(missing)
+                   
                    type <- match.arg(type)
+                   
                    if(missing(sep)) {
                      sep <- ""
                    }
@@ -120,7 +175,7 @@ setReplaceMethod("ecoslot.G", "ecogen",
                    
                    if(any(dim(value) == 0)) { # empty G
                      object@G <- data.frame()
-                     object@A <- data.frame()
+                     object@A <- matrix(nrow = 0, ncol = 0)
                      object@INT <- new("int.gendata")
                      
                      
@@ -128,7 +183,7 @@ setReplaceMethod("ecoslot.G", "ecogen",
                      
                      ## coherence between data ploidy and ncod is checked for int.df2genind
                      
-                     tempo <- int.df2genind(value, 
+                     tempo <- int.df2genind(as.data.frame(value), 
                                             sep = sep, 
                                             ncod =  ncod,
                                             NA.char = NA.char, 
@@ -143,7 +198,7 @@ setReplaceMethod("ecoslot.G", "ecogen",
                      ## if marker type is "dominant", A is a pointer to G for assignments
                      ## and extraction methods, and the slot is empty
                      if(tempo@type == "codominant") {
-                       object@A <- as.data.frame(tempo@tab)
+                       object@A <- tempo@tab
                      }
                    
                      object@INT <- int.genind2gendata(tempo)
@@ -162,7 +217,7 @@ setReplaceMethod("ecoslot.G", "ecogen",
                                          chk.plocod = FALSE)
                        } 
                        
-                       # G processed data frame 
+                       # G processed data frame
                        G <- as.data.frame(tmp, stringsAsFactors = FALSE)
                        
                        # G changes messages 
@@ -181,8 +236,21 @@ setReplaceMethod("ecoslot.G", "ecogen",
                      # fill now the G slot
                      object@G <- G
                    }
-                   object
-                 })
+                   
+                     
+                     if(length(object@ATTR$names) != 0 && use.object.names && !order.rows) {
+                       rownames(object@G) <- object@ATTR$names
+                     } else if(length(object@ATTR$names) != 0 && use.object.names && order.rows) {
+                       object <- int.order(object)
+                     } else if(length(object@ATTR$names) == 0) {
+                       object@ATTR$names <- rownames(value)
+                     }
+                     #check validity
+                     validObject(object)
+                     
+                     object
+                     
+                   })
 
 #--------------------------------------------------------------------#
 #' @rdname EcoGenetics-accessors
@@ -230,14 +298,31 @@ setMethod("ecoslot.E", "ecogen", function(X) X@E)
 #' @rdname EcoGenetics-accessors
 #' @export
 
-setGeneric("ecoslot.E<-", function(object, value) standardGeneric("ecoslot.E<-"))
+setGeneric("ecoslot.E<-", function(object, use.object.names = FALSE, order.rows = FALSE, value) standardGeneric("ecoslot.E<-"))
 
 #' @rdname EcoGenetics-accessors
 #' @exportMethod ecoslot.E
 
-setReplaceMethod("ecoslot.E", "ecogen", function(object, value) {
-  slot(object, "E") <- value
+setReplaceMethod("ecoslot.E", "ecogen", function(object, 
+                                                 use.object.names = FALSE, 
+                                                 order.rows = FALSE,
+                                                 value) {
+  
+  
+  object@E <- as.data.frame(value)
+  
+  if(length(object@ATTR$names) != 0 && use.object.names && !order.rows) {
+    rownames(object@E) <- object@ATTR$names
+  } else if(length(object@ATTR$names) != 0 && use.object.names && order.rows) {
+    object <- int.order(object)
+  } else if(length(object@ATTR$names) == 0) {
+    object@ATTR$names <- rownames(value)
+  }
+  #check validity
+  validObject(object)
+  
   object
+  
 })
 
 #--------------------------------------------------------------------#
@@ -254,22 +339,40 @@ setMethod("ecoslot.S", "ecogen", function(X) X@S)
 #' @rdname EcoGenetics-accessors
 #' @export
 
-setGeneric("ecoslot.S<-", function(object, value) standardGeneric("ecoslot.S<-"))
+setGeneric("ecoslot.S<-", function(object, use.object.names = FALSE, order.rows = FALSE, value) standardGeneric("ecoslot.S<-"))
 
 #' @rdname EcoGenetics-accessors
 #' @exportMethod ecoslot.S
 
-setReplaceMethod("ecoslot.S", "ecogen", function(object, value) {
+setReplaceMethod("ecoslot.S", "ecogen", function(object,
+                                                 use.object.names = FALSE, 
+                                                 order.rows = FALSE,
+                                                 value) {
   
+  value <- as.data.frame(value)
   if(dim(value)[1] != 0) {
-    for(i in 1:(ncol(value))) {
-      value[, i] <- factor(value[, i])
-    }
+    # better this way. 2016/04/01 L.R.
+    value[] <- lapply(value, factor)
+  #  for(i in 1:(ncol(value))) {
+  #    value[, i] <- factor(value[, i])
+  #  }
   }
-  
-  slot(object, "S") <- value
-  object
-})
+    
+    object@S <- as.data.frame(value)
+    
+    if(length(object@ATTR$names) != 0 && use.object.names && !order.rows) {
+      rownames(object@S) <- object@ATTR$names
+    } else if(length(object@ATTR$names) != 0 && use.object.names && order.rows) {
+      object <- int.order(object)
+    } else if(length(object@ATTR$names) == 0) {
+      object@ATTR$names <- rownames(value)
+    }
+    #check validity
+    validObject(object)
+    
+    object
+    
+  })
 
 #--------------------------------------------------------------------#
 #' @rdname EcoGenetics-accessors
@@ -285,14 +388,31 @@ setMethod("ecoslot.C", "ecogen", function(X) X@C)
 #' @rdname EcoGenetics-accessors
 #' @export
 
-setGeneric("ecoslot.C<-", function(object, value) standardGeneric("ecoslot.C<-"))
+setGeneric("ecoslot.C<-", function(object, use.object.names =FALSE, order.rows = FALSE, value) standardGeneric("ecoslot.C<-"))
 
 #' @rdname EcoGenetics-accessors
 #' @exportMethod ecoslot.C
 
-setReplaceMethod("ecoslot.C", "ecogen", function(object, value) {
-  slot(object, "C") <- value
+setReplaceMethod("ecoslot.C", "ecogen", function(object, 
+                                                 use.object.names = FALSE, 
+                                                 order.rows = FALSE,
+                                                 value) {
+  
+  
+  object@C <- as.data.frame(value)
+  
+  if(length(object@ATTR$names) != 0 && use.object.names && !order.rows) {
+    rownames(object@C) <- object@ATTR$names
+  } else if(length(object@ATTR$names) != 0 && use.object.names && order.rows) {
+    object <- int.order(object)
+  } else if(length(object@ATTR$names) == 0) {
+    object@ATTR$names <- rownames(value)
+  }
+  #check validity
+  validObject(object)
+  
   object
+  
 })
 
 #--------------------------------------------------------------------#

@@ -5,16 +5,18 @@
 \title{Spatial weights}
 \usage{
 eco.weight(XY, method = c("circle", "knearest", "inverse", "circle.inverse",
-  "exponential", "circle.exponential"), d1 = 0, d2 = NULL, k = NULL,
-  p = 1, alpha = 1, dist.method = "euclidean", row.sd = FALSE,
-  max.sd = FALSE, self = FALSE, latlon = FALSE, ties = c("unique",
-  "min", "random", "ring", "first"))
+  "exponential", "circle.exponential"), W = NULL, d1 = 0, d2 = NULL,
+  k = NULL, p = 1, alpha = 1, dist.method = "euclidean",
+  row.sd = FALSE, max.sd = FALSE, self = FALSE, latlon = FALSE,
+  ties = c("unique", "min", "random", "ring", "first"))
 }
 \arguments{
 \item{XY}{Matrix/data frame with projected coordinates.}
 
 \item{method}{Method of spatial weight matrix: "circle", "knearest", "inverse", 
 "circle.inverse", "exponential", "circle.exponential".}
+
+\item{W}{Custom weight matrix, with rownames and colnames identical to the XY data frame with coordinates}
 
 \item{d1}{Minimum distance for circle matrices.}
 
@@ -85,7 +87,7 @@ See help("EcoGenetics accessors") and the Examples
 section below
 }
 \description{
-Spatial weights for individuals with coordinates XY
+Spatial weights for individuals (nodes) with coordinates XY
 }
 \details{
 This program computes a weights matrix (square matrix with individuals
@@ -119,16 +121,35 @@ This distance requires the parameter p (default p = 1).
  binary matrix, and an "exponential" matrix.
  This distance requires the parameters alpha, d1 and d2 (default alpha = 1, d1 = 0).
  
+ In addition to these methods, a spatial weight object can be created
+ assigning a custom W matrix ("W" argument). In this case, the "method"
+ is argument automatically set by the program to "custom" (see te example).
+ 
+ ----------------------------------
+ 
  In row standardization, each weight wij for the individual i, is divided by the
  sum of the row weights (i.e., wij / sum(wij), where sum(wij) is computed over an
  individual i and all individuals j). 
  
  When self is TRUE, the connection j = i is also included.
  
- A plot method is availble showing the connections in an X-Y graph, 
- showing the individuals as points representing the original coordinates and
- the coordinates transformed as ranks (i.e., each coordinate takes an ordered
+ ----------------------------------
+ 
+ PLOTS FOR ECO.WEIGHT OBJECTS:
+ 
+ A plot method is availble (function "eco.plotWeight") showing static or interactive plots,
+ In the case of using the function eco.plotWeight for the argument type="simple", 
+ the connections are shown in two plots: an X-Y graph, 
+ with the individuals as points, representing the original coordinates, and in a plot
+ with coordinates transformed as ranks (i.e., each coordinate takes an ordered
  value from 1 to the number of individuals).
+ The other static method (type="igraph") uses the igraph package to generate 
+ a visual attractive graph (force network).
+ Two interactive methods are available: type = "network", to plot an interactive force network,
+ and type = "edgebundle" to plot a circular network.
+ For the cases type = "inverse" or type = "exponential", the program generates a 
+ plot of weights values vs distance 
+ See the examples below.
 }
 \examples{
 
@@ -136,36 +157,109 @@ This distance requires the parameter p (default p = 1).
 
 data(eco3)
 
-# "circle" method
+# 1)  "circle" method
 
 con <- eco.weight(eco3[["XY"]], method = "circle", d1 = 0, d2 = 500)
-plot(con) 
+
+
+#---- Different plot styles for the graph ----#
+
+# simple
+eco.plotWeight(con, type = "simple") 
             
-# "knearest" method
+# igraph
+eco.plotWeight(con, type = "igraph", group = eco3[["S"]]$structure)
+
+# network (interactive)
+## click in a node to see the label
+eco.plotWeight(con, type = "network", bounded = TRUE, group = eco3[["S"]]$structure)
+
+# edgebundle (interactive)
+## in the following plot, the assignment a group factor, 
+## generates clustered nodes.
+## hover over the nodes to see the individual connections
+eco.plotWeight(con, type = "edgebundle", fontSize=8, group = eco3[["S"]]$structure)
+
+
+# 2) "knearest" method
 
 con <- eco.weight(eco3[["XY"]], method = "knearest", k = 10)
-plot(con) 
+eco.plotWeight(con) 
+eco.plotWeight(con, type = "network", bounded = TRUE, group = eco3[["S"]]$structure)
 
-# "inverse" method
+# 3)  "inverse" method
 ## scale dependent. In the example, the original coordinates (in km) are converted into m
 con <- eco.weight(eco3[["XY"]]/1000, method = "inverse", max.sd = TRUE, p = 0.1)
 con
-plot(con)
+eco.plotWeight(con)
 
-# "circle.inverse" method
+# 4) "circle.inverse" method
 con <- eco.weight(eco3[["XY"]], method = "circle.inverse", d2 = 1000)
 con
-plot(con)
+eco.plotWeight(con)
 
-# "exponential" method
+# 5) "exponential" method
 ## scale dependent. In the example, the original coordinates (in km) are converted into m
 con <- eco.weight(eco3[["XY"]]/1000, method = "exponential", max.sd = TRUE, alpha = 0.1)
-plot(con)
+eco.plotWeight(con)
 
-# "circle.exponential" method
-con <- eco.weight(eco[["XY"]], method = "circle.exponential", d2 = 2)
+# 6) "circle.exponential" method
+con <- eco.weight(eco3[["XY"]], method = "circle.exponential", d2 = 2000)
 con
-plot(con)
+eco.plotWeight(con)
+
+
+# 7) CUSTOM WEIGHT MATRIX
+
+## A eco.weight object can be created with a custom W matrix. In this case,
+## the rows and the columns of W (weight matrix) must have names, 
+## that must coincide (also in order) with the name of the XY (position) matrix.
+
+require(igraph)
+## this example generates a network with the package igraph
+tr <- make_tree(40, children = 3, mode = "undirected")
+plot(tr, vertex.size = 10, vertex.label = NA) 
+
+## conversion from igraph to weight matrix 
+weights <- as.matrix(as_adj(tr))
+
+## weight matrix requires named rows and columns
+myNames <- 1:nrow(weights)
+rownames(weights) <- colnames(weights) <-  myNames
+
+## extract coordinates from the igraph object 
+coord <- layout.auto(tr)
+rownames(coord) <- myNames
+plot(layout.auto(tr))
+
+## custom weight object
+customw <- eco.weight(XY = coord, W = weights)
+
+## simple plot of the object
+eco.plotWeight(customw, type = "simple")
+
+## create a vector with groups to have coloured plots
+myColors <- c(rep(1,13), rep(2, 9), rep(3, 9), rep(4, 9))
+
+eco.plotWeight(customw, type = "igraph",group = myColors)
+
+## in the following plot, the argument bounded is set to FALSE, 
+## but if you have many groups, it probably should be set to TRUE.
+# click in a node to see the label
+eco.plotWeight(customw,type = "network", bounded = FALSE, group = myColors)
+
+## in the following plot, the assignment a group factor, 
+# generates clustered nodes.
+# hover over the name of the nodes to see the individual connections
+eco.plotWeight(customw,  type = "edgebundle", group = myColors)
+
+
+#### CONVERSION FROM LISTW OBJECTS #####
+require(adegenet)
+# Delaunay triangulation
+temp <-chooseCN(eco3[["XY"]], type = 1, result.type = "listw", plot.nb = FALSE)
+con <- eco.listw2ew(temp)
+eco.plotWeight(con, "network", bounded = TRUE, group = eco3[["S"]]$structure)
 
 
 #-----------------------

@@ -34,7 +34,7 @@ setMethod("show", "eco.gsa", function(object) {
         paste(" ", method), "\n", 
         "###########################","\n\n")
     if(method == "Mantel test" | method == "Partial Mantel test") {
-      cat("  >", "Correlation coefficent used --> ", 
+      cat("  >", "Correlation coefficient used --> ", 
           gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
     }
     cat(
@@ -50,7 +50,7 @@ setMethod("show", "eco.gsa", function(object) {
         paste(" ", method), "\n", 
         "############################","\n\n")
     if(method == "Mantel test" | method == "Partial Mantel test") {
-      cat("  >", "Correlation coefficent used --> ", 
+      cat("  >", "Correlation coefficient used --> ", 
           gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
     }
     cat(
@@ -194,7 +194,7 @@ setMethod("show", "eco.correlog", function(object) {
           paste(" ", method), "\n", 
           "############################","\n\n")
       if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-        cat(" >", "Correlation coefficent used --> ", 
+        cat(" >", "Correlation coefficient used --> ", 
             gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
       }
       cat(paste("  >", "Number of simulations --> ", object@NSIM), "\n",
@@ -213,7 +213,7 @@ setMethod("show", "eco.correlog", function(object) {
           paste(" ", method), "\n", 
           "############################","\n\n")
       if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-        cat("Correlation coefficent used --> ", 
+        cat("Correlation coefficient used --> ", 
             gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE), "\n")
       }
       cat(paste("   >", "Number of simulations --> ", object@NSIM), "\n",
@@ -232,7 +232,7 @@ setMethod("show", "eco.correlog", function(object) {
         paste(" ", method), "\n", 
         "############################","\n\n")
     if(method == "Mantel statistic" | method == "Partial Mantel statistic") {
-      cat("Correlation coefficent used --> ", 
+      cat("Correlation coefficient used --> ", 
           gsub("(^[[:alnum:]{1}])","\\U\\1", cormethod, perl =TRUE),  "\n")
     }
     cat(paste(" Results --> ","\n\n"))
@@ -258,8 +258,9 @@ setMethod("show", "eco.weight", function(object)  {
       paste(" spatial weights"), "\n", 
       "###################","\n\n",
       paste(" Method  --> ", object@METHOD), "\n",
-      " Parameters --> ", paste("(", object@PAR, " = ",  
-                              object@PAR.VAL, ")", sep =""), "\n",
+      " Parameters --> ", ifelse(is.null(object@PAR),
+                                 paste("NULL"), 
+                                 paste("(", object@PAR, " = ", object@PAR.VAL, ")", sep ="", collapse = "")), "\n",
       paste(" Row-standardization --> ", object@ROW.SD), "\n")
   if(object@METHOD == "circle" | object@METHOD == "knearest") {
     cat(paste("  Self-included --> ", object@SELF), "\n",
@@ -275,8 +276,16 @@ setMethod("show", "eco.weight", function(object)  {
         paste(" Individuals with non-zero (non-self) links --> ", 
               object@NONZEROIND, "%"), "\n",
         paste(" Average (non-self) links per individual --> ", object@AVG), "\n",
-        paste(" Average distance between connected individuals --> ", object@AVG.DIST), "\n\n")
+        paste(" Average distance between connected individuals --> ", object@AVG.DIST), "\n")
   }
+  if(!is.null(object@ANGLE)){
+    minang <- min(object@ANGLE)
+    maxang <- max(object@ANGLE)
+    Nang <- length(object@ANGLE)
+    cat(paste("  Angles range --> ", paste0("(", minang, ", ", maxang, ")"), "\n"))
+    cat(paste("  N angles     --> ", Nang, "\n"))
+  }
+  paste0("\n")
 })
 
 
@@ -325,8 +334,15 @@ setMethod("show", "eco.lagweight", function(object)  {
       paste(" Self-included --> ", object@SELF), "\n",
       paste(" Cummulative --> ", object@CUMMUL), "\n",
       paste(" Number of classes --> ", length(object@MEAN)), "\n",
-      paste(" Method --> ", object@METHOD), "\n\n")
-  
+      paste(" Method --> ", object@METHOD), "\n")
+  if(!is.null(object@ANGLE)){
+    minang <- min(object@ANGLE)
+    maxang <- max(object@ANGLE)
+    Nang <- length(object@ANGLE)
+    cat(paste("  Angles range --> ", paste0("(", minang, ", ", maxang, ")"), "\n"))
+    cat(paste("  N angles     --> ", Nang, "\n"))
+  }
+  paste0("\n")
 })
 
 
@@ -539,9 +555,17 @@ setMethod("show", "eco.IBD", function(object) {
   } 
   cat(
     "  Available information --> ", "\n",
-    paste(" >", paste(aue.access("SP", "x"), " --> ", sep = ""), "SP analysis"), "\n", 
-    paste(" >", paste(aue.access("OUT", "x"), " --> ", sep = ""), "table with results"),"\n")
-  cat("\n Results table in", aue.access("OUT",  "x"), "\n")
+    paste(" >", paste(aue.access("OUT", "x"), " --> ", sep = ""), "table with results"),"\n", 
+    paste(" >", paste(aue.access("SP", "x"), " --> ", sep = ""), "SP analysis"))
+   
+  #cat("\n Results table in", aue.access("OUT",  "x"), "\n")
+  cat("\n\n", "Results (slot OUT):", "\n")
+  print(object@OUT[[1]])
+  cat("\n", "Global significance test of correlogram (Oden, 1984):", "\n")
+  print(object@GLOBALTEST)
+  cat("\n", "Sp analysis (slot SP):", "\n")
+  print(object@SP)
+  cat("\n")
   .printaccess()
   cat("\n")
 })

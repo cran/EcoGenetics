@@ -29,6 +29,10 @@ eco.correlog-class
 \item{\code{NSIM}}{number of simulations}
 
 \item{\code{PADJUST}}{P-values adjust method for permutation tests}
+
+\item{\code{ANGLE}}{angle used for the construction of correlogram}
+
+\item{\code{BEARING}}{bearing correlogram (logical)}
 }}
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}

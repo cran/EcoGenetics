@@ -110,7 +110,7 @@
 #' localmoran <- eco.lsa(eco[["P"]][, 1], con, method = "I", nsim = 99)     
 #' 
 #' # "rankplot" graph
-#' plot(localmoran)
+#' eco.plotLocal(localmoran)
 #' 
 #' # test for several variables---------------------------------
 #' 
@@ -130,21 +130,20 @@
 #' # Plot of the phenotypic spatial patterns
 #' 
 #' # "rasterplot" graph 
-#' plot(all.traits)
+#' eco.plotLocal(all.traits)
 #' 
 #' # in grey: non significant results (P > 0.05)
 #' # set significant = FALSE for showing significant and no significant results
-#' plot(all.traits, significant = FALSE)
+#' eco.plotLocal(all.traits, significant = FALSE)
 #'
 #' # single plots using "rankplot" graphs
-#' all.single.traits <- apply(eco[["P"]],  2, eco.lsa, con, method = "I", nsim = 99)
-#' multiplot(plotlist = lapply(all.single.traits, plot), layout = matrix(1:8, 2, 4))
+#' all.single.traits <- eco.lsa(eco[["P"]],con, method = "I", nsim = 99, multi="list")
+#' eco.plotLocal(all.single.traits)
 #' 
 #' # removing legends for a better visualization
-#' # - individual plots support ggplot2 sintax
-#' all.single.traits <- lapply(all.single.traits, 
-#' function(x)plot(x)+ggplot2::theme(legend.position="none"))
-#' grf.seqmultiplot(all.single.traits, 8, 2, 4)
+#' eco.plotLocal(all.single.traits, legend = FALSE)
+#' # - individual plots support ggplot2 sintax (plot equivalent to the previous):
+#' eco.plotLocal(all.single.traits) + ggplot2::theme(legend.position="none")
 #' 
 #' 
 #' #-------------------------
@@ -178,11 +177,11 @@
 #' all.alleles <-  eco.lsa(eco[["A"]], con, method = "I", nsim = 99)
 #' 
 #' # plot all alleles to get an overview of the spatial patterns
-#' plot(all.alleles)
+#' eco.plotLocal(all.alleles)
 #' 
 #' # in grey: non significant results (P > 0.05)
 #' # set significant = FALSE for showing significant and no significant results
-#' plot(all.alleles, significant = FALSE)
+#' eco.plotLocal(all.alleles, significant = FALSE)
 #' 
 #' # counting individuals with P < 0.05 for each allele (5 * 225 /100 ~  12 significant tests 
 #' # by random)
@@ -197,16 +196,14 @@
 #' 
 #' # Plot of the genotypic spatial patterns using "localplot" graphs
 #' 
-#' plot(all.alleles.f)
+#' eco.plotLocal(all.alleles.f)
 #' 
 #' 
 #' ## using "rankplot" graphs
 #' 
-#' all.sf <- apply(A.local,  2, eco.lsa, con, method = "I", nsim = 99)
-#' all.sf <- lapply(all.sf, 
-#' function(x)plot(x)+ggplot2::theme(legend.position="none"))
-#' multiplot(plotlist = all.sf[1:6], layout = matrix(1:6, 2, 3))
-#' multiplot(plotlist = all.sf[7:12], layout = matrix(1:6, 2, 3))
+#' all.sf <- eco.lsa(A.local,  2, eco.lsa, con, method = "I", nsim = 99, multi = "list")
+#' eco.plotLocal(all.sf, legend = FALSE) 
+#' 
 #' 
 #' #####################
 #' # GETIS-ORD'S G*
@@ -220,10 +217,10 @@
 #' ### (see ?eco.rankplot) when test = "permutation" and "eco.forestplot" (see ?eco.forestplot)
 #' ###  when test = "bootstrap"
 #' 
-#' p <- plot(getis.ak)      # rankplot graph
+#' p <- eco.plotLocal(getis.ak)      # rankplot graph
 #' p    #  points with colors of the color-scale:  
 #'      #  points with P < 0.05. Yellow points : points with P > 0.05
-#' p <- plot(getis.ak, significant = FALSE)  
+#' p <- eco.plotLocal(getis.ak, significant = FALSE)  
 #' p    # all points have a color of the color-scale 
 #' 
 #' #-----------------------
@@ -238,8 +235,10 @@
 #' 
 #' ## bootstrap example
 #' getis.akb <- eco.lsa(eco[["P"]][, 1], con, method = "G*", nsim = 99, test = "bootstrap")
-#' p <- plot(getis.akb)      # forestplot graph
-#' p + ggplot2::theme_bw()   # the plot can be modified with ggplot2
+#' p <- eco.plotLocal(getis.akb)      # forestplot graph
+#' 
+#' p2 <- eco.plotLocal(getis.akb, interactivePlot = FALSE)  
+#' p2 + ggplot2::theme_bw()   # the plot can be modified with ggplot2
 #'                           # In this case, the background is modified  (white color)
 #' 
 #' #---------------------------------------------------------------------------#
@@ -251,7 +250,7 @@
 #' con <- eco.weight(eco[["XY"]], method = "knearest", k = 4) 
 #' # self = FALSE for G
 #' getis <- eco.lsa(eco[["P"]][, 1], con, method = "G", nsim = 99)
-#' plot(getis)
+#' eco.plotLocal(getis)
 #'
 #' #---------------------------------------------------------------------------#
 #' 
@@ -262,7 +261,7 @@
 #' con<- eco.weight(eco[["XY"]], method = "knearest",  k = 4, row.sd = TRUE) 
 #' # row standardized weights = TRUE
 #' localgeary <- eco.lsa(eco[["P"]][, 1], con, method = "C", nsim = 99, adjust = "none")
-#' plot(localgeary)
+#' eco.plotLocal(localgeary)
 #' 
 #'}
 #'
@@ -377,6 +376,9 @@ setGeneric("eco.lsa",
                XY <- attr(con, "xy")
              }
              
+             if(u <- nrow(as.data.frame(var)) != nrow(con)) {
+               stop(paste0("incompatible dimension between <var> (", u, ") and <con> (",  nrow(con), ")"))
+             }
              ## single/multiple test configuration 
              
          

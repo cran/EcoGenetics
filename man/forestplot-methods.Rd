@@ -9,13 +9,13 @@
 \title{Forestplot graphs}
 \usage{
 eco.forestplot(input, xlabel = NULL, ylabel = NULL, titlelabel = NULL,
-  legendlabel = NULL, ...)
+  legendlabel = NULL, interactivePlot = TRUE, ...)
 
 \S4method{eco.forestplot}{eco.lsa}(input, rescaled = FALSE, xlabel, ylabel,
-  titlelabel, legendlabel)
+  titlelabel, legendlabel, interactivePlot = TRUE)
 
 \S4method{eco.forestplot}{dataframeORmatrix}(input, xlabel, ylabel, titlelabel,
-  legendlabel)
+  legendlabel, interactivePlot = TRUE)
 }
 \arguments{
 \item{input}{Matrix/data frame, with three columns in the 
@@ -29,6 +29,8 @@ confidence interval.}
 \item{titlelabel}{Optional title label.}
 
 \item{legendlabel}{Optional legend label.}
+
+\item{interactivePlot}{Show an interactive plot via plotly? (default: TRUE)}
 
 \item{...}{Additional elements to the generic.}
 
@@ -55,7 +57,8 @@ data <- data.frame(a, infer2, super2)
 forest <- eco.forestplot(data)
 forest
 
-# the forestplot method support the use of ggplot2 syntax
+# the forestplot method support the use of ggplot2 syntax with ggplot2 graphs
+forest <- eco.forestplot(data, interactivePlot = FALSE)
 forest <- forest + theme_bw() + theme(legend.position="none")
 forest
 }

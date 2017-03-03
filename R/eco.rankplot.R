@@ -18,6 +18,7 @@
 #' @param ns color for non significant individuals, when significant = TRUE.
 #' This argument can be used with \code{\link{eco.lsa}} results.
 #' @param rescaled rescale values to [-1, 1] range?
+#' @param interactivePlot Show an interactive plot via plotly? (default: TRUE)
 #' @param ... Additional elements to the generic.
 #' 
 #' @examples
@@ -26,7 +27,7 @@
 #' 
 #' # The data set eco3 has  50 points in two sites, 
 #' # but they are not visible in a usual X-Y plot 
-#' due to the small distance among them
+#' # due to the small distance among them
 #' 
 #' var <- eco3[["P"]][,1]
 #' plot(eco3[["XY"]], col = var)
@@ -38,7 +39,9 @@
 #' rankeco3 <- eco.rankplot(var, eco3[["XY"]])
 #' rankeco3
 #' 
-#' # the rankplot method support the use of ggplot2 syntax
+#' # the rankplot method support the use of ggplot2 syntax with ggplot2 graphs
+#' require(ggplot2)
+#' rankeco3 <- eco.rankplot(var, eco3[["XY"]], interactivePlot = FALSE)
 #' rankeco3 <- rankeco3 + theme_bw() + theme(legend.position="none")
 #' rankeco3
 #' }
@@ -47,9 +50,7 @@
 #' 
 #' @rdname rankplot-methods
 #' 
-#' @aliases eco.rankplot,genetic-method
-#' 
-#' @exportMethod eco.rankplot
+#' @export eco.rankplot
 
 
 setGeneric("eco.rankplot", function(input, 
@@ -81,8 +82,17 @@ setMethod("eco.rankplot",
                    background = c("grey", "white"),
                    significant = TRUE,
                    rescaled = FALSE,
-                   ns = NULL) {
+                   ns = NULL,
+                   interactivePlot = TRUE) {
             
+            
+            if(interactivePlot) {
+              axis.size = 9
+              title.size = 13
+            } else {
+              axis.size = 10
+              title.size = 14
+            }
             
             if((input@TEST)[1] != "permutation" && input@NSIM != 0) {
               stop("this method is available for eco.lsa with permutation test")
@@ -171,11 +181,10 @@ setMethod("eco.rankplot",
               ggplot2::xlab(xlabel) +
               ggplot2::ylab(ylabel) +
               ggplot2::labs(title = title) +
-              ggplot2::theme(axis.text = ggplot2::element_text(size = 12), 
-                             axis.title = ggplot2::element_text(size = 14, 
-                                                                face = "bold"), 
-                             plot.title = ggplot2::element_text(size = 16,
-                                                                face = "bold")) 
+              ggplot2::theme(axis.text = ggplot2::element_text(size = axis.size), 
+                             axis.title = ggplot2::element_text(size = title.size), 
+                             plot.title = ggplot2::element_text(size = title.size, hjust=0.5)) 
+            
             
             
             xy.out <- data.frame(x, y)
@@ -186,8 +195,13 @@ setMethod("eco.rankplot",
             if(significant == TRUE) {
               rankplot <- rankplot + p.points
             }
-            message(paste("plot options: significant =", significant))
-            message(paste("plot options: rescaled =", rescaled))
+            #message(paste("plot options: significant =", significant))
+            #message(paste("plot options: rescaled =", rescaled))
+            
+            if(interactivePlot == TRUE) {
+              rankplot <- plotly::ggplotly(rankplot)
+            }
+            #message(paste("plot options: interactivePlot =", interactivePlot))
             rankplot
           })
 
@@ -209,7 +223,17 @@ setMethod("eco.rankplot",
                    ylabel,
                    title,
                    legendlabel,
-                   background = c("grey", "white")) {
+                   background = c("grey", "white"),
+                   interactivePlot = TRUE) {
+            
+            if(interactivePlot) {
+              axis.size = 9
+              title.size = 13
+            } else {
+              axis.size = 10
+              title.size = 14
+            }
+            
             
             theme <- match.arg(background)
             if(theme == "grey") {
@@ -253,11 +277,9 @@ setMethod("eco.rankplot",
               ggplot2::xlab(xlabel) +
               ggplot2::ylab(ylabel) +
               ggplot2::labs(title = title) +
-              ggplot2::theme(axis.text = ggplot2::element_text(size = 12), 
-                             axis.title = ggplot2::element_text(size = 14, 
-                                                                face = "bold"), 
-                             plot.title = ggplot2::element_text(size = 16,
-                                                                face = "bold")) 
+              ggplot2::theme(axis.text = ggplot2::element_text(size = axis.size), 
+                             axis.title = ggplot2::element_text(size = title.size), 
+                             plot.title = ggplot2::element_text(size = title.size, hjust=0.5)) 
             
             
             
@@ -265,8 +287,14 @@ setMethod("eco.rankplot",
             rownames(xy.out) <- rownames(XY)
             colnames(xy.out) <- c("X rank", "X rank")
             
+            if(interactivePlot) {
+              rankplot <- plotly::ggplotly(rankplot)
+            }
+            
             attr(rankplot, "data") <- xy.out
+            #message(paste("plot options: interactivePlot =", interactivePlot))
             rankplot
+            
             
           })
 
@@ -287,7 +315,17 @@ setMethod("eco.rankplot",
                    ylabel,
                    title,
                    legendlabel,
-                   background = c("grey", "white")) {
+                   background = c("grey", "white"),
+                   interactivePlot = TRUE) {
+            
+            
+            if(interactivePlot) {
+              axis.size = 9
+              title.size = 13
+            } else {
+              axis.size = 10
+              title.size = 14
+            }
             
             theme <- match.arg(background)
             if(theme == "grey") {
@@ -329,11 +367,9 @@ setMethod("eco.rankplot",
               ggplot2::xlab(xlabel) +
               ggplot2::ylab(ylabel) +
               ggplot2::labs(title = title) +
-              ggplot2::theme(axis.text = ggplot2::element_text(size = 12), 
-                             axis.title = ggplot2::element_text(size = 14, 
-                                                                face = "bold"), 
-                             plot.title = ggplot2::element_text(size = 16,
-                                                                face = "bold")) 
+              ggplot2::theme(axis.text = ggplot2::element_text(size = axis.size), 
+                             axis.title = ggplot2::element_text(size = title.size), 
+                             plot.title = ggplot2::element_text(size = title.size, hjust=0.5)) 
             
             
             
@@ -341,8 +377,13 @@ setMethod("eco.rankplot",
             xy.out <- data.frame(x, y)
             rownames(xy.out) <- rownames(XY)
             colnames(xy.out) <- c("X rank", "X rank")
+           
+             if(interactivePlot) {
+              rankplot <- plotly::ggplotly(rankplot)
+             }
             
             attr(rankplot, "data") <- xy.out
+            #message(paste("plot options: interactivePlot =", interactivePlot))
             rankplot
             
           })

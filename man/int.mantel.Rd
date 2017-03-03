@@ -24,6 +24,8 @@ are computed.}
 \item{alternative}{The alternative hypothesis. If "auto" is selected (default) the
 program determines the alternative hypothesis.
 Other options are: "two.sided", "greater" and "less".}
+
+\item{plotit}{Should be generated a plot of the simulations?}
 }
 \description{
 Mantel and partial Mantel tests, internal.

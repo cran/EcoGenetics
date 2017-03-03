@@ -1,17 +1,25 @@
-#' Mantel and partial Mantel tests
+#' Mantel and partial Mantel tests, with truncation option
 #' 
 #' @description This program computes the Mantel test between the distance matrices 
-#' d1 and d2, or a partial Mantel test between the distance matrices 
+#' d1 and d2, or a partial Mantel test between the distance matrices. The test can 
+#' be performed for truncated distances (Legendre et al. 2015) or with a direction
+#' Falsetti and Sokal (1993) using a weights object generated with  \code{\link{eco.bearing}}.
 #' d1 and d2, conditioned on dc.
 #' @param d1 Distance matrix.
 #' @param d2 Distance matrix.
 #' @param dc Distance matrix (optional).
+#' @param con binary eco.weight object used for truncation or a weights object obtained with eco.bearing.
+#' @param thres threshold distance used for truncation. distances above the threshold are
+#' set as 4 times the threshold. If null, and con is not null, it is set to the maximum
+#' distance observed in d2
+#' @param truncMat Matrix to be used for truncation (default = d2)
 #' @param method Correlation method used for the construction of the statistic 
 #' ("pearson", "spearman" or "kendall"). Kendall's tau computation is slow.
 #' @param nsim Number of Monte-Carlo simulations. 
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the alternative hypothesis.
-#' Other options are: "two.sided", "greater" and "less".   
+#' Other options are: "two.sided", "greater" and "less".  
+#' @param plotit Should be generated a plot of the simulations? 
 #' @param ... Additional arguments passed to \code{\link[stats]{cor}}.
 #' @return An object of class "eco.gsa" with the following slots:
 #' @return > METHOD method used in the analysis 
@@ -42,6 +50,21 @@
 #' pm <- eco.mantel(d1 = dist(eco[["P"]]), d2 = dist(eco[["E"]]), 
 #' dc = dist(eco[["XY"]]), nsim = 99)                               # partial Mantel test
 #' 
+#' # checking threshold in a correlogram:
+#' corm <- eco.cormantel(M = dist(eco[["P"]]), XY = eco[["XY"]], nsim = 99)
+#' eco.plotCorrelog(corm)
+#' Correlation is around 0 when distance between points is > 5
+#' 
+#' # create a weights object for truncation
+#' con <- eco.weight(eco@XY, method="circle", d2=5)
+#' #compute a truncated mantel test
+#' eco.mantel(dist(eco[["P"]]), dist(eco[["XY"]]), con=con)
+#' 
+#' # analize test mantel in a direction of 35 degrees
+#' con <- eco.bearing(XY = eco[["X"]], thata = 37)
+#' eco.mantel(dist(eco[["P"]]), dist(eco[["XY"]]), con = con2)
+#' 
+#' 
 #' #-----------------------
 #' # ACCESSORS USE EXAMPLE
 #' #-----------------------
@@ -57,6 +80,9 @@
 #'
 #' @references 
 #' 
+#' Falsetti A., and Sokal R. 1993. Genetic structure of human populations
+#'  in the British Isles. Annals of Human Biology 20: 215-229.
+#' 
 #' Legendre P. 2000. Comparison of permutation methods for the partial correlation
 #' and partial Mantel tests. Journal of Statistical Computation and Simulation,
 #' 67: 37-73.
@@ -69,8 +95,9 @@
 #' Mantel N. 1967. The detection of disease clustering and a generalized 
 #' regression approach. Cancer research, 27: 209-220.
 #' 
-#' Smouse P. J. Long and R. Sokal. 1986. Multiple regression and correlation 
+#' Smouse P. Long and R. Sokal. 1986. Multiple regression and correlation 
 #' extensions of the Mantel test of matrix correspondence. Systematic zoology, 627-632.
+#' 
 #' 
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' 
@@ -78,20 +105,52 @@
 
 
 setGeneric("eco.mantel", 
-           function(d1, d2, dc = NULL, 
+           function(d1, d2, dc = NULL, con = NULL, thres = NULL,
+                    truncMat = c("d2","d1","dc"),
                     method = c("pearson", "spearman", "kendall"),
                     nsim = 99,  
                     alternative = c("auto", "two.sided", "less", 
                                     "greater"), 
+                    plotit = TRUE,
                     ...) {
              
              alternative <- match.arg(alternative)
              method <- match.arg(method)
+             truncMat <- match.arg(truncMat)
              
-             control <- c(class(d1), 
-                          class(d2), 
-                          class(dc)) %in% "dist"
+             control <- c(class(d1), class(d2), class(dc)) == "dist"
              sumcontrol<- sum(control)
+             
+             
+             if(!is.null(con)) {
+               if(class(con) != "eco.weight") {
+                 stop("con must be an eco.weight object")
+               }
+               if(!is.null(thres) && (!is.numeric(thres) ||length(thres) > 1)) {
+                 stop("please provide a threshold value (numeric of length 1)")
+               }
+               if(is.null(thres)) {
+                 thres <- max(d2)
+                 message(paste0("the threshold was set as the maximum distance found in ", truncMat, " (", round(thres, 6),")"))
+               }
+               if(!all(con@W %in% c(0,1)) &&  is.null(con@ANGLE)) {
+                 stop("con must have binary weights")
+               }
+               dTrunc <- as.dist(con@W)
+               # for truncated test 
+               if(is.null(con@ANGLE)){
+               dTrunc[dTrunc == 0] <- 4 * thres
+               } 
+               if(truncMat == "d1") {
+                 d1 <-  d1 * dTrunc
+               } else if(truncMat == "d2") {
+                 d2 <- d2 * dTrunc
+               }  else if(truncMat == "d3") {
+                 d3 <- d3 * dTrunc
+               }
+               
+             }
+             
              
              if(sumcontrol != 3 & !is.null(dc)) { 
                nondist <- which(!(control))
@@ -106,7 +165,7 @@ setGeneric("eco.mantel",
                                method = method, nsim = nsim,
                                test = "permutation", 
                                alternative = alternative, 
-                               plotit = TRUE)
+                               plotit = plotit)
              
              
              if(is.null(dc)) { 

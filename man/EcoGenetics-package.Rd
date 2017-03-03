@@ -31,7 +31,7 @@ The \strong{general spatial module} computes global (\link[=eco.gsa]{Moran's I},
 
 The package have also special plot methods, as \link[=eco.rankplot]{rankplot},  
 \link[=eco.forestplot]{forestplot}, \link[=eco.rasterplot]{rasterplot} (implemented the last two for 
-\link[=eco.lsa]{local spatial analysis}). Several conversor of data to other programs are available, (as to \link[=eco.2genepop]{genepop} - an \link[=eco.genepop2df]{importer} tool is also defined for genepop-, \link[=eco.2spagedi]{SPAGeDi}, etc.). Basic manipulation of genetic matrices is allowed by \link{eco.convert} and \link{eco.format}. Tools for computation of NDVI in Landsat imaginery, 
+\link[=eco.lsa]{local spatial analysis}). Several conversor of data from/to other programs are available, (as to \link[=ecogen2genepop]{genepop} - an \link[=genepop2ecogen]{importer} tool is also defined for genepop-, \link[=ecogen2spagedi]{SPAGeDi}, , etc.). Basic manipulation of genetic matrices is allowed by \link{eco.convert} and \link{eco.format}. Tools for computation of NDVI in Landsat imaginery, 
 post-process of rasters and temporal analysis can be found in \link{eco.NDVI}, \link{eco.NDVI.post} and \link{eco.theilsen}. Other useful functions are \link{aue.sort} (for ordering alleles), \link{eco.alfreq} (to comput histograms of allelic frequencies for detection of bottlenecks), \link{eco.post.geneland} and \link{eco.pairtest}. 
 
 The results obtained with the main functions defined in EcoGenetics are
@@ -91,7 +91,7 @@ The construction of a new "ecogen" object from a data frame is made with the hom
 
 \emph{eco.ord <- eco[c(50:1)]}
 
-\emph{eco.ord[["XY"]] # object ordered and subsetted rows.
+\emph{eco.ord[["XY"]] # object ordered and subset rows.
 This is a powerful method for handling the stack of ecogen data frames}
 
 \emph{eco <- eco[order(eco[["S"]][, 1])] #ordering S[, 1] and then the object}
@@ -117,13 +117,8 @@ This is a powerful method for handling the stack of ecogen data frames}
 
 \emph{eco.c <- eco.cbind(eco, eco1)}
 
-\bold{# 6. \link[=eco.order]{ordering by row-method}, using the rows in the XY data frame as reference}
 
-\emph{ecoslot.P(eco1) <- eco[["P"]][sample(1:173), ]} ## object with unordered rows in P data frame
-
-\emph{ordered <- eco.order(eco1)}
-
-\bold{# 7. get-method using generic \link[=ecoslot.XY]{accessors} and "[[" (equivalent methods):}
+\bold{# 6. get-method using generic \link[=ecoslot.XY]{accessors} and "[[" (equivalent methods):}
 
 \emph{ecoslot.XY(eco) ; eco[["XY"]]}
 
@@ -142,7 +137,7 @@ This is a powerful method for handling the stack of ecogen data frames}
 \emph{ecoslot.OUT(eco); eco[["OUT"]]}
 
 
-\bold{# 8. set-method using \link[=ecoslot.XY]{accessors} and "[[" (equivalent methods):}
+\bold{# 7. set-method using \link[=ecoslot.XY]{accessors} and "[[" (equivalent methods):}
 
 \emph{eco.temp <- ecogen(XY = coordinates, P = phenotype)}
 
@@ -164,7 +159,7 @@ This is a powerful method for handling the stack of ecogen data frames}
 
 \emph{eco.temp}
 
-\bold{# 9. appending-method (storing information generated via \link[=ecoslot.XY]{accessors)}}
+\bold{# 8. appending-method (storing information generated via \link[=ecoslot.XY]{accessors)}}
 
 ## fitting a multiple linear regression model:
 
@@ -203,7 +198,7 @@ square brackets notation:
 ## note that the append method is a particular case of the
 ## set method with accessors / "[[" for the slot OUT.
 
-\bold{# 10. \link[=eco.remove]{removing-method}}
+\bold{# 9. \link[=eco.remove]{removing-method}}
 
 ## removing objects a and b from eco
 
@@ -214,13 +209,22 @@ square brackets notation:
 
 - - - - - - 
 
-Finally, the workspace can be \link[=eco.clear]{cleared}, only storing the desired object:
+The workspace can be \link[=eco.clear]{cleared}, only storing the desired object:
 
 \emph{ls()}
 
 \emph{eco.clear(eco)}
 
 \emph{ls()}
+
+The cleaner and compact option, is to save the object as \link[=saveRDS]{RDS},
+which is a way to save R objects as a file:
+
+\emph{saveRDS(eco, "myObject.rds")}
+
+The object can be loaded in the future with the function readRDS:
+
+\emph{eco <- readRDS("myObject.rds")}
 
  ----------------------- o -----------------------
 
@@ -273,6 +277,9 @@ Lichstein J., T. Simons, S. Shriner, and K. Franzreb. 2002. Spatial autocorrelat
 Loiselle B., V. Sork, J. Nason, and C. Graham. 1995. Spatial genetic structure of a tropical understory shrub, Psychotria officinalis (Rubiaceae). American Journal of Botany 1420-1425.
 
 Moran P. 1950. Notes on continuous stochastic phenomena. Biometrika, 17-23.
+
+Oden, N., 1984. Assessing the significance of a spatial correlogram. 
+Geographical Analysis, 16: 1-16.
 
 Oden N., and R. Sokal. 1986. Directional autocorrelation: an extension of spatial correlograms to two dimensions. Systematic Zoology, 35: 608-617.
 

@@ -34,6 +34,8 @@ with non-zero connections (as percentage)}
 \item{\code{AVERAGE}}{average number of connection (as percentage)}
 
 \item{\code{AVG.DIST}}{average distance between connected individuals}
+
+\item{\code{ANGLE}}{angle used for the construction of correlogram}
 }}
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}

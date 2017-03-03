@@ -1,4 +1,6 @@
+
 #' d-Jackknife estimation.
+#' 
 #' @param x vector with simulations or matrix with variables in columns, simulations in rows.
 #' @param fun function to apply
 #' @param d how many elements to leave out. For "leave one out",  d= 1 (default)
@@ -16,7 +18,7 @@ int.jackknife <- function(x, fun, d = 1, alpha = 0.05) {
   combinations <- combn(nloci, dcomp)
   
   obs <- apply(x, 2, fun)
-  obs2 <- matrix(obs, nrow= N, ncol= length(obs), byrow=T)
+  obs2 <- matrix(obs, nrow = N, ncol = length(obs), byrow = TRUE)
   jack <- x - x
   for(i in 1:N) {
     icomb <- combinations[, i]

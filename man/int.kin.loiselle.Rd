@@ -7,7 +7,9 @@
 int.kin.loiselle(geno, locus)
 }
 \arguments{
-\item{eco}{Object of class ecogen.}
+\item{geno}{genotipic matrix: eco@A for codominant, eco@G for dominant}
+
+\item{locus}{corresponds to: as.numeric(eco@INT@loc.fac)}
 }
 \description{
 obtetion of multilocus Loiselle's Fij matrix
