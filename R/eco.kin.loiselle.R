@@ -24,6 +24,7 @@
 #' Psychotria officinalis (Rubiaceae). 
 #' American Journal of Botany 1420-1425.
 #' 
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 eco.kin.loiselle <- function(eco) {

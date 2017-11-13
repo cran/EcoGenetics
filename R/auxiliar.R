@@ -58,7 +58,7 @@ setClassUnion("logicalORmissing",
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @export
 
 aue.rescale  <- function(dfm, method =c("zero.one", "one.one")) {

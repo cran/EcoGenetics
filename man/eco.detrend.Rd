@@ -101,3 +101,6 @@ Lichstein J., T. Simons, S. Shriner, and K. Franzreb. 2002.
 Spatial autocorrelation and autoregressive models in ecology. 
 Ecological monographs, 72: 445-463.
 }
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

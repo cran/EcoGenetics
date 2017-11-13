@@ -34,7 +34,7 @@ for each with Y.}
 
 \item{seqvec}{Vector with breaks in the units of XY.}
 
-\item{method}{Correlogram method. Could be I for Moran's I, C for Geary's C
+\item{method}{Correlogram method. It can be I for Moran's I, C for Geary's C
 and CC for Bivariate Moran's Ixy. 
 If method = "CC", the program computes for the first interval (d = 0)
 the corresponding P-value and CI with \code{\link[stats]{cor.test}}.}
@@ -46,7 +46,7 @@ resampling and the associated confidence intervals of the null hypothesis.
  If test = "permutation" (default) a permutation test is made and the P-values 
  are computed.}
 
-\item{alpha}{Value for alpha. Default alpha = 0.05.}
+\item{alpha}{Value for alpha (significance level). Default alpha = 0.05.}
 
 \item{alternative}{The alternative hypothesis. If "auto" is selected (default) the
 program determines the alternative hypothesis.
@@ -57,8 +57,8 @@ The selected method is passed as argument to \code{\link[stats]{p.adjust}} (defa
 For bearing correlograms, the corrections (and permutation tests) are performed for individual correlograms 
 of fixed variables (i.e.,  angles fixed [distances variable] or distances fixed [angles variable]).}
 
-\item{sequential}{Should be performed a Holm-Bonberroni (Legendre and Legendre, 2012) 
-adjustment of P-values? Defalult TRUE (only available for omnidirectional correlograms or correlograms for fixed angles).}
+\item{sequential}{Should a Holm-Bonberroni correction of P-values (Legendre and Legendre, 2012) be performed?
+Defalult TRUE (only available for omnidirectional correlograms or correlograms for fixed angles).}
 
 \item{include.zero}{Should be included the distance = 0 in cross correlograms 
 (i.e., the intra- individual correlation)?. Defalut TRUE.}
@@ -336,5 +336,5 @@ Sturges  H. 1926. The choice of a class interval. Journal of the American
 Statistical Association, 21: 65-66.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }

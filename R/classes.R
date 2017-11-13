@@ -19,7 +19,7 @@
 #' @slot ANGLE angle used for the construction of correlogram
 #' @slot BEARING bearing correlogram (logical)
 #' @aliases eco.correlog-class
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @keywords internal
 
 setClass("eco.correlog", 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.formula.R
 \name{eco.formula}
 \alias{eco.formula}
-\title{Conversion of a formula for an ecogen objects into an explict expression}
+\title{Formula construction for ecogen objects}
 \usage{
 eco.formula(eco, formula, out.mode = c("formula", "expression"),
   expand.tables = "+")
@@ -17,15 +17,20 @@ eco.formula(eco, formula, out.mode = c("formula", "expression"),
 \item{expand.tables}{method for tables coertion. Default is "+"}
 }
 \description{
-The function creates an explicit formula that can be used as input 
-to parse ecogen objects into other methods. For this purpose, each element in the 
-formula is substituted with an explicit name of columns in ecogen objects if:
+When a data frame is present in a slot of an object, any individual column can be 
+accessed using the notation: my_object@my_data_frame[, column_to_be_accessed]. The later constitutes an explicit 
+name for the variable present in the object.  The present function generalizes this concept, 
+allowing to construct a formula for the variables present in an ecogen object
+(columns of the data frames in slots). The function creates an explicit formula that can be used
+to parse ecogen objects into other functions (see examples below). For this purpose, each name in the 
+formula is substituted with explicit names of columns if:
 
-- The name in formula corresponds to the name of a column in the data frames of the object, or
-- The name in formula is surrounded by U() and corresponds to a slot name. Complete data frames (as P, E, etc) 
-  or subsets (as U[, 1:5]) can be passed with this method.
+- The name corresponds to the name of an individual column in the data frames of the ecogen object, or
+
+- The name is surrounded by U() and corresponds to the name of a slot. Complete data frames (as P, E, etc.) 
+  or subsets (as U[, 1:5]) can be passed with this method and all the columns will be explicitly included in the formula.
   
-  In other situations, text is not replaced.
+  In other situations, names are not replaced.
 }
 \examples{
 \dontrun{
@@ -44,10 +49,10 @@ lm(form2)
 
 
 # parsing with magrittr
-eco.formula(eco, P1 + P2 + P3 + E (A) ~ U(E) + Condition(X+Y)) \%>\% rda
+eco.formula(eco, P1 + P2 + P3 + U(A) ~ U(E) + Condition(X+Y)) \%>\% rda
 }
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }

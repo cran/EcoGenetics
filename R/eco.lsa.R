@@ -283,7 +283,7 @@
 #' spatial autocorrelation: an example from an Amerindian tribal population. 
 #' American journal of physical anthropology, 129: 121-131.
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 

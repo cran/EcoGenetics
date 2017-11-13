@@ -92,7 +92,7 @@
 #' See the section Examples.
 #' 
 #' @rdname EcoGenetics-accessors
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' 
 #' @examples
 #' 

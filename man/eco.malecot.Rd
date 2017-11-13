@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.malecot.R
 \name{eco.malecot}
 \alias{eco.malecot}
-\title{Global and local kinship analyses}
+\title{Global and local kinship analysis}
 \usage{
 eco.malecot(eco, method = c("global", "local"), kinmatrix = NULL,
   int = NULL, smin = 0, smax = NULL, nclass = NULL, kmax = NULL,
@@ -37,20 +37,20 @@ of the ecogen object if kinmatrix = NULL (Defaul option).}
 
 \item{size}{Number of individuals per class.}
 
-\item{type}{Weight mode for local analyis: "knearest" for nearest neigbors,
+\item{type}{Weighting mode for local analysis: "knearest" for nearest neigbors,
 "radialdist" for radial distances. Default is knearest.}
 
-\item{cubic}{Should be performed a cubic interpolation (res~ ln(dij)) 
-with the regression residuals (res)  of (kinship)ij ~ ln(dij) ? Defalut TRUE.}
+\item{cubic}{Should a cubic interpolation (res~ ln(dij)) be performed, 
+for the regression residuals (res)  of (kinship)ij ~ ln(dij) ? Default TRUE.}
 
-\item{testclass.b}{Should be performed a permutation test in each individual class? Defalut TRUE.}
+\item{testclass.b}{Carry a permutation test within each individual class? Default TRUE.}
 
-\item{testmantel.b}{Should be performed a Mantel test for testing the slope (b)? Defalut TRUE.}
+\item{testmantel.b}{Should a Mantel test for testing the slope (b) be performed? Default TRUE.}
 
-\item{jackknife}{Should be performed jackknife in each individual class for computing
-the standard deviation (SD) of the coancestry (class) values? Defalut TRUE.}
+\item{jackknife}{Compute jackknife within each individual class for obtention of
+the standard deviation (SD) of the coancestry (class) values. Default TRUE.}
 
-\item{cummulative}{Should be construced a cummulative correlogram?.}
+\item{cummulative}{Should a cummulative correlogram be construced?.}
 
 \item{normLocal}{Normalize the local kinship values ([local_kinship-mean]/sd)? Default TRUE}
 
@@ -65,10 +65,10 @@ resampling and the associated confidence intervals of the null hypothesis.
 program determines the alternative hypothesis.
 Other options are: "two.sided", "greater" and "less".}
 
-\item{sequential}{Should be performed a Holm-Bonberroni (Legendre and Legendre, 2012) 
-adjustment of P-values for global analysis? Defalult TRUE.}
+\item{sequential}{Use the Holm-Bonberroni sequential method for
+adjustment of P-values (Legendre and Legendre, 2012) in global analysis? Default TRUE.}
 
-\item{conditional}{Logical. Should be used a conditional randomization? (Anselin 1998, Sokal and Thomson 2006). The option "auto"
+\item{conditional}{Logical. Use a conditional randomization? (Anselin 1998, Sokal and Thomson 2006). The option "auto"
 sets conditional = TRUE for LISA methods and G, as suggested by Sokal (2008).}
 
 \item{bin}{Rule for constructing intervals when a partition parameter (int, 
@@ -79,14 +79,14 @@ option is Freedman-Diaconis method (Freedman and Diaconis, 1981).}
 (binary weights).}
 
 \item{adjust}{P-values correction method for multiple tests 
-passed to \code{\link[stats]{p.adjust}}. Defalut is "holm".}
+passed to \code{\link[stats]{p.adjust}}. Default is "holm".}
 
-\item{latlon}{Are the coordinates in decimal degrees format? Defalut FALSE. If TRUE,
+\item{latlon}{Are the coordinates in decimal degrees format? Default FALSE. If TRUE,
 the coordinates must be in a matrix/data frame with the longitude in the first
 column and latitude in the second. The position is projected onto a plane in
 meters with the function \code{\link[SoDA]{geoXY}}.}
 
-\item{angle}{direction for computation of bearing correlogram (angle between 0 and 180).
+\item{angle}{direction for computation of a bearing correlogram (angle in degrees between 0 and 180).
 Default NULL (omnidirectional).}
 }
 \value{
@@ -171,7 +171,7 @@ with the following slots:
 > OUT results
 
 
-> In the permutation test case contains: 
+> In the permutation test case it contains: 
 
 - d.mean: mean class distance
 - obs, exp, alter, p.val: observed, and expected value of the statistic
@@ -181,7 +181,7 @@ under randomization, alternative, P value;
 - cardinal: number of individuals in each class;
 
 
-> In the bootstrap test case contains: 
+> In the bootstrap test case it contains: 
 - d.mean: mean class distance;
 - obs: observed value of the statistic;
 - null.lwr, nul.uppr: lower and upper bound of the jackknife;
@@ -210,11 +210,11 @@ See help("EcoGenetics accessors") and the Examples
 section below.
 }
 \description{
-The program computes a global multilocus correlogram, or a local analysis, using a 
-kinship matrix. When a kinship matrix is not given as input, the program
+The program computes, for a kinship matrix,  a global multilocus correlogram,
+ or a local analysis. When a kinship matrix is not given as input, the program
 computes the Loiselle's Fij (Kalisz et al., 2001; Loiselle et al., 1995). 
 The program can compute a bearing correlogram (Rosenberg 2000, Born et al.
-2012) for the obtention of a directional approach to the global test.
+2012) for the obtention of a directional approach in the global test.
 }
 \details{
 The GLOBAL ANALYSIS mode, computes a multilocus correlogram, with a detailed
@@ -227,19 +227,20 @@ and ln(dij)
 - The Sp statistic (Vekemans and Hardy, 2004) with confidence intervals
 - A cubic interpolation of (kinship)ij ~ ln(dij) residuals vs ln(dij)
 
-A directional approach is based in bearing analysis method. This compute the 
-directional correlogram using the method of Rosenberg (2000). The 
+A directional approach is based on the bearing analysis method, and consists in the 
+obtention of a directional correlogram using the method of Rosenberg (2000). A
 slope is computed for the logarithm of D' (Born et al 2012), where D' is the distance matrix
 between individuals weighted by cos(alpha - B)^2, being alpha the angle
-between individuals and B the desired direction angle, with B = 0
- the positive x axis, B = 0 the positive y axis, and B = 180 the negative x axis.
+between individuals and B the desired direction angle. With B = 0
+the direcction analyzed follows the positive x axis, with B = 0 the positive y axis,
+ and with B = 180 the negative x axis, respectively.
 
 
 The LOCAL ANALYSIS mode, computes a local kinship estimate, based in a weighted 
-mean (for each individual). The signification of each local statistic
+mean (for each individual). The significance of each local statistic
 is computed using a permutation test, as in eco.lsa (see ?"eco.lsa"). 
 Default option do not adjust the individual P values 
-for multiple corrections.
+for multiple comparisons.
 }
 \examples{
 
@@ -279,16 +280,16 @@ eco.plotCorrelog(globaltest)    # Significant mean class coancestry classes at
 #                         CI for the class statistic)
 
 
-A directional approach based in bearing correlograms, 30 degrees
+# A directional approach based in bearing correlograms, 30 degrees
 globaltest_30 <- eco.malecot(eco=eco, method = "global", smax=10,
                          size=1000, angle = 30)
-eco.plotCorrelog(globaltest, angle = 30) 
+eco.plotCorrelog(globaltest) 
 
 #----------------------------------------------------------#
 # ---local analysis---
 
 
-(using the spatial weights). 
+# (using the spatial weights). 
 
 # ---local analysis with k nearest neighbors---
 

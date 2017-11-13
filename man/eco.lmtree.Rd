@@ -131,5 +131,5 @@ A Conditional Inference Framework. Journal of Computational and Graphical Statis
 15: 651-674.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }

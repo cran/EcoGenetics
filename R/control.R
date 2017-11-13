@@ -7,7 +7,7 @@
 #------------------------------------------------------------------------------#
 #' Check a connection network
 #' @param con Connection network.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @keywords internal
 
 int.check.con <- function(con) {

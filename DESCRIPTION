@@ -1,11 +1,11 @@
 Package: EcoGenetics
 Type: Package
-Title: Spatial Analysis of Phenotypic, Genotypic and Environmental Data
+Title: EcoGenetics: Management and Analysis of Spatial Data in Landscape Genetics
 Version: 1.2.1-1
 Date: 2017-11-13
-Author: Leandro Roser, Juan Vilardi, Beatriz Saidman and Laura Ferreyra
+Authors@R: c(person(given = "Leandro", family = "Roser", role = c("aut", "cre"), email = "learoser@gmail.com"), person(given = "Juan", family = "Vilardi", role = "aut"),  person(given = "Beatriz", family = "Saidman", role = "aut"), person(given = "Laura", family = "Ferreyra", role = "aut"))
 Maintainer: Leandro Roser <learoser@gmail.com>
-Description: Management and exploratory analysis of spatial data in population biology. Easy integration of information from multiple sources with "ecogen" objects.
+Description: Management and exploratory analysis of spatial data in landscape genetics. Easy integration of information from multiple sources with "ecogen" objects.
 License: GPL (>= 2)
 URL: https://github.com/cran/EcoGenetics,
 https: //leandroroser.github.io/EcoGenetics-Tutorial
@@ -40,3 +40,4 @@ Collate: 'ZZZ.R' 'auxiliar.R' 'int.genind.R' 'ecogen.1OF6.definition.R'
 RoxygenNote: 6.0.1
 NeedsCompilation: no
 Packaged: 2017-11-12 21:16:21 UTC; leandro
+Suggests: testthat

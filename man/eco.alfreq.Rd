@@ -34,5 +34,5 @@ Distortion of allele frequency distributions provides a test for recent
 population bottlenecks. Journal of Heredity, 89: 238-247.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
