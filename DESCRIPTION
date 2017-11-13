@@ -1,8 +1,8 @@
 Package: EcoGenetics
 Type: Package
 Title: Spatial Analysis of Phenotypic, Genotypic and Environmental Data
-Version: 1.2.1
-Date: 2017-03-2
+Version: 1.2.1-1
+Date: 2017-11-13
 Author: Leandro Roser, Juan Vilardi, Beatriz Saidman and Laura Ferreyra
 Maintainer: Leandro Roser <learoser@gmail.com>
 Description: Management and exploratory analysis of spatial data in population biology. Easy integration of information from multiple sources with "ecogen" objects.
@@ -39,4 +39,4 @@ Collate: 'ZZZ.R' 'auxiliar.R' 'int.genind.R' 'ecogen.1OF6.definition.R'
         'roxygen.auxiliar.R' 'show_summary.methods.R'
 RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2017-03-02 21:16:21 UTC; leandro
+Packaged: 2017-11-12 21:16:21 UTC; leandro
