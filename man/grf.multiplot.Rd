@@ -21,4 +21,3 @@ Multiple plot function for ggplot
 \author{
 Hadley Wickham
 }
-

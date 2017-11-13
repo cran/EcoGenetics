@@ -34,4 +34,3 @@ Spatial genetic structure of a tropical understory shrub,
 Psychotria officinalis (Rubiaceae). 
 American Journal of Botany 1420-1425.
 }
-

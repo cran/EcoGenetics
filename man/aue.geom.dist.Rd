@@ -26,4 +26,3 @@ Spatial weights for individuals with XY coordinates
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

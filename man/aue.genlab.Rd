@@ -18,4 +18,3 @@ Generation of generic labels of constant length
 Thibaut Jombart
 }
 \keyword{internal}
-

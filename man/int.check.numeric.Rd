@@ -16,4 +16,3 @@ Check numeric format in a data frame
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

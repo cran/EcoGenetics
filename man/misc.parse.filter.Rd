@@ -25,4 +25,3 @@ Filter a raster using a conditional expression and values in a conditional vecto
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

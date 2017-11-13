@@ -20,4 +20,3 @@ Radial distance to a point.
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

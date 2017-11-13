@@ -28,12 +28,11 @@ eco.alfreq(eco, "pop")
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Luikart G., F. Allendorf, F. Cornuet, and W. Sherwin. 1998. 
 Distortion of allele frequency distributions provides a test for recent 
 population bottlenecks. Journal of Heredity, 89: 238-247.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

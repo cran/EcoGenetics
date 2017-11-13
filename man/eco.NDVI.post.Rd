@@ -74,9 +74,6 @@ pch=15, main = "Mean NDVI", xlab = "X", ylab  = "Y")
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Chander G., B. Markham, and D. Helder. 2009. Summary of current radiometric calibration 
 coefficients for Landsat MSS, TM, ETM+, and EO-1 ALI sensors. Remote sensing of 
@@ -103,4 +100,6 @@ eco.NDVI
 
 extract
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

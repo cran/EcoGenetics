@@ -18,4 +18,3 @@ Check row names
 Thibaut Jombart. Adapted by Leandro Roser.
 }
 \keyword{internal}
-

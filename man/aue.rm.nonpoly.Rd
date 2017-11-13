@@ -15,4 +15,3 @@ aue.rm.nonpoly(X, poly.level)
 Remotion of non polymorphic loci
 }
 \keyword{internal}
-

@@ -11,4 +11,3 @@
 show eco.IBD
 }
 \keyword{internal}
-

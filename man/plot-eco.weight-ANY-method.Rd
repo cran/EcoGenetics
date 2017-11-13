@@ -19,4 +19,3 @@ makes a graph for the original coordinates and transformed as ranks.
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

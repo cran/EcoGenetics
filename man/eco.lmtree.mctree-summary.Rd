@@ -2,9 +2,9 @@
 % Please edit documentation in R/show_summary.methods.R
 \docType{methods}
 \name{summary,eco.mlm-method}
+\alias{summary,eco.mlm-method}
 \alias{summary,eco.lmtree-method}
 \alias{summary,eco.mctree-method}
-\alias{summary,eco.mlm-method}
 \title{Summary for eco.lmtree output}
 \usage{
 \S4method{summary}{eco.mlm}(object)
@@ -37,10 +37,9 @@ summary(mod)                                    #summary for "mctree" analysis
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \seealso{
 \code{\link{eco.lmtree}}
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

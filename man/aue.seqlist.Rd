@@ -22,4 +22,3 @@ Creation of a sequence of numbers in matrix or list format, for indexing.
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

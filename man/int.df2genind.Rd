@@ -12,4 +12,3 @@ int.df2genind(indata, sep = "", ncod = NULL, NA.char = "NA", ploidy = 2,
 importer
 }
 \keyword{internal}
-

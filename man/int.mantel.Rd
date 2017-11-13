@@ -34,4 +34,3 @@ Mantel and partial Mantel tests, internal.
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

@@ -12,4 +12,3 @@
 plot eco.lsa
 }
 \keyword{internal}
-

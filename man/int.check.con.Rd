@@ -16,4 +16,3 @@ Check a connection network
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

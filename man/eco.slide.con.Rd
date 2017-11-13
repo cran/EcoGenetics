@@ -45,4 +45,3 @@ result <- eco.slide.con(myMatrix2, con, function(x) mean(x, na.rm = TRUE))
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

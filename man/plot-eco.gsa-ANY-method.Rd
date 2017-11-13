@@ -18,4 +18,3 @@ Plot method for an eco.gsa objects object.
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

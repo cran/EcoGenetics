@@ -73,12 +73,11 @@ bearing_W_list <- eco.bearing(W_list, 90)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Rosenberg, M. 2000. The bearing correlogram: a new method 
  of analyzing directional spatial autocorrelation. 
  Geographical Analysis, 32: 267-278.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

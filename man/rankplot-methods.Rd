@@ -5,10 +5,10 @@
 \alias{eco.rankplot}
 \alias{eco.rankplot,eco.lsa,missing,missing-method}
 \alias{eco.rankplot,eco.lsa-method}
-\alias{eco.rankplot,factor,dataframeORmatrix,missing-method}
-\alias{eco.rankplot,factor-method}
 \alias{eco.rankplot,numeric,dataframeORmatrix,missing-method}
 \alias{eco.rankplot,numeric-method}
+\alias{eco.rankplot,factor,dataframeORmatrix,missing-method}
+\alias{eco.rankplot,factor-method}
 \title{Rankplot graphs}
 \usage{
 eco.rankplot(input, XY, xlabel = NULL, ylabel = NULL, title = NULL,
@@ -89,4 +89,3 @@ rankeco3
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

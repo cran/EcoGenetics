@@ -16,4 +16,3 @@ Remove spaces and tabs at the begining and the end of each element of charvec
 Thibaut Jombart
 }
 \keyword{internal}
-

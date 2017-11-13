@@ -24,4 +24,3 @@ Check ploidy and number of digits per allele
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

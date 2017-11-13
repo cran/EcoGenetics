@@ -15,4 +15,3 @@ aue.is.poly(X, poly.level)
 Identification of polymorphic loci
 }
 \keyword{internal}
-

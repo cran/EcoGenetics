@@ -326,9 +326,6 @@ eco.plotLocal(localktest, significant = FALSE)    # significant and non
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Born C., P. le Roux, C. Spohr, M. McGeoch, B. Van Vuuren. 2012.
 Plant dispersal in the sub-Antarctic inferred from anisotropic genetic structure.
@@ -360,4 +357,6 @@ Vekemans, X., and O. Hardy. 2004. New insights from fine-scale
 spatial genetic structure analyses in plant populations. 
 Molecular Ecology, 13: 921-935.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

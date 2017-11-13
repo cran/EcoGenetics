@@ -42,4 +42,3 @@ the coordinates transformed as ranks. It also can construct dynamic plots
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

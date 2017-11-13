@@ -36,8 +36,8 @@ eco.multilsa class
 
 \item{\code{OBS.RES}}{rescaled observed values to [-1, 1] range}
 }}
+
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

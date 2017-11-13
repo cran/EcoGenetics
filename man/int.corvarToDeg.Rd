@@ -13,4 +13,3 @@ int.corvarToDeg(x, angle)
 convert a eco.correlog  output into a list for degrees
 }
 \keyword{internal}
-

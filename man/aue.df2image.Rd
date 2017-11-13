@@ -17,4 +17,3 @@ This is the inverse function of aue.image2df
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

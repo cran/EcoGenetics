@@ -51,4 +51,3 @@ eco.formula(eco, P1 + P2 + P3 + E (A) ~ U(E) + Condition(X+Y)) \%>\% rda
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

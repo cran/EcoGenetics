@@ -52,9 +52,6 @@ plot(slope, main = "slope")
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Sen, P. 1968. Estimates of the regression coefficient based on Kendall's tau. 
 Journal of the American Statistical Association, Taylor and Francis Group, 63: 1379-1389.
@@ -65,4 +62,6 @@ Part 3 Proceedings of Koninalijke Nederlandse Akademie van Weinenschatpen A, 53:
 \seealso{
 \code{\link[rkt]{rkt}}.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

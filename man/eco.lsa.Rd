@@ -307,9 +307,6 @@ eco.plotLocal(localgeary)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Anselin L. 1995. Local indicators of spatial association-LISA. 
 Geographical analysis. 27: 93-115.
@@ -327,4 +324,6 @@ Sokal R. and B. Thomson. 2006. Population structure inferred by local
 spatial autocorrelation: an example from an Amerindian tribal population. 
 American journal of physical anthropology, 129: 121-131.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

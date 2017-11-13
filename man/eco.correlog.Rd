@@ -298,9 +298,6 @@ eco.plotCorrelog(cross, interactivePlot = FALSE)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Freedman D., and P. Diaconis. 1981. On the histogram as a density estimator: 
 L 2 theory. Probability theory and related fields, 57: 453-476.
@@ -336,4 +333,6 @@ MD, pp. 167-96.
 Sturges  H. 1926. The choice of a class interval. Journal of the American 
 Statistical Association, 21: 65-66.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

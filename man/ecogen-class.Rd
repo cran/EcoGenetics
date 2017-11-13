@@ -30,8 +30,8 @@ ecogen class
 
 \item{\code{ATTR}}{attributes slot}
 }}
+
 \author{
 Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

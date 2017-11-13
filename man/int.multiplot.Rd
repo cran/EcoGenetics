@@ -10,4 +10,3 @@ int.multiplot(correlog, significant = TRUE, ...)
 int.multiplot method. Graphical processing of multiple correlograms
 }
 \keyword{internal}
-

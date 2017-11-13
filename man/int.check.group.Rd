@@ -18,4 +18,3 @@ Check factor name consistency in a data frame and returns the corresponding colu
 Thibaut Jombart. Adapted by Leandro Roser.
 }
 \keyword{internal}
-

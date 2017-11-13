@@ -21,4 +21,3 @@ profiles of the bands.
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{data}
-

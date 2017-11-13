@@ -25,4 +25,3 @@ Angles for an XY coordinates matrix
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{export}
-

@@ -24,4 +24,3 @@ Solid square
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

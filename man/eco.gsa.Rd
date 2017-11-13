@@ -175,9 +175,6 @@ eco.plotGlobal(global.JC)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Geary R. 1954. The contiguity ratio and statistical mapping. 
 The incorporated statistician, 115-146.
@@ -195,4 +192,6 @@ Sokal R. and N. Oden. 1978. Spatial autocorrelation in biology.
 2. Some biological implications and four applications of evolutionary and 
 ecological interest. Biological Journal of the Linnean Society, 10: 229-49.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

@@ -20,4 +20,3 @@ Transforming an adyacency matrix into a local weight matrix for a point with coo
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

@@ -34,8 +34,8 @@ eco.lagweight class
 
 \item{\code{ANGLE}}{angle used for the construction of correlogram}
 }}
+
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

@@ -10,4 +10,3 @@ int.genind2df(x, sep = "", NA.char = "NA", restore.removed = FALSE)
 export
 }
 \keyword{internal}
-

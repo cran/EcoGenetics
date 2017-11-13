@@ -108,9 +108,6 @@ ecoslot.PVAL(pm)    # slot PVAL (P-value)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Falsetti A., and Sokal R. 1993. Genetic structure of human populations
  in the British Isles. Annals of Human Biology 20: 215-229.
@@ -130,4 +127,6 @@ regression approach. Cancer research, 27: 209-220.
 Smouse P. Long and R. Sokal. 1986. Multiple regression and correlation 
 extensions of the Mantel test of matrix correspondence. Systematic zoology, 627-632.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

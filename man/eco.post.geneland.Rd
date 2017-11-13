@@ -67,4 +67,3 @@ eco.post.geneland(5, 10)
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

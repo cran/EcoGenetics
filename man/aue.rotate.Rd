@@ -23,4 +23,3 @@ The position of the input matrix is c(1,2,3,4). For example, a transposition is 
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

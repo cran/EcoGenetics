@@ -2,8 +2,8 @@
 % Please edit documentation in R/show_summary.methods.R
 \docType{methods}
 \name{show,eco.lsa-method}
-\alias{show,eco.listlsa-method}
 \alias{show,eco.lsa-method}
+\alias{show,eco.listlsa-method}
 \alias{show,eco.multilsa-method}
 \title{show eco.lsa}
 \usage{
@@ -21,4 +21,3 @@ show eco.listlsa
 show eco.multilsa
 }
 \keyword{internal}
-

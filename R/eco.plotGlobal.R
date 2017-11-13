@@ -94,9 +94,10 @@ eco.plotGlobal <- function(input, interactivePlot = TRUE,
     
     
     mydat <- input@MULTI
-    mydat <- data.frame(rownames(mydat), mydat)
+    mydat <- data.frame(rownames(mydat), mydat, stringsAsFactors = FALSE)
     colnames(mydat)[1] <- "var"
-    levels(mydat$var) <- as.character(mydat$var)
+    mydat$var <- factor(mydat$var, levels =  as.character(mydat$var))
+
     
     mydat$ymin <- rep(0, nrow(mydat))
     

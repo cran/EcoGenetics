@@ -15,4 +15,3 @@ ecogen object with simulated data of 900 individuals.
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{data}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/show_summary.methods.R
 \docType{methods}
 \name{show,eco.mlm-method}
-\alias{show,eco.mctree-method}
 \alias{show,eco.mlm-method}
+\alias{show,eco.mctree-method}
 \title{show eco.mlm}
 \usage{
 \S4method{show}{eco.mlm}(object)
@@ -16,4 +16,3 @@ show eco.mlm
 show eco.mctree
 }
 \keyword{internal}
-

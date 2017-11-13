@@ -42,10 +42,9 @@ Plot method for bearing correlograms
 For examples see  \code{\link{eco.correlog}}. It constructs an angular correlogram
 for each distance class taken as fixed.
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \seealso{
 \code{\link{eco.correlog}}
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

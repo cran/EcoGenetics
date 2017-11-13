@@ -15,4 +15,3 @@ Allelic frequency table from 50 villages, analyzed in Sokal et al. (1986).
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{data}
-

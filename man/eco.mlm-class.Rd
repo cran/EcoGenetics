@@ -20,8 +20,8 @@ eco.mlm-class
 
 \item{\code{DF2}}{data frame}
 }}
+
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

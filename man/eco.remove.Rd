@@ -40,4 +40,3 @@ ecoslot.OUT(eco)
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

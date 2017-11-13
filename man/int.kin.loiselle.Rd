@@ -15,4 +15,3 @@ int.kin.loiselle(geno, locus)
 obtetion of multilocus Loiselle's Fij matrix
 }
 \keyword{internal}
-

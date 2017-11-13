@@ -95,9 +95,6 @@ ecoslot.BREAKS(variog)     # slot BREAKS
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Borcard D., F. Gillet, and P. Legendre. 2011. Numerical ecology with R. 
 Springer Science & Business Media.
@@ -109,4 +106,6 @@ Rosenberg, M. 2000. The bearing correlogram: a new method
 of analyzing directional spatial autocorrelation. 
 Geographical Analysis, 32: 267-278.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

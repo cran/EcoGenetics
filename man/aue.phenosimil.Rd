@@ -16,4 +16,3 @@ Phenotypic similarity for vector, matrix or data frame acoording to Ritland (199
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

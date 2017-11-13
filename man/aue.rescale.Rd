@@ -35,4 +35,3 @@ cex = 1.5, xlab ="X", ylab= "Y")
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

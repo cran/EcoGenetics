@@ -57,10 +57,9 @@ show only significant correlograms? (default: FALSE)}
 Plot method for correlograms and variograms. 
 For examples see  \code{\link{eco.correlog}} \code{\link{eco.cormantel}}  \code{\link{eco.variogram}}
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \seealso{
 \code{\link{eco.correlog}} \code{\link{eco.cormantel}}  \code{\link{eco.variogram}}
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

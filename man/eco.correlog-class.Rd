@@ -34,8 +34,8 @@ eco.correlog-class
 
 \item{\code{BEARING}}{bearing correlogram (logical)}
 }}
+
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

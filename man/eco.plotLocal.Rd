@@ -82,4 +82,3 @@ Additional parameters can be passed to eco.rankplot.
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
-

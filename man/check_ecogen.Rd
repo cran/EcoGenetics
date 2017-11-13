@@ -10,4 +10,3 @@ check_ecogen(object)
 check_ecogen
 }
 \keyword{internal}
-

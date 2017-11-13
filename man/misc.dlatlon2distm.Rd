@@ -21,4 +21,3 @@ under a spherical Earth model
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

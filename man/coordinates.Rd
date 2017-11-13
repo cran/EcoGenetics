@@ -16,4 +16,3 @@ Data frame with cartesian coordinates of
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{data}
-

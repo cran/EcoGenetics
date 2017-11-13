@@ -25,8 +25,8 @@ eco.gsa class
 \item{\code{MULTI}}{table with observed and expected values, P-values and alternative
 hypoteses when multiple variables are tested}
 }}
+
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

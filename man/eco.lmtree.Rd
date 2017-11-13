@@ -125,12 +125,11 @@ summary(mod)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Hothorn T., K. Hornik, and A. Zeileis. 2006. Unbiased Recursive Partitioning: 
 A Conditional Inference Framework. Journal of Computational and Graphical Statistics, 
 15: 651-674.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

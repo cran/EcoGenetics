@@ -82,6 +82,7 @@
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' 
 #' @export
+#' 
 
 setGeneric("eco.variogram",  
            function(Z, XY, 

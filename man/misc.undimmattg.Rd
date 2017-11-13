@@ -16,4 +16,3 @@ Creates a matrix without diagonal, in row order
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

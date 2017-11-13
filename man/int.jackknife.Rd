@@ -20,4 +20,3 @@ d-Jackknife estimation.
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

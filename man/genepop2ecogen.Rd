@@ -30,4 +30,3 @@ ingpop
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}, adapting code
 written by Emiel van Loon and Scott Davis
 }
-

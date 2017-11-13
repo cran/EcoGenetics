@@ -12,4 +12,3 @@ eco.order(...)
 \description{
 Functions deprecated in EcoGenetics version 1.2.0-2
 }
-

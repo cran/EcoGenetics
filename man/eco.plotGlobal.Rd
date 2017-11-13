@@ -34,4 +34,3 @@ For examples see \code{\link{eco.gsa}}
 \author{
 Leandro Roser
 }
-

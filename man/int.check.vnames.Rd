@@ -20,4 +20,3 @@ Check a vector of names
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

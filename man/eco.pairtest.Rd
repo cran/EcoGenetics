@@ -50,10 +50,9 @@ wil
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \seealso{
 \code{\link{wilcox.test}} \code{\link{TukeyHSD}}
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

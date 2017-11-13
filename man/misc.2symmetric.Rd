@@ -16,4 +16,3 @@ Conversion of a non symmetric binary matrix into symmetric.
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

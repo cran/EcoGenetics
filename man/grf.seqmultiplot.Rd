@@ -21,4 +21,3 @@ Plot a ggplot sequence in layers of n plots arranged in k rows
 \author{
 Leandro Roser
 }
-

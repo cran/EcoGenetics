@@ -66,9 +66,6 @@ image(example)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Chander G., B. Markham, and D. Helder. 2009. Summary of current radiometric calibration 
 coefficients for Landsat MSS, TM, ETM+, and EO-1 ALI sensors. Remote sensing of 
@@ -90,4 +87,6 @@ atmospheric effects?. Remote sensing of Environment, 75: 230-244.
 Tucker C. 1979. Red and photographic infrared linear combinations for monitoring 
 vegetation. Remote sensing of Environment, 8: 127-150.
 }
-
+\author{
+Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+}

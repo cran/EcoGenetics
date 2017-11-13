@@ -26,8 +26,8 @@ eco.lsa class
 
 \item{\code{NAMES}}{variable name}
 }}
+
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-
