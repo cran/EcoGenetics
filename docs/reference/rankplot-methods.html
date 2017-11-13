@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -137,7 +137,7 @@ to the rank of the X and Y coordinates, respectively.</p>
     </tr>
     <tr>
       <th>background</th>
-      <td><p>color of the background ("grey" or "white")-</p></td>
+      <td><p>Background color ("grey" or "white")-</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -145,8 +145,8 @@ to the rank of the X and Y coordinates, respectively.</p>
     </tr>
     <tr>
       <th>significant</th>
-      <td><p>should be colored only the individuals with significant 
-result?. This argument can be used with <code><a href='eco.lsa.html'>eco.lsa</a></code> results. 
+      <td><p>Should only the individuals with significant 
+result be colored?. This argument can be used with <code><a href='eco.lsa.html'>eco.lsa</a></code> results. 
 Default TRUE</p></td>
     </tr>
     <tr>
@@ -155,7 +155,7 @@ Default TRUE</p></td>
     </tr>
     <tr>
       <th>ns</th>
-      <td><p>color for non significant individuals, when significant = TRUE.
+      <td><p>Color for non significant individuals, when significant = TRUE.
 This argument can be used with <code><a href='eco.lsa.html'>eco.lsa</a></code> results.</p></td>
     </tr>
     <tr>
@@ -169,9 +169,10 @@ This argument can be used with <code><a href='eco.lsa.html'>eco.lsa</a></code> r
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'>data</span>(<span class='no'>eco3</span>)
 
-<span class='co'># The data set eco3 has  50 points in two sites, </span>
-<span class='co'># but they are not visible in a usual X-Y plot </span>
-<span class='co'># due to the small distance among them</span>
+<span class='co'># The data set eco3 has 50 points in two sites, </span>
+<span class='co'># but points are not visible in a usual X-Y plot, </span>
+<span class='co'># due to the small distance among them in relation to the large</span>
+<span class='co'># distance between sites</span>
 
 <span class='no'>var</span> <span class='kw'>&lt;-</span> <span class='no'>eco3</span><span class='kw'>[[</span><span class='st'>"P"</span>]][,<span class='fl'>1</span>]
 <span class='fu'>plot</span>(<span class='no'>eco3</span><span class='kw'>[[</span><span class='st'>"XY"</span>]], <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>var</span>)
@@ -183,7 +184,7 @@ This argument can be used with <code><a href='eco.lsa.html'>eco.lsa</a></code> r
 <span class='no'>rankeco3</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.rankplot</span>(<span class='no'>var</span>, <span class='no'>eco3</span><span class='kw'>[[</span><span class='st'>"XY"</span>]])
 <span class='no'>rankeco3</span>
 
-<span class='co'># the rankplot method support the use of ggplot2 syntax with ggplot2 graphs</span>
+<span class='co'># the rankplot method supports the use of ggplot2 syntax with ggplot2 graphs</span>
 <span class='fu'>require</span>(<span class='no'>ggplot2</span>)
 <span class='no'>rankeco3</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.rankplot</span>(<span class='no'>var</span>, <span class='no'>eco3</span><span class='kw'>[[</span><span class='st'>"XY"</span>]], <span class='kw'>interactivePlot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='no'>rankeco3</span> <span class='kw'>&lt;-</span> <span class='no'>rankeco3</span> + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_bw</a></span>() + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>legend.position</span><span class='kw'>=</span><span class='st'>"none"</span>)
@@ -201,7 +202,7 @@ This argument can be used with <code><a href='eco.lsa.html'>eco.lsa</a></code> r
 
     <h2>Author</h2>
     
-Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>

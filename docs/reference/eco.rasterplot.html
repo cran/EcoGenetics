@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>rasterplot graphs — eco.rasterplot • EcoGenetics</title>
+<title>Rasterplot graphs — eco.rasterplot • EcoGenetics</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -80,14 +80,14 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>rasterplot graphs</h1>
+    <h1>Rasterplot graphs</h1>
     </div>
 
     
     <p>This function generates a multivariate plot for 
 a data matrix (raster), with an option for filtering the data
-and to graph using groups. The resterplot graph is a flexible tools
-for multiple data sources (environmental, genetic, phenotypic, etc.).</p>
+and to plot using groups. The resterplot graph is a flexible tool useful
+for different data sources.</p>
     
 
     <pre class="usage"><span class='fu'>eco.rasterplot</span>(<span class='no'>x</span>, <span class='kw'>filter</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>condition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>grp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -99,35 +99,35 @@ for multiple data sources (environmental, genetic, phenotypic, etc.).</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>data matrix (raster)</p></td>
+      <td><p>Data matrix (raster)</p></td>
     </tr>
     <tr>
       <th>filter</th>
-      <td><p>optional data matrix used as filter</p></td>
+      <td><p>Optional data matrix used as filter</p></td>
     </tr>
     <tr>
       <th>condition</th>
-      <td><p>condition used to filter data</p></td>
+      <td><p>Condition used to filter data</p></td>
     </tr>
     <tr>
       <th>grp</th>
-      <td><p>factor with groups to use in the plot. Default NULL</p></td>
+      <td><p>Factor with groups to use in the plot. Default NULL</p></td>
     </tr>
     <tr>
       <th>limits</th>
-      <td><p>values limits used for computing the data gradient for the plot</p></td>
+      <td><p>Balues limits used for computing the data gradient for the plot</p></td>
     </tr>
     <tr>
       <th>title</th>
-      <td><p>plot title</p></td>
+      <td><p>Plot title</p></td>
     </tr>
     <tr>
       <th>z.name</th>
-      <td><p>name for the legend</p></td>
+      <td><p>Name for the legend</p></td>
     </tr>
     <tr>
       <th>vertical</th>
-      <td><p>should be partitioned the populations on the x axis? Default
+      <td><p>Should the populations on the x axis  be partitioned? Default
 TRUE.</p></td>
     </tr>
     <tr>
@@ -143,70 +143,73 @@ TRUE.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
- </div># NOT RUN {
-data(eco.test)
+ </div><span class='co'># NOT RUN {</span>
+<span class='fu'>data</span>(<span class='no'>eco.test</span>)
+<span class='fu'>require</span>(<span class='no'>ggplot2</span>)
 
-# using the ecogen object "eco" to perform a multiple-lsa
-con <- eco.weight(eco[["XY"]], method = "knearest", k = 4, row.sd = TRUE)
-test.lsa <- eco.lsa(eco[["P"]], con = con, method = "I", nsim = 99, multi = "matrix")
+<span class='co'># using the ecogen object "eco" to perform a multiple-lsa</span>
+<span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='eco.weight.html'>eco.weight</a></span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"XY"</span>]], <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"knearest"</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>row.sd</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>test.lsa</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='eco.lsa.html'>eco.lsa</a></span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"P"</span>]], <span class='kw'>con</span> <span class='kw'>=</span> <span class='no'>con</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"I"</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>99</span>, <span class='kw'>multi</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>)
 
-# the default method for this object, is a resterplot
-eco.plotLocal(test.lsa)
+<span class='co'># the plot method for this object based in ggplot2, is a resterplot</span>
+<span class='fu'><a href='eco.plotLocal.html'>eco.plotLocal</a></span>(<span class='no'>test.lsa</span>, <span class='kw'>multi</span> <span class='kw'>=</span> <span class='st'>"ggplot2"</span>)
 
-# adding a factor
-test.lsa <- eco.lsa(eco[["P"]], con = con, method = "I",
-nsim = 99, multi = "matrix", pop = eco[["S"]][,1])
-eco.plotLocal(test.lsa)
+<span class='co'># adding a factor</span>
+<span class='no'>test.lsa</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='eco.lsa.html'>eco.lsa</a></span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"P"</span>]], <span class='kw'>con</span> <span class='kw'>=</span> <span class='no'>con</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"I"</span>,
+<span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>99</span>, <span class='kw'>multi</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>, <span class='kw'>pop</span> <span class='kw'>=</span> <span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"S"</span>]][,<span class='fl'>1</span>])
+<span class='fu'><a href='eco.plotLocal.html'>eco.plotLocal</a></span>(<span class='no'>test.lsa</span>, <span class='kw'>multi</span> <span class='kw'>=</span> <span class='st'>"ggplot2"</span>)
 
-# The generic rasterplot method requires a data matrix, and, as option, a condition 
-# and a filter matrix. The condition is an expression, containing the word "filter" and 
-# logical elements, e.g., "filter < 50", "filter <50 || filter > 2", etc. ). 
-# Filter is used as a logical matrix (TRUE-FALSE, in relation to the passed condition),
-# for filtering the data. If a condition is passed but not a filter matrix, the condition
-# is applied over the data matrix, also using the word "filter". 
-# Internally, the multi.lsa plot uses three fundamental elements. 
-# - a data matrix: in the example, ecoslot.OBS(test.lsa)
-#  a filter matrix: in the example, ecoslt.PVAL(test.lsa); i.e., 
-the data matrix will be filtered
-# by P-value using the third element, an expresion.
-# - an expression: in the example: "filter < 0.05"
- 
- # Combining the three elements, the multivariate plot can be manually constructed:
- my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
- filter = ecoslot.PVAL(test.lsa), condition = "filter < 0.05")
- 
- 
- # add population
- my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
- filter = ecoslot.PVAL(test.lsa), 
- condition = "filter < 0.05", grp = ecoslot.POP(test.lsa))
- 
- 
- # Extra manipulation with ggplot2 graphs (ggplot2 commands allowed by rasterplot)
- my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
- filter = ecoslot.PVAL(test.lsa), condition = "filter < 0.05",
- interactivePlot = FALSE)
- 
- ## rotate plot
- 
- my.plot + coord_flip()
- 
- ## change design
- my.plot + theme_grey()
- 
- 
- # using the data as filter
- eco.rasterplot(x= ecoslot.OBS(test.lsa), filter = ecoslot.OBS(test.lsa), 
- condition = "filter > 0 & filter < 3")
- 
- 
- # example of bad syntax (incorrect use of && over matrices)
- eco.rasterplot(x= ecoslot.OBS(test.lsa), filter = ecoslot.OBS(test.lsa), 
- condition = "filter > 0 && filter < 3")
- 
- 
-# }
-<div class='input'> 
+<span class='co'># The generic rasterplot method requires a data matrix, and, as option, a condition </span>
+<span class='co'># and a filter matrix. The condition is an expression, containing the word "filter" and </span>
+<span class='co'># logical elements, e.g., "filter &lt; 50", "filter &lt;50 || filter &gt; 2", etc. ). </span>
+<span class='co'># Filter is used as a logical matrix (TRUE-FALSE, in relation to the passed condition),</span>
+<span class='co'># for filtering the data. If a condition is passed but not a filter matrix, the condition</span>
+<span class='co'># is applied over the data matrix, also using the word "filter". </span>
+<span class='co'># Internally, the multi.lsa plot uses three fundamental elements. </span>
+<span class='co'># - a data matrix: in the example, ecoslot.OBS(test.lsa)</span>
+<span class='co'># - a filter matrix: in the example, ecoslt.PVAL(test.lsa); i.e., </span>
+<span class='co'># the data matrix will be filtered by P-value using the third element, an expresion.</span>
+<span class='co'># - an expression: in the example: "filter &lt; 0.05"</span>
+
+ <span class='co'># by combining the three elements, the multivariate plot can be manually constructed:</span>
+ <span class='no'>my.plot</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.rasterplot</span>(<span class='kw'>x</span><span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OBS</a></span>(<span class='no'>test.lsa</span>),
+ <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.PVAL</a></span>(<span class='no'>test.lsa</span>), <span class='kw'>condition</span> <span class='kw'>=</span> <span class='st'>"filter &lt; 0.05"</span>)
+ <span class='no'>my.plot</span>
+
+
+ <span class='co'># add population</span>
+ <span class='no'>my.plot</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.rasterplot</span>(<span class='kw'>x</span><span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OBS</a></span>(<span class='no'>test.lsa</span>),
+ <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.PVAL</a></span>(<span class='no'>test.lsa</span>),
+ <span class='kw'>condition</span> <span class='kw'>=</span> <span class='st'>"filter &lt; 0.05"</span>, <span class='kw'>grp</span> <span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.POP</a></span>(<span class='no'>test.lsa</span>))
+ <span class='no'>my.plot</span>
+
+
+ <span class='co'># extra manipulation with ggplot2 graphs (ggplot2 commands allowed by rasterplot)</span>
+ <span class='no'>my.plot</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.rasterplot</span>(<span class='kw'>x</span><span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OBS</a></span>(<span class='no'>test.lsa</span>),
+ <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.PVAL</a></span>(<span class='no'>test.lsa</span>), <span class='kw'>condition</span> <span class='kw'>=</span> <span class='st'>"filter &lt; 0.05"</span>,
+ <span class='kw'>interactivePlot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+ <span class='no'>my.plot</span>
+
+
+ <span class='co'>## rotate plot</span>
+
+ <span class='no'>my.plot</span> + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/coord_flip'>coord_flip</a></span>()
+
+ <span class='co'>## change design</span>
+ <span class='no'>my.plot</span> + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_grey</a></span>()
+
+
+ <span class='co'># using the data as filter</span>
+ <span class='fu'>eco.rasterplot</span>(<span class='kw'>x</span><span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OBS</a></span>(<span class='no'>test.lsa</span>), <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OBS</a></span>(<span class='no'>test.lsa</span>),
+ <span class='kw'>condition</span> <span class='kw'>=</span> <span class='st'>"filter &gt; 0 &amp; filter &lt; 3"</span>)
+
+
+ <span class='co'># example of bad syntax (incorrect use of &amp;&amp; over matrices)</span>
+ <span class='fu'>eco.rasterplot</span>(<span class='kw'>x</span><span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OBS</a></span>(<span class='no'>test.lsa</span>), <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OBS</a></span>(<span class='no'>test.lsa</span>),
+ <span class='kw'>condition</span> <span class='kw'>=</span> <span class='st'>"filter &gt; 0 &amp;&amp; filter &lt; 3"</span>)
+
+
+<span class='co'># }</span><div class='input'> 
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

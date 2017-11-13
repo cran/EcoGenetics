@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Splitting an ecogen object by groups — eco.split • EcoGenetics</title>
+<title>Splitting an ecogen object by group — eco.split • EcoGenetics</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -80,15 +80,15 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Splitting an ecogen object by groups</h1>
+    <h1>Splitting an ecogen object by group</h1>
     </div>
 
     
-    <p>The function splits an ecogen objects into the groups of a hierarchy
-contained in the slot S. If asList is TRUE,a list with the objects is created , 
+    <p>The function splits an ecogen object into the groups defined
+in the slot S. If asList is TRUE, a list with the objects is created , 
 that can be assigned to a name with regular rules, using the operator "&lt;-". 
-Else, the function creates one ecogen object for each level in the workspace
-with the following nomenclature: &lt;name of ecogen object&gt;.&lt;name of hierarchical level&gt;.</p>
+Otherwise, the function creates in the workspace an ecogen object for each group 
+with the following nomenclature: &lt;name of ecogen object&gt;.&lt;name of the group&gt;.</p>
     
 
     <pre class="usage"><span class='fu'>eco.split</span>(<span class='no'>eco</span>, <span class='no'>hier</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"0"</span>,
@@ -112,13 +112,14 @@ a suffix (see Description).</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>Overwrite files in workspace with same name if exist?
-Missing elements are treated as zeros in the default option.</p></td>
+      <td><p>Overwrite files with the same name of the output
+if already present in workspace when asList = FALSE? Default FALSE.</p></td>
     </tr>
     <tr>
       <th>missing</th>
       <td><p>Missing data argument This can take three values ("0", "NA" or "MEAN"),
-as described in  <code><a href='ecogen.html'>ecogen</a></code>.</p></td>
+as described in  <code><a href='ecogen.html'>ecogen</a></code>. 
+#' Missing elements are treated as zeros in the default option.</p></td>
     </tr>
     <tr>
       <th>asList</th>
@@ -132,15 +133,24 @@ Default = TRUE</p></td>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'>data</span>(<span class='no'>eco3</span>)
 <span class='no'>eco3</span>
-<span class='co'>#list of objects</span>
+
+
+<span class='co'># list of objects</span>
 <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.split</span>(<span class='no'>eco3</span>, <span class='st'>"structure"</span>, <span class='kw'>asList</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='co'>#r-ebinding</span>
+
+
+<span class='co'># rebinding</span>
 <span class='no'>eco.bind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='eco.rbind.html'>eco.rbind</a></span>(<span class='no'>x</span>)
+
+
 <span class='co'># note that different subsets can also be created</span>
 <span class='no'>S1.3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='eco.rbind.html'>eco.rbind</a></span>(<span class='no'>x</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='no'>x</span><span class='kw'>[[</span><span class='fl'>3</span>]])
 
+
 <span class='co'># split and create objects with prefix "eco3"</span>
 <span class='fu'>eco.split</span>(<span class='no'>eco3</span>,<span class='st'>"structure"</span>, <span class='kw'>asList</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+
 <span class='co'># split and create objects with prefix "newObjects"</span>
 <span class='fu'>eco.split</span>(<span class='no'>eco3</span>,<span class='st'>"structure"</span>, <span class='st'>"newObjects"</span>, <span class='kw'>asList</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
@@ -159,7 +169,7 @@ Default = TRUE</p></td>
 
     <h2>Author</h2>
     
-Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Conversion of a formula for an ecogen objects into an explict expression — eco.formula • EcoGenetics</title>
+<title>Formula construction for ecogen objects — eco.formula • EcoGenetics</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -80,17 +80,21 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Conversion of a formula for an ecogen objects into an explict expression</h1>
+    <h1>Formula construction for ecogen objects</h1>
     </div>
 
     
-    <p>The function creates an explicit formula that can be used as input 
-to parse ecogen objects into other methods. For this purpose, each element in the 
-formula is substituted with an explicit name of columns in ecogen objects if:</p>
-<p>- The name in formula corresponds to the name of a column in the data frames of the object, or
-- The name in formula is surrounded by U() and corresponds to a slot name. Complete data frames (as P, E, etc) 
-  or subsets (as U[, 1:5]) can be passed with this method.</p>  
-<p>In other situations, text is not replaced.</p>
+    <p>When a data frame is present in a slot of an object, any individual column can be 
+accessed using the notation: my_object@my_data_frame[, column_to_be_accessed]. The later constitutes an explicit 
+name for the variable present in the object.  The present function generalizes this concept, 
+allowing to construct a formula for the variables present in an ecogen object
+(columns of the data frames in slots). The function creates an explicit formula that can be used
+to parse ecogen objects into other functions (see examples below). For this purpose, each name in the 
+formula is substituted with explicit names of columns if:</p>
+<p>- The name corresponds to the name of an individual column in the data frames of the ecogen object, or</p>
+<p>- The name is surrounded by U() and corresponds to the name of a slot. Complete data frames (as P, E, etc.) 
+  or subsets (as U[, 1:5]) can be passed with this method and all the columns will be explicitly included in the formula.</p>  
+<p>In other situations, names are not replaced.</p>
     
 
     <pre class="usage"><span class='fu'>eco.formula</span>(<span class='no'>eco</span>, <span class='no'>formula</span>, <span class='kw'>out.mode</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"formula"</span>, <span class='st'>"expression"</span>),
@@ -128,14 +132,14 @@ formula is substituted with an explicit name of columns in ecogen objects if:</p
 <span class='co'># indicating conditioning variables; in eco.formula it is only text.</span>
 
 <span class='no'>form</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.formula</span>(<span class='no'>eco</span>, <span class='no'>P1</span> + <span class='no'>P2</span> + <span class='no'>P3</span> + <span class='fu'>U</span>(<span class='no'>A</span>) ~ <span class='no'>E1</span> + <span class='no'>E2</span> + <span class='fu'>Condition</span>(<span class='no'>X</span>+<span class='no'>Y</span>))
-<span class='fu'>rda</span>(<span class='no'>form</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/vegan/topics/cca'>rda</a></span>(<span class='no'>form</span>)
 
 <span class='no'>form2</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.formula</span>(<span class='no'>eco</span>, <span class='no'>P1</span> + <span class='no'>P2</span> + <span class='no'>P3</span> + <span class='fu'>U</span>(<span class='no'>A</span>) ~ <span class='no'>E1</span> + <span class='no'>E2</span> + <span class='no'>X</span> + <span class='no'>Y</span>)
 <span class='fu'>lm</span>(<span class='no'>form2</span>)
 
 
 <span class='co'># parsing with magrittr</span>
-<span class='fu'>eco.formula</span>(<span class='no'>eco</span>, <span class='no'>P1</span> + <span class='no'>P2</span> + <span class='no'>P3</span> + <span class='fu'>E</span> (<span class='no'>A</span>) ~ <span class='fu'>U</span>(<span class='no'>E</span>) + <span class='fu'>Condition</span>(<span class='no'>X</span>+<span class='no'>Y</span>)) <span class='kw'>%&gt;%</span> <span class='no'>rda</span>
+<span class='fu'>eco.formula</span>(<span class='no'>eco</span>, <span class='no'>P1</span> + <span class='no'>P2</span> + <span class='no'>P3</span> + <span class='fu'>U</span>(<span class='no'>A</span>) ~ <span class='fu'>U</span>(<span class='no'>E</span>) + <span class='fu'>Condition</span>(<span class='no'>X</span>+<span class='no'>Y</span>)) <span class='kw'>%&gt;%</span> <span class='no'>rda</span>
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
@@ -149,7 +153,7 @@ formula is substituted with an explicit name of columns in ecogen objects if:</p
 
     <h2>Author</h2>
     
-Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>

@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -84,11 +84,10 @@
     </div>
 
     
-    <p>This program computes the Mantel test between the distance matrices 
-d1 and d2, or a partial Mantel test between the distance matrices. The test can 
-be performed for truncated distances (Legendre et al. 2015) or with a direction
-Falsetti and Sokal (1993) using a weights object generated with  <code><a href='eco.bearing.html'>eco.bearing</a></code>.
-d1 and d2, conditioned on dc.</p>
+    <p>Mantel test or Partial Mantel test for distance matrices d1 and d2, 
+or partial Mantel test for d1 and d2, conditioned on the matrix dc.
+ The test can be performed for truncated distances (Legendre et al. 2015) or for a particular direction
+(Falsetti and Sokal, 1993) using a weights object generated with  <code><a href='eco.bearing.html'>eco.bearing</a></code>.</p>
     
 
     <pre class="usage"><span class='fu'>eco.mantel</span>(<span class='no'>d1</span>, <span class='no'>d2</span>, <span class='kw'>dc</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>con</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thres</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -113,17 +112,17 @@ d1 and d2, conditioned on dc.</p>
     </tr>
     <tr>
       <th>con</th>
-      <td><p>binary eco.weight object used for truncation or a weights object obtained with eco.bearing.</p></td>
+      <td><p>Binary eco.weight object used for truncation, or a weights object obtained with eco.bearing.</p></td>
     </tr>
     <tr>
       <th>thres</th>
-      <td><p>threshold distance used for truncation. distances above the threshold are
-set as 4 times the threshold. If null, and con is not null, it is set to the maximum
-distance observed in d2</p></td>
+      <td><p>Threshold distance used for truncation. Distances above the threshold are
+set as 4 times the threshold. If thres is null, and con is not null,
+the parameter set to the maximum distance observed in d2.</p></td>
     </tr>
     <tr>
       <th>truncMat</th>
-      <td><p>Matrix to be used for truncation (default = d2)</p></td>
+      <td><p>Matrix used for truncation (default = d2)</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -137,12 +136,11 @@ distance observed in d2</p></td>
     <tr>
       <th>alternative</th>
       <td><p>The alternative hypothesis. If "auto" is selected (default) the
-program determines the alternative hypothesis.
-Other options are: "two.sided", "greater" and "less".</p></td>
+program determines the alternative hypothesis. Other options are: "two.sided", "greater" and "less".</p></td>
     </tr>
     <tr>
       <th>plotit</th>
-      <td><p>Should be generated a plot of the simulations?</p></td>
+      <td><p>Plot a histogram of the simulations?</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -186,42 +184,44 @@ extensions of the Mantel test of matrix correspondence. Systematic zoology, 627-
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-</div># NOT RUN {
-data(eco.test)
+</div><span class='co'># NOT RUN {</span>
+<span class='fu'>data</span>(<span class='no'>eco.test</span>)
 
-eco.mantel(d1 = dist(eco[["P"]]), d2 = dist(eco[["E"]]), nsim = 99)   # ordinary Mantel test
+<span class='co'>### Ordinary Mantel test ###</span>
+<span class='fu'>eco.mantel</span>(<span class='kw'>d1</span> <span class='kw'>=</span> <span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"P"</span>]]), <span class='kw'>d2</span> <span class='kw'>=</span> <span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"E"</span>]]), <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>99</span>)
 
-pm <- eco.mantel(d1 = dist(eco[["P"]]), d2 = dist(eco[["E"]]), 
-dc = dist(eco[["XY"]]), nsim = 99)                               # partial Mantel test
+<span class='co'>### Partial Mantel test ###</span>
+<span class='no'>pm</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.mantel</span>(<span class='kw'>d1</span> <span class='kw'>=</span> <span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"P"</span>]]), <span class='kw'>d2</span> <span class='kw'>=</span> <span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"E"</span>]]),
+<span class='kw'>dc</span> <span class='kw'>=</span> <span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"XY"</span>]]), <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>99</span>)
 
-# checking threshold in a correlogram:
-corm <- eco.cormantel(M = dist(eco[["P"]]), XY = eco[["XY"]], nsim = 99)
-eco.plotCorrelog(corm)
-Correlation is around 0 when distance between points is > 5
+<span class='co'>### Truncated Mantel test ###</span>
+<span class='co'># checking threshold in a correlogram:</span>
+<span class='no'>corm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='eco.cormantel.html'>eco.cormantel</a></span>(<span class='kw'>M</span> <span class='kw'>=</span> <span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"P"</span>]]), <span class='kw'>XY</span> <span class='kw'>=</span> <span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"XY"</span>]], <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>99</span>)
+<span class='fu'><a href='eco.plotCorrelog.html'>eco.plotCorrelog</a></span>(<span class='no'>corm</span>)
+<span class='co'># Correlation is around 0 when distance between points is &gt; 5</span>
 
-# create a weights object for truncation
-con <- eco.weight(eco@XY, method="circle", d2=5)
-#compute a truncated mantel test
-eco.mantel(dist(eco[["P"]]), dist(eco[["XY"]]), con=con)
+<span class='co'># creating a weights object for truncation</span>
+<span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='eco.weight.html'>eco.weight</a></span>(<span class='no'>eco</span>@<span class='kw'>XY</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"circle"</span>, <span class='kw'>d2</span><span class='kw'>=</span><span class='fl'>5</span>)
+<span class='co'># compute a truncated mantel test</span>
+<span class='fu'>eco.mantel</span>(<span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"P"</span>]]), <span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"XY"</span>]]), <span class='kw'>con</span><span class='kw'>=</span><span class='no'>con</span>)
 
-# analize test mantel in a direction of 35 degrees
-con <- eco.bearing(XY = eco[["X"]], thata = 37)
-eco.mantel(dist(eco[["P"]]), dist(eco[["XY"]]), con = con2)
+<span class='co'>### Directional Mantel test ###</span>
+<span class='co'># analyzing with a Mantel test, in a direction of 35 degrees counterclockwise from E.</span>
+<span class='no'>con2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='eco.bearing.html'>eco.bearing</a></span>(<span class='kw'>XY</span> <span class='kw'>=</span> <span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"XY"</span>]], <span class='kw'>theta</span> <span class='kw'>=</span> <span class='fl'>37</span>)
+<span class='fu'>eco.mantel</span>(<span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"P"</span>]]), <span class='fu'>dist</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"XY"</span>]]), <span class='kw'>con</span> <span class='kw'>=</span> <span class='no'>con2</span>)
 
+<span class='co'>#-----------------------</span>
+<span class='co'># ACCESSORS USE EXAMPLE</span>
+<span class='co'>#-----------------------</span>
 
-#-----------------------
-# ACCESSORS USE EXAMPLE
-#-----------------------
+<span class='co'># the slots are accessed with the generic format </span>
+<span class='co'># (ecoslot. + name of the slot + name of the object). </span>
+<span class='co'># See help("EcoGenetics accessors")</span>
 
-# the slots are accessed with the generic format 
-# (ecoslot. + name of the slot + name of the object). 
-# See help("EcoGenetics accessors")
+<span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OBS</a></span>(<span class='no'>pm</span>)     <span class='co'># slot OBS (observed value)</span>
+<span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.PVAL</a></span>(<span class='no'>pm</span>)    <span class='co'># slot PVAL (P-value) </span>
 
-ecoslot.OBS(pm)     # slot OBS (observed value)
-ecoslot.PVAL(pm)    # slot PVAL (P-value) 
-
-# }
-<div class='input'>
+<span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -238,7 +238,7 @@ ecoslot.PVAL(pm)    # slot PVAL (P-value)
 
     <h2>Author</h2>
     
-Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>

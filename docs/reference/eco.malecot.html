@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Global and local kinship analyses — eco.malecot • EcoGenetics</title>
+<title>Global and local kinship analysis — eco.malecot • EcoGenetics</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -80,15 +80,15 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Global and local kinship analyses</h1>
+    <h1>Global and local kinship analysis</h1>
     </div>
 
     
-    <p>The program computes a global multilocus correlogram, or a local analysis, using a 
-kinship matrix. When a kinship matrix is not given as input, the program
+    <p>The program computes, for a kinship matrix,  a global multilocus correlogram,
+ or a local analysis. When a kinship matrix is not given as input, the program
 computes the Loiselle's Fij (Kalisz et al., 2001; Loiselle et al., 1995). 
 The program can compute a bearing correlogram (Rosenberg 2000, Born et al.
-2012) for the obtention of a directional approach to the global test.</p>
+2012) for the obtention of a directional approach in the global test.</p>
     
 
     <pre class="usage"><span class='fu'>eco.malecot</span>(<span class='no'>eco</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"global"</span>, <span class='st'>"local"</span>), <span class='kw'>kinmatrix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -148,30 +148,30 @@ of the ecogen object if kinmatrix = NULL (Defaul option).</p></td>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>Weight mode for local analyis: "knearest" for nearest neigbors,
+      <td><p>Weighting mode for local analysis: "knearest" for nearest neigbors,
 "radialdist" for radial distances. Default is knearest.</p></td>
     </tr>
     <tr>
       <th>cubic</th>
-      <td><p>Should be performed a cubic interpolation (res~ ln(dij)) 
-with the regression residuals (res)  of (kinship)ij ~ ln(dij) ? Defalut TRUE.</p></td>
+      <td><p>Should a cubic interpolation (res~ ln(dij)) be performed, 
+for the regression residuals (res)  of (kinship)ij ~ ln(dij) ? Default TRUE.</p></td>
     </tr>
     <tr>
       <th>testclass.b</th>
-      <td><p>Should be performed a permutation test in each individual class? Defalut TRUE.</p></td>
+      <td><p>Carry a permutation test within each individual class? Default TRUE.</p></td>
     </tr>
     <tr>
       <th>testmantel.b</th>
-      <td><p>Should be performed a Mantel test for testing the slope (b)? Defalut TRUE.</p></td>
+      <td><p>Should a Mantel test for testing the slope (b) be performed? Default TRUE.</p></td>
     </tr>
     <tr>
       <th>jackknife</th>
-      <td><p>Should be performed jackknife in each individual class for computing
-the standard deviation (SD) of the coancestry (class) values? Defalut TRUE.</p></td>
+      <td><p>Compute jackknife within each individual class for obtention of
+the standard deviation (SD) of the coancestry (class) values. Default TRUE.</p></td>
     </tr>
     <tr>
       <th>cummulative</th>
-      <td><p>Should be construced a cummulative correlogram?.</p></td>
+      <td><p>Should a cummulative correlogram be construced?.</p></td>
     </tr>
     <tr>
       <th>normLocal</th>
@@ -196,12 +196,12 @@ Other options are: "two.sided", "greater" and "less".</p></td>
     </tr>
     <tr>
       <th>sequential</th>
-      <td><p>Should be performed a Holm-Bonberroni (Legendre and Legendre, 2012) 
-adjustment of P-values for global analysis? Defalult TRUE.</p></td>
+      <td><p>Use the Holm-Bonberroni sequential method for
+adjustment of P-values (Legendre and Legendre, 2012) in global analysis? Default TRUE.</p></td>
     </tr>
     <tr>
       <th>conditional</th>
-      <td><p>Logical. Should be used a conditional randomization? (Anselin 1998, Sokal and Thomson 2006). The option "auto"
+      <td><p>Logical. Use a conditional randomization? (Anselin 1998, Sokal and Thomson 2006). The option "auto"
 sets conditional = TRUE for LISA methods and G, as suggested by Sokal (2008).</p></td>
     </tr>
     <tr>
@@ -218,18 +218,18 @@ option is Freedman-Diaconis method (Freedman and Diaconis, 1981).</p></td>
     <tr>
       <th>adjust</th>
       <td><p>P-values correction method for multiple tests 
-passed to <code><a href='http://www.rdocumentation.org/packages/stats/topics/p.adjust'>p.adjust</a></code>. Defalut is "holm".</p></td>
+passed to <code><a href='http://www.rdocumentation.org/packages/stats/topics/p.adjust'>p.adjust</a></code>. Default is "holm".</p></td>
     </tr>
     <tr>
       <th>latlon</th>
-      <td><p>Are the coordinates in decimal degrees format? Defalut FALSE. If TRUE,
+      <td><p>Are the coordinates in decimal degrees format? Default FALSE. If TRUE,
 the coordinates must be in a matrix/data frame with the longitude in the first
 column and latitude in the second. The position is projected onto a plane in
 meters with the function <code><a href='http://www.rdocumentation.org/packages/SoDA/topics/geoXY'>geoXY</a></code>.</p></td>
     </tr>
     <tr>
       <th>angle</th>
-      <td><p>direction for computation of bearing correlogram (angle between 0 and 180).
+      <td><p>direction for computation of a bearing correlogram (angle in degrees between 0 and 180).
 Default NULL (omnidirectional).</p></td>
     </tr>
     </table>
@@ -297,7 +297,7 @@ esiduals vs ln(dij);</p>
 with the following slots:</p>
 <p>&gt; OUT results</p>
 
-<p>&gt; In the permutation test case contains:</p>
+<p>&gt; In the permutation test case it contains:</p>
 <p>- d.mean: mean class distance
 - obs, exp, alter, p.val: observed, and expected value of the statistic
 under randomization, alternative, P value;
@@ -305,7 +305,7 @@ under randomization, alternative, P value;
  confidence interval for the statistic;
 - cardinal: number of individuals in each class;</p>
 
-<p>&gt; In the bootstrap test case contains: 
+<p>&gt; In the bootstrap test case it contains: 
 - d.mean: mean class distance;
 - obs: observed value of the statistic;
 - null.lwr, nul.uppr: lower and upper bound of the jackknife;
@@ -336,17 +336,18 @@ interval
 and ln(dij) 
 - The Sp statistic (Vekemans and Hardy, 2004) with confidence intervals
 - A cubic interpolation of (kinship)ij ~ ln(dij) residuals vs ln(dij)</p>
-<p>A directional approach is based in bearing analysis method. This compute the 
-directional correlogram using the method of Rosenberg (2000). The 
+<p>A directional approach is based on the bearing analysis method, and consists in the 
+obtention of a directional correlogram using the method of Rosenberg (2000). A
 slope is computed for the logarithm of D' (Born et al 2012), where D' is the distance matrix
 between individuals weighted by cos(alpha - B)^2, being alpha the angle
-between individuals and B the desired direction angle, with B = 0
- the positive x axis, B = 0 the positive y axis, and B = 180 the negative x axis.</p>
+between individuals and B the desired direction angle. With B = 0
+the direcction analyzed follows the positive x axis, with B = 0 the positive y axis,
+ and with B = 180 the negative x axis, respectively.</p>
     <p>The LOCAL ANALYSIS mode, computes a local kinship estimate, based in a weighted 
-mean (for each individual). The signification of each local statistic
+mean (for each individual). The significance of each local statistic
 is computed using a permutation test, as in eco.lsa (see ?"eco.lsa"). 
 Default option do not adjust the individual P values 
-for multiple corrections.</p>
+for multiple comparisons.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -377,87 +378,86 @@ Molecular Ecology, 13: 921-935.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-</div># NOT RUN {
-data(eco.test)
+</div><span class='co'># NOT RUN {</span>
+<span class='fu'>data</span>(<span class='no'>eco.test</span>)
 
-# ---global analysis---
+<span class='co'># ---global analysis---</span>
 
-globaltest <- eco.malecot(eco=eco, method = "global", smax=10,
-                         size=1000)
-eco.plotCorrelog(globaltest)    # Significant mean class coancestry classes at   
-                    # individual level (alpha = 0.05, 
-                    # out of the red area), 
-                    # and family-wise P corrected values (red-blue
-                    # points, indicated in the legend)
+<span class='no'>globaltest</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.malecot</span>(<span class='kw'>eco</span><span class='kw'>=</span><span class='no'>eco</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"global"</span>, <span class='kw'>smax</span><span class='kw'>=</span><span class='fl'>10</span>,
+                         <span class='kw'>size</span><span class='kw'>=</span><span class='fl'>1000</span>)
+<span class='fu'><a href='eco.plotCorrelog.html'>eco.plotCorrelog</a></span>(<span class='no'>globaltest</span>)    <span class='co'># Significant mean class coancestry classes at   </span>
+                    <span class='co'># individual level (alpha = 0.05, </span>
+                    <span class='co'># out of the red area), </span>
+                    <span class='co'># and family-wise P corrected values (red-blue</span>
+                    <span class='co'># points, indicated in the legend)</span>
 
-# ecoslot.SP(globaltest) contains:
-# - the slope (bhat) and values with confidence intervals
-#  of the regression reg = kinship ~ ln(distance_between_individuals)
-#- A Mantel test result for assesing the relation between
-#  between  kinship and ln(distance_between_individuals)
-#- A cubic interpolation between the residuals of reg and 
-#  ln(distance_between_individuals)
-#- the sp statistic and its confidence interval
+<span class='co'># ecoslot.SP(globaltest) contains:</span>
+<span class='co'># - the slope (bhat) and values with confidence intervals</span>
+<span class='co'>#  of the regression reg = kinship ~ ln(distance_between_individuals)</span>
+<span class='co'>#- A Mantel test result for assesing the relation between</span>
+<span class='co'>#  between  kinship and ln(distance_between_individuals)</span>
+<span class='co'>#- A cubic interpolation between the residuals of reg and </span>
+<span class='co'>#  ln(distance_between_individuals)</span>
+<span class='co'>#- the sp statistic and its confidence interval</span>
 
-# ecoslot.OUT(globaltest) contains:
-# - In permutation case, the values of mean and log-mean distance    
-#   classes; observed class value; expected + alternative + P value,
-#   the bootstrap null confidence intervals and 
-#   jackknife statistics (jackknifed mean, jackknifed SD, and
-#                         CI for the class statistic)
+<span class='co'># ecoslot.OUT(globaltest) contains:</span>
+<span class='co'># - In permutation case, the values of mean and log-mean distance    </span>
+<span class='co'>#   classes; observed class value; expected + alternative + P value,</span>
+<span class='co'>#   the bootstrap null confidence intervals and </span>
+<span class='co'>#   jackknife statistics (jackknifed mean, jackknifed SD, and</span>
+<span class='co'>#                         CI for the class statistic)</span>
 
-# - In bootstrap case, the values of mean and log-mean distance
-#   classes;the bootstrap null confidence intervals and 
-#   jackknife statistics (jackknifed mean, jackknifed SD, and
-#                         CI for the class statistic)
-
-
-A directional approach based in bearing correlograms, 30 degrees
-globaltest_30 <- eco.malecot(eco=eco, method = "global", smax=10,
-                         size=1000, angle = 30)
-eco.plotCorrelog(globaltest, angle = 30) 
-
-#----------------------------------------------------------#
-# ---local analysis---
+<span class='co'># - In bootstrap case, the values of mean and log-mean distance</span>
+<span class='co'>#   classes;the bootstrap null confidence intervals and </span>
+<span class='co'>#   jackknife statistics (jackknifed mean, jackknifed SD, and</span>
+<span class='co'>#                         CI for the class statistic)</span>
 
 
-(using the spatial weights). 
+<span class='co'># A directional approach based in bearing correlograms, 30 degrees</span>
+<span class='no'>globaltest_30</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.malecot</span>(<span class='kw'>eco</span><span class='kw'>=</span><span class='no'>eco</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"global"</span>, <span class='kw'>smax</span><span class='kw'>=</span><span class='fl'>10</span>,
+                         <span class='kw'>size</span><span class='kw'>=</span><span class='fl'>1000</span>, <span class='kw'>angle</span> <span class='kw'>=</span> <span class='fl'>30</span>)
+<span class='fu'><a href='eco.plotCorrelog.html'>eco.plotCorrelog</a></span>(<span class='no'>globaltest</span>)
 
-# ---local analysis with k nearest neighbors---
-
-
-
-localktest <- eco.malecot(eco=eco, method = "local",
-                         type = "knearest", kmax = 5, 
-                         adjust = "none")
-eco.plotLocal(localktest)
+<span class='co'>#----------------------------------------------------------#</span>
+<span class='co'># ---local analysis---</span>
 
 
-# ---local analysis with radial distance---
+<span class='co'># (using the spatial weights). </span>
 
-localdtest <- eco.malecot(eco=eco, method = "local",
-                        type = "radialdist", smax = 3, 
-                        adjust = "none")
-                        
-eco.plotLocal(localdtest)                    # rankplot graphic (see ?"eco.rankplot")
+<span class='co'># ---local analysis with k nearest neighbors---</span>
 
-                                         # Significant values
-                                         # in blue-red scale, 
-                                         # non significant 
-                                         # values in yellow
 
-eco.plotLocal(localktest, significant = FALSE)    # significant and non
-                                              # signficant values
-                                              # in blue-red scale
 
-# The slot OUT of localktest (ecoslot.OUT(localktest)) and localdtest 
-# (ecoslot.OUT(localdtest)) contains:
-# - the mean distance per individual, observed value of the
-#   statistic, expected + alternative + P value + null hypotesis
-#   confidence intervals,  or boostrap confidence intervals in 
-#   permutation or bootstrap cases, respectively.
-# }
-<div class='input'>
+<span class='no'>localktest</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.malecot</span>(<span class='kw'>eco</span><span class='kw'>=</span><span class='no'>eco</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"local"</span>,
+                         <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"knearest"</span>, <span class='kw'>kmax</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+                         <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
+<span class='fu'><a href='eco.plotLocal.html'>eco.plotLocal</a></span>(<span class='no'>localktest</span>)
+
+
+<span class='co'># ---local analysis with radial distance---</span>
+
+<span class='no'>localdtest</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.malecot</span>(<span class='kw'>eco</span><span class='kw'>=</span><span class='no'>eco</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"local"</span>,
+                        <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"radialdist"</span>, <span class='kw'>smax</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+                        <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
+
+<span class='fu'><a href='eco.plotLocal.html'>eco.plotLocal</a></span>(<span class='no'>localdtest</span>)                    <span class='co'># rankplot graphic (see ?"eco.rankplot")</span>
+
+                                         <span class='co'># Significant values</span>
+                                         <span class='co'># in blue-red scale, </span>
+                                         <span class='co'># non significant </span>
+                                         <span class='co'># values in yellow</span>
+
+<span class='fu'><a href='eco.plotLocal.html'>eco.plotLocal</a></span>(<span class='no'>localktest</span>, <span class='kw'>significant</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)    <span class='co'># significant and non</span>
+                                              <span class='co'># signficant values</span>
+                                              <span class='co'># in blue-red scale</span>
+
+<span class='co'># The slot OUT of localktest (ecoslot.OUT(localktest)) and localdtest </span>
+<span class='co'># (ecoslot.OUT(localdtest)) contains:</span>
+<span class='co'># - the mean distance per individual, observed value of the</span>
+<span class='co'>#   statistic, expected + alternative + P value + null hypotesis</span>
+<span class='co'>#   confidence intervals,  or boostrap confidence intervals in </span>
+<span class='co'>#   permutation or bootstrap cases, respectively.</span>
+<span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -476,7 +476,7 @@ eco.plotLocal(localktest, significant = FALSE)    # significant and non
 
     <h2>Author</h2>
     
-Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>

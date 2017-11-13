@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Postprocessing for NDVI and MSAVI 2 temporal series of Landsat 5 and 7 — eco.NDVI.post • EcoGenetics</title>
+<title>Postprocessing for NDVI and MSAVI2 temporal series of Landsat 5 and 7 — eco.NDVI.post • EcoGenetics</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -80,7 +80,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Postprocessing for NDVI and MSAVI 2 temporal series of Landsat 5 and 7</h1>
+    <h1>Postprocessing for NDVI and MSAVI2 temporal series of Landsat 5 and 7</h1>
     </div>
 
     
@@ -88,8 +88,8 @@
 The inputs required (tab, correct, method) are the same described
 and used in that function. The algorithm stacks the images and save
 the stack into the working directory with the name "time.tif". 
-If the user wishes, the program can also compute images of max, min,
-mean and var by pixel over the temporal sequence. Default is "mean".</p>
+If the user wishes, the program can also compute images consisting in the
+max, min, mean and var for each pixel across the temporal sequence. Default is "mean".</p>
     
 
     <pre class="usage"><span class='fu'>eco.NDVI.post</span>(<span class='no'>tab</span>, <span class='kw'>correct</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"COST"</span>, <span class='st'>"DOS"</span>), <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"NDVI"</span>, <span class='st'>"MSAVI2"</span>),
@@ -119,10 +119,11 @@ Default "FLT4S".</p></td>
     <tr>
       <th>what</th>
       <td><p>Functions to apply over the created stack. 
-The values permitted are: "none", "max", "min", "mean" and "var".
+The allowed values are: "none", "max", "min", "mean" and "var".
 The functions are implemented with <code><a href='http://www.rdocumentation.org/packages/raster/topics/calc'>calc</a></code>.
-If more that one function would be applied, must be used the following
-syntax: c("fun_1", "fun:2", "fun_i").</p></td>
+For passing more than one function as argument, the following
+syntax must be used: c("fun_1", "fun_2", "fun_i"), where fun_1...fun_n are
+the functions that you want to compute.</p></td>
     </tr>
     </table>
     
@@ -205,7 +206,7 @@ vegetation. Remote sensing of Environment, 8: 127-150.</p>
 
     <h2>Author</h2>
     
-Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>

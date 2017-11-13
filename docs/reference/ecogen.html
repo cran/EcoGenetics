@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -120,11 +120,11 @@ in columns.</p></td>
     <tr>
       <th>S</th>
       <td><p>Data frame with n rows (individuals), and groups (factors) in columns.
-The program converts non factor data into factor.</p></td>
+The program converts non-factor data into factor.</p></td>
     </tr>
     <tr>
       <th>C</th>
-      <td><p>data frame with n rows (individuals), and custom variables in columns.</p></td>
+      <td><p>Data frame with n rows (individuals), and custom variables in columns.</p></td>
     </tr>
     <tr>
       <th>G.processed</th>
@@ -178,14 +178,15 @@ Default if FALSE.</p></td>
     </tr>
     <tr>
       <th>order.df</th>
-      <td><p>Order data frames rows (all data frames with a same row names order). This 
+      <td><p>Order individuals of data frames by row? (all data frames with a same order in row names).
+ This 
 option works when the names of the data frames are used 
-(i.e., set.names and valid.names are NULL), otherwise order.df  = TRUE/FALSE has no effect
-in the function. 
-Defalut TRUE. If FALSE, row names of all data frames must be ordered. The use of data frames 
+(i.e., set.names and valid.names are NULL), otherwise the TRUE/FALSE value of this parameter
+ has no effect in the function. 
+Defalut TRUE. If FALSE, the row names of all the data frames must be ordered. The use of data frames 
 with row names in different order will return an error.
 In both cases, the program sets an internal names attribute of the object
-as the row names of the first non-empty data frame found in the following order: 
+using the row names of the first non-empty data frame found in the following order: 
 XY, P, G, E, S, C. This attribute is used as reference to order rows when order.df = TRUE.</p></td>
     </tr>
     <tr>
@@ -202,18 +203,18 @@ set.names. The program will name individuals with valid tags I.1, I.2, etc.</p><
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This is a generic function for creating an ecogen object.
-In default option, the missing data input value is "NA", but any missing 
+    <p>This is a generic function for creation of ecogen objects.
+In the default option, missing data should be coded as "NA", but any missing 
 data character can be passed with the option NA.char. 
-The output in the slot G will have coded the missing data as NA. 
-For dominant markers, the slot A is unnecesary and is treated
-in ecogen methods as a symbolic link to G.</p>
+In all the cases, the new object will have a slot G coding the missing data as NA. 
+For dominant markers (0/1 coding), the slot A is unnecesary an it is treated
+by ecogen methods as a symbolic link to G.</p>
 <p><strong>ACCESS TO THE SLOTS. MODIFICATION OF ECOGEN OBJECTS</strong></p>
-<p>The content of the slots can be extracted with the corresponding accesors
+<p>The content of the slots can be extracted with the corresponding accessors
 ecoslot.XY, ecoslot.P, ecoslot.G, ecoslot.A, ecoslot.E, ecoslot.C and ecoslot.OUT. 
-Data can be assigned individually to the slots, also with the corresponding accessors.
+Accessors can be also used to assign data to the slots.
 The correct use of ecogen objects requires the implementation of accessors, 
-as they ensure the data check and pre-processing. The use of accessors enables to
+as they ensure the checking and pre-processing of the data. The use of accessors allows to
 modify or fill the slots of ecogen objects, without the need of creating a new
 object each time. See <em>help("EcoGenetics accessors")</em> for a detailed description 
 and examples about ecogen accessors.
@@ -222,35 +223,35 @@ and examples about ecogen accessors.
 <p>- Single bracket: the single bracket ("[") is used to subset all the ecogen
  data frames (P, G, E, S, A and C) by row, at once. The notation for an object
  is eco[from:to], where eco is any ecogen object, and from: to is the row
- subset. For example: eco[1:10] , subsets the object eco from row 1 to row 10, 
+ range. For example: eco[1:10] , subsets the object eco from row 1 to row 10, 
  for all the data frames at once.</p> 
 <p>- Double square brackets: the double square brackets are symbolic abbreviations 
 of the accessors (i.e., it is a call to the corresponding accessor). 
-The usage is: eco[["X"]], where X is any slot of interest: eco[["P"]], 
+The usage is: eco[["X"]], where X is a slot: eco[["P"]], 
 eco[["G"]], eco[["A"]], eco[["E"]], eco[["S"]], eco[["C"]] and eco[["OUT"]].
 Double square brackets can be used in get/set mode. 
 See Examples below and in help("EcoGenetics accessors").</p>
 <p><b>ABOUT THE CONSTRUCTION OF NEW ECOGEN OBJECTS</b></p>
-<p>The construction of a new ecogen object can be made in two different ways. 
+<p>A new ecogen object can be constructed in two different ways. 
 First, a new object can be created, incorporating all the information 
 at once. Second, the data can be added in each slot, using the corresponding
-accessor / "[[". The accessor/double square brackets methods allow temporal modification 
-of any created ecogen object and ensures its modularity. 
-These methods are not only functions to get/assign values to the slots, 
+accessor / "[[". Accessor/double square brackets methods allow temporal modification 
+of any ecogen object and ensure the modularity of this kind of objets. 
+These methods are not only functions used to get/assign values to the slots, 
 they provide a basic pre-processing of the data during assignment, 
-generating a set of coherent information.</p>
+generating a coherent and valid set of information.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='co'>#Example with G data of class "data.frame", corresponding to</span>
-<span class='co'>#microsatellites of a diploid organism:</span>
+<span class='co'># Example with G data of class "data.frame", corresponding to</span>
+<span class='co'># microsatellites of a diploid organism:</span>
 <span class='fu'>data</span>(<span class='no'>eco.test</span>)
 <span class='no'>eco</span> <span class='kw'>&lt;-</span> <span class='fu'>ecogen</span>(<span class='kw'>XY</span> <span class='kw'>=</span> <span class='no'>coordinates</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='no'>phenotype</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='no'>genotype</span>,
 <span class='kw'>E</span> <span class='kw'>=</span> <span class='no'>environment</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>structure</span>)
 
-<span class='co'>#Example with G data of class "data.frame", corresponding to a</span>
-<span class='co'>#presence - absence molecular marker:</span>
+<span class='co'># Example with G data of class "data.frame", corresponding to a</span>
+<span class='co'># presence - absence molecular marker:</span>
 <span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>1</span>),<span class='fl'>100</span>,<span class='kw'>rep</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='fu'>matrix</span>(<span class='no'>dat</span>,<span class='fl'>10</span>,<span class='fl'>10</span>))
 <span class='no'>eco</span> <span class='kw'>&lt;-</span> <span class='fu'>ecogen</span>(<span class='kw'>G</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"dominant"</span>)
@@ -281,7 +282,7 @@ generating a set of coherent information.</p>
 
 <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OUT</a></span>(<span class='no'>eco</span>) <span class='kw'>&lt;-</span> <span class='no'>singers</span>
 
-<span class='co'># Storing several data</span>
+<span class='co'># Storing several datasets</span>
 
 <span class='no'>golden.number</span> <span class='kw'>&lt;-</span> (<span class='fu'>sqrt</span>(<span class='fl'>5</span>) + <span class='fl'>1</span>) / <span class='fl'>2</span>
 <span class='fu'><a href='EcoGenetics-accessors.html'>ecoslot.OUT</a></span>(<span class='no'>eco</span>) <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='no'>singers</span>, <span class='no'>golden.number</span>)    <span class='co'># several objects must be passed as a list</span>
@@ -306,6 +307,8 @@ generating a set of coherent information.</p>
     <h2>Author</h2>
     
 Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>

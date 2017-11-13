@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -132,8 +132,7 @@ neighbors are present, the program select them randomly.</p></td>
     </tr>
     <tr>
       <th>dist.method</th>
-      <td><p>Method of computing distance when XY is in metric
-units. If latlon is TRUE, the method is euclidean.</p></td>
+      <td><p>Method used for computing distances passed to  <code><a href='http://www.rdocumentation.org/packages/stats/topics/dist'>dist</a></code>. Default = euclidean.</p></td>
     </tr>
     <tr>
       <th>row.sd</th>
@@ -300,7 +299,7 @@ This distance requires the parameter p (default p = 1).</p>
 
 <span class='co'># 7) CUSTOM WEIGHT MATRIX</span>
 
-<span class='co'>## A eco.weight object can be created with a custom W matrix. In this case,</span>
+<span class='co'>## An eco.weight object can be created with a custom W matrix. In this case,</span>
 <span class='co'>## the rows and the columns of W (weight matrix) must have names, </span>
 <span class='co'>## that must coincide (also in order) with the name of the XY (position) matrix.</span>
 
@@ -346,7 +345,7 @@ This distance requires the parameter p (default p = 1).</p>
 <span class='co'>#### CONVERSION FROM LISTW OBJECTS #####</span>
 <span class='fu'>require</span>(<span class='no'>adegenet</span>)
 <span class='co'># Delaunay triangulation</span>
-<span class='no'>temp</span> <span class='kw'>&lt;-</span><span class='fu'>chooseCN</span>(<span class='no'>eco3</span><span class='kw'>[[</span><span class='st'>"XY"</span>]], <span class='kw'>type</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>result.type</span> <span class='kw'>=</span> <span class='st'>"listw"</span>, <span class='kw'>plot.nb</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>temp</span> <span class='kw'>&lt;-</span><span class='fu'><a href='http://www.rdocumentation.org/packages/adegenet/topics/chooseCN'>chooseCN</a></span>(<span class='no'>eco3</span><span class='kw'>[[</span><span class='st'>"XY"</span>]], <span class='kw'>type</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>result.type</span> <span class='kw'>=</span> <span class='st'>"listw"</span>, <span class='kw'>plot.nb</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='eco.listw2ew.html'>eco.listw2ew</a></span>(<span class='no'>temp</span>)
 <span class='fu'><a href='eco.plotWeight.html'>eco.plotWeight</a></span>(<span class='no'>con</span>, <span class='st'>"network"</span>, <span class='kw'>bounded</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>eco3</span><span class='kw'>[[</span><span class='st'>"S"</span>]]$<span class='no'>structure</span>)
 
@@ -380,7 +379,7 @@ This distance requires the parameter p (default p = 1).</p>
 
     <h2>Author</h2>
     
-Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>

@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -87,13 +87,13 @@
     <p>Univariate and multivariable global spatial analysis.This program computes Moran's I, Geary's C,  Bivariate Moran's I or
 Join-count statistics with P-values.</p>
 <p>The program allows the analysis of a single variable or multiple variables. 
-in the last case, the variables must be in columns and the individuals in rows.</p>
-<p>For join-count analysis, a ploidy argumen must be supplied. The data is then ordered with the 
-function <code><a href='aue.sort.html'>aue.sort</a></code>. This step is required in the analysis of
-genotypes. An individual with the alleles A and B, coded as AB, is identical 
-to other coded as BA. The ordination step ensures that both are considered
-in a single category. For the analysis of frequencies of single alleles, the input 
-is count data (ploidy-times the frequency, as provided by the slot
+in this latter last case, the variables must be in columns and the individuals in rows.</p>
+<p>In join-count analysis, a ploidy argument must be supplied. The data is then ordered with the 
+function <code><a href='aue.sort.html'>aue.sort</a></code>. This step is required for the analysis of
+genotypic data. An individual with the alleles A and B, coded as AB, is identical 
+to other coded as BA. The order step ensures the AB and BA 
+will be considered the same genotype. For the analysis of frequencies of single alleles, the input 
+is count data (ploidy times the frequency, as provided by the slot
 A of an ecogen object: the count data A' can be obtained as A' &lt;- ploidy * A),
 using the function with the arguments ploidy = 1.</p>
     
@@ -200,7 +200,7 @@ ecological interest. Biological Journal of the Linnean Society, 10: 229-49.</p>
 <span class='no'>global</span>
 
 <span class='fu'>require</span>(<span class='no'>adegenet</span>)
-<span class='no'>con2</span><span class='kw'>&lt;-</span><span class='fu'>chooseCN</span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"XY"</span>]], <span class='kw'>type</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>result.type</span> <span class='kw'>=</span> <span class='st'>"listw"</span>, <span class='kw'>plot.nb</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>con2</span><span class='kw'>&lt;-</span><span class='fu'><a href='http://www.rdocumentation.org/packages/adegenet/topics/chooseCN'>chooseCN</a></span>(<span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"XY"</span>]], <span class='kw'>type</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>result.type</span> <span class='kw'>=</span> <span class='st'>"listw"</span>, <span class='kw'>plot.nb</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='no'>global</span> <span class='kw'>&lt;-</span> <span class='fu'>eco.gsa</span>(<span class='kw'>Z</span> <span class='kw'>=</span> <span class='no'>eco</span><span class='kw'>[[</span><span class='st'>"P"</span>]][, <span class='fl'>1</span>], <span class='kw'>con</span> <span class='kw'>=</span> <span class='no'>con2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"I"</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>200</span>)
 <span class='no'>global</span>
 
@@ -295,7 +295,7 @@ ecological interest. Biological Journal of the Linnean Society, 10: 229-49.</p>
 
     <h2>Author</h2>
     
-Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>

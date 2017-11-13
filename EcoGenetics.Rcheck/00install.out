@@ -1,0 +1,12 @@
+* installing *source* package ‘EcoGenetics’ ...
+** R
+** data
+** inst
+** preparing package for lazy loading
+Creating a generic function for ‘nrow’ from package ‘base’ in package ‘EcoGenetics’
+Creating a generic function for ‘ncol’ from package ‘base’ in package ‘EcoGenetics’
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded
+* DONE (EcoGenetics)

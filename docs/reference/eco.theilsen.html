@@ -52,7 +52,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -85,10 +85,10 @@
 
     
     <p>This function computes the theil-sen estimator and 
-the P-value associated for each pixel over time in a stack of images,
-writing the values in a raster (one for the estimators and one for 
-the P-values). It is recommended to use a "RasterBrick", that
-is more efficient in managing memory.</p>
+the associated P-value, for each pixel over time in a stack of images.
+The output consists of two rasters (one for the estimators and one for 
+the P-values). It is recommended to use a "RasterBrick", which
+is more efficient in memory management.</p>
     
 
     <pre class="usage"><span class='fu'>eco.theilsen</span>(<span class='no'>stacked</span>, <span class='no'>date</span>, <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='st'>"none"</span>)</pre>
@@ -102,7 +102,7 @@ is more efficient in managing memory.</p>
     </tr>
     <tr>
       <th>date</th>
-      <td><p>data vector with dates for each image.</p></td>
+      <td><p>data vector with decimal dates for each image.</p></td>
     </tr>
     <tr>
       <th>adjust</th>
@@ -168,7 +168,7 @@ Part 3 Proceedings of Koninalijke Nederlandse Akademie van Weinenschatpen A, 53:
 
     <h2>Author</h2>
     
-Leandro Roser <a href='mailto:leandroroser@ege.fcen.uba.ar'>leandroroser@ege.fcen.uba.ar</a>
+Leandro Roser <a href='mailto:learoser@gmail.com'>learoser@gmail.com</a>
 
   </div>
 </div>
