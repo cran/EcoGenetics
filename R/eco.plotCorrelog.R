@@ -305,8 +305,8 @@ setGeneric("eco.plotCorrelog",
     
     if(interactivePlot) {
       # plot with ggplotly. show distance and observed value
-      z <- plotly::ggplotly(z, tooltip = c("d.mean", "CI.inf", "obs", 
-                                           "CI.sup", "null.lwr", "null.uppr"))
+      z <- suppressMessages(plotly::ggplotly(z, tooltip = c("d.mean", "CI.inf", "obs", 
+                                           "CI.sup", "null.lwr", "null.uppr")))
       
       # this corrects the labels in ggplotly
       for(i in 1:length(z$x$data)) {
@@ -318,7 +318,7 @@ setGeneric("eco.plotCorrelog",
       }
       
     }
-    print(z)
+    suppressMessages(print(z))
     ######################
     
   # multiplot case
@@ -383,7 +383,8 @@ setGeneric("eco.plotCorrelog",
         #ggplot2::geom_line(data = intervalos, ggplot2::aes(x = d.mean, y = obs), size= 1.8) 
         
         if(interactivePlot) {
-          multi.correlog <- plotly::ggplotly((multi.correlog + ggplot2::theme(legend.position = "none")), tooltip = c("d.mean", "variable", "value", "obs", "lwr", "uppr"))
+          multi.correlog <- suppressMessages(plotly::ggplotly((multi.correlog + ggplot2::theme(legend.position = "none")), 
+                                                              tooltip = c("d.mean", "variable", "value", "obs", "lwr", "uppr")))
         }
         
       } else  {
@@ -400,7 +401,8 @@ setGeneric("eco.plotCorrelog",
     
         
         if(interactivePlot) {
-          multi.correlog <- plotly::ggplotly((multi.correlog + ggplot2::theme(legend.position = "none")), tooltip = c("d.mean", "variable", "value"))
+          multi.correlog <- suppressMessages(plotly::ggplotly((multi.correlog + ggplot2::theme(legend.position = "none")), 
+                                                              tooltip = c("d.mean", "variable", "value")))
         }
       }
       
@@ -414,8 +416,8 @@ setGeneric("eco.plotCorrelog",
         
       
       if(interactivePlot) {
-        mean.correlog <- plotly::ggplotly(mean.correlog,
-                                          tooltip = c("d.mean", "obs", "lwr", "uppr"))
+        mean.correlog <- suppressMessages(plotly::ggplotly(mean.correlog,
+                                          tooltip = c("d.mean", "obs", "lwr", "uppr")))
       }
       
    
@@ -431,7 +433,7 @@ setGeneric("eco.plotCorrelog",
     
   }
   options(op)
-  invisible(z)
+  suppressMessages(invisible(z))
 })
 
 
@@ -563,7 +565,8 @@ setGeneric("eco.plotCorrelogB",
                    significant.S = TRUE,
                    xlim = NULL,
                    ylim = NULL,
-                   interactivePlot = TRUE) {
+                   interactivePlot = TRUE,
+                   alpha = 0.05) {
             
             op <- options()
             options(max.print = 9999)
@@ -573,14 +576,16 @@ setGeneric("eco.plotCorrelogB",
             if(length(x@OUT) == 1) {
               var2 <- 1
               plot.method <- "uniplot"
-            } else if(is.null(var)) {
-              plot.method <- "multiplot"
             } else {
-              if(!is.numeric(var)){
-                stop("var must be a number between 1 and number of classes")
+              if(is.null(var)) {
+                plot.method <- "multiplot"
+              } else {
+                if(!is.numeric(var)){
+                  stop("var must be a number between 1 and number of classes")
+                }
+                var2 <- var
+                plot.method <- "uniplot"
               }
-              var2 <- var
-              plot.method <- "uniplot"
             }
             
             randtest <- (x@TEST)[1]
@@ -655,6 +660,7 @@ setGeneric("eco.plotCorrelogB",
               datos$obs2 <- datos$obs3 <-  datos$obs
               
               #ggplotly requires aes within ggplot(...) to plot errorbars
+              
               z <- ggplot2::ggplot(datos, ggplot2::aes(x = angle, y = obs), environment = localenv) + 
                 ggplot2::geom_line(ggplot2::aes(x = angle2, y = obs2)) + 
                 ggplot2::xlab(xlabel) + 
@@ -709,7 +715,7 @@ setGeneric("eco.plotCorrelogB",
               
               if(interactivePlot) {
                 # plot with ggplotly. show distance and observed value
-                z <- plotly::ggplotly(z, tooltip = c("angle", "obs"))
+                z <- suppressMessages(plotly::ggplotly(z, tooltip = c("angle", "obs")))
                 
                 # this corrects the labels in ggplotly
                 for(i in 1:length(z$x$data)) {
@@ -759,14 +765,14 @@ setGeneric("eco.plotCorrelogB",
               
               
               if(interactivePlot && !legend) {
-                z <- plotly::ggplotly((z + ggplot2::theme(legend.position = "none")),
-                                      tooltip = c("angle", "dist", "obs"))
+                z <- suppressMessages(plotly::ggplotly((z + ggplot2::theme(legend.position = "none")),
+                                      tooltip = c("angle", "dist", "obs")))
                 z[[1]]$layout$title <- title
                 } else if(interactivePlot && legend) {
-                z <- plotly::ggplotly(z, tooltip = c("angle", "dist", "obs"))
+                z <- suppressMessages(plotly::ggplotly(z, tooltip = c("angle", "dist", "obs")))
                 z[[1]]$layout$title <- title
               }
               
-              z
             }
+            suppressMessages(z)
           })

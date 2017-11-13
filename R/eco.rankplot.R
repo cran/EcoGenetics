@@ -199,7 +199,7 @@ setMethod("eco.rankplot",
             #message(paste("plot options: rescaled =", rescaled))
             
             if(interactivePlot == TRUE) {
-              rankplot <- plotly::ggplotly(rankplot)
+              rankplot <- suppressMessages(plotly::ggplotly(rankplot))
             }
             #message(paste("plot options: interactivePlot =", interactivePlot))
             rankplot
@@ -288,7 +288,7 @@ setMethod("eco.rankplot",
             colnames(xy.out) <- c("X rank", "X rank")
             
             if(interactivePlot) {
-              rankplot <- plotly::ggplotly(rankplot)
+              rankplot <- suppressMessages(plotly::ggplotly(rankplot))
             }
             
             attr(rankplot, "data") <- xy.out
@@ -379,7 +379,7 @@ setMethod("eco.rankplot",
             colnames(xy.out) <- c("X rank", "X rank")
            
              if(interactivePlot) {
-              rankplot <- plotly::ggplotly(rankplot)
+              rankplot <- suppressMessages(plotly::ggplotly(rankplot))
              }
             
             attr(rankplot, "data") <- xy.out

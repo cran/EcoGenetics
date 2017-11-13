@@ -203,7 +203,7 @@ setGeneric("eco.rasterplot",
              }
              
              if(interactivePlot) {
-               out <- plotly::ggplotly(out)
+               out <- suppressMessages(plotly::ggplotly(out))
              }
             # message(paste("plot options: interactivePlot =", interactivePlot))
              out

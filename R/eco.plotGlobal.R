@@ -146,7 +146,7 @@ eco.plotGlobal <- function(input, interactivePlot = TRUE,
     
     if(interactivePlot) {
       
-      out <- plotly::ggplotly(out + ggplot2::theme(plot.margin = ggplot2::unit(c(0.6, 0.6, 0.7, 0.6), "cm")), tooltip = c("var", "obs")) 
+      out <- suppressMessages(plotly::ggplotly(out + ggplot2::theme(plot.margin = ggplot2::unit(c(0.6, 0.6, 0.7, 0.6), "cm")), tooltip = c("var", "obs"))) 
       
       for(i in 1:length(out$x$data)) {
         if(out$x$data[[i]]$name =="#00B0F6") {

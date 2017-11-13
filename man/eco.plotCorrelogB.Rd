@@ -7,7 +7,7 @@
 eco.plotCorrelogB(x, var = NULL, xlabel = NULL, ylabel = NULL,
   title = NULL, legend = TRUE, background = c("grey", "white"),
   significant.S = TRUE, xlim = NULL, ylim = NULL,
-  interactivePlot = TRUE)
+  interactivePlot = TRUE, alpha = 0.05)
 }
 \arguments{
 \item{x}{Result of correlogram  analysis, with output using angles as independent 
