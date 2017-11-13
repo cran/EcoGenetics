@@ -35,10 +35,12 @@
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
 #' program determines the alternative hypothesis.
 #' Other options are: "two.sided", "greater" and "less".	
-#' @param adjust P-values correction method for multiple tests 
-#' passed to \code{\link[stats]{p.adjust}}. Defalut is "holm".
+#' @param adjust P-values correction method for multiple tests. 
+#' The selected method is passed as argument to \code{\link[stats]{p.adjust}} (defalut = "holm").
+#' For bearing correlograms, the corrections (and permutation tests) are performed for individual correlograms 
+#' of fixed variables (i.e.,  angles fixed [distances variable] or distances fixed [angles variable]). 
 #' @param sequential Should be performed a Holm-Bonberroni (Legendre and Legendre, 2012) 
-#' adjustment of P-values? Defalult TRUE.
+#' adjustment of P-values? Defalult TRUE (only available for omnidirectional correlograms or correlograms for fixed angles). 
 #' @param include.zero Should be included the distance = 0 in cross correlograms 
 #' (i.e., the intra- individual correlation)?. Defalut TRUE.
 #' @param cummulative Should be construced a cummulative correlogram?.
@@ -304,8 +306,8 @@ setGeneric("eco.correlog",
                     alpha = 0.05,
                     alternative = c("auto", "two.sided", 
                                     "greater", "less"),
-                    adjust = "holm",
-                    sequential = TRUE, 
+                    adjust = "holm", 
+                    sequential =  ifelse((as.deg), FALSE, TRUE), 
                     include.zero = TRUE,
                     cummulative = FALSE,
                     bin = c("sturges", "FD"),
@@ -327,6 +329,10 @@ setGeneric("eco.correlog",
              
              if(length(angle) > 1 && as.deg && test == "bootstrap") {
                stop("Only permutation test is available for bearing correlograms with degrees format output")
+             }
+             
+             if(length(angle) > 1 && as.deg && sequential) {
+               stop("Sequential correction of P values is only available for correlograms with fixed angles")
              }
              
              

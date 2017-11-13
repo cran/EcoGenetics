@@ -29,7 +29,7 @@
 #' 
 #' - The accessors in objects of class \code{\link{ecogen}} 
 #' have a double usage. First, the extraction of data included in a slot (\strong{get mode}).  
-#' Second, the assignation of data (\strong{set mode}). The data assigned 
+#' Second, the assignment of data (\strong{set mode}). The data assigned 
 #' to ecogen objects using this method is properly pre-processed. 
 #' 
 #' - The get mode is defined for ecoslot.XY, ecoslot.P, ecoslot.G, 

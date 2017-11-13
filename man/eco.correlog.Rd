@@ -8,9 +8,9 @@ eco.correlog(Z, XY, Y = NULL, int = NULL, smin = 0, smax = NULL,
   nclass = NULL, size = NULL, seqvec = NULL, method = c("I", "C", "CC"),
   nsim = 99, test = c("permutation", "bootstrap"), alpha = 0.05,
   alternative = c("auto", "two.sided", "greater", "less"), adjust = "holm",
-  sequential = TRUE, include.zero = TRUE, cummulative = FALSE,
-  bin = c("sturges", "FD"), row.sd = FALSE, latlon = FALSE,
-  angle = NULL, as.deg = TRUE)
+  sequential = ifelse((as.deg), FALSE, TRUE), include.zero = TRUE,
+  cummulative = FALSE, bin = c("sturges", "FD"), row.sd = FALSE,
+  latlon = FALSE, angle = NULL, as.deg = TRUE)
 }
 \arguments{
 \item{Z}{Vector, matrix or data frame with variable/s
@@ -52,11 +52,13 @@ resampling and the associated confidence intervals of the null hypothesis.
 program determines the alternative hypothesis.
 Other options are: "two.sided", "greater" and "less".}
 
-\item{adjust}{P-values correction method for multiple tests 
-passed to \code{\link[stats]{p.adjust}}. Defalut is "holm".}
+\item{adjust}{P-values correction method for multiple tests. 
+The selected method is passed as argument to \code{\link[stats]{p.adjust}} (defalut = "holm").
+For bearing correlograms, the corrections (and permutation tests) are performed for individual correlograms 
+of fixed variables (i.e.,  angles fixed [distances variable] or distances fixed [angles variable]).}
 
 \item{sequential}{Should be performed a Holm-Bonberroni (Legendre and Legendre, 2012) 
-adjustment of P-values? Defalult TRUE.}
+adjustment of P-values? Defalult TRUE (only available for omnidirectional correlograms or correlograms for fixed angles).}
 
 \item{include.zero}{Should be included the distance = 0 in cross correlograms 
 (i.e., the intra- individual correlation)?. Defalut TRUE.}
