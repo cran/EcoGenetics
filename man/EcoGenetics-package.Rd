@@ -3,7 +3,7 @@
 \alias{EcoGenetics}
 \docType{package}
 \title{
- Management and Analysis of Spatial Data in Landscape Genetics
+ Management and Exploratory Analysis of Spatial Data in Landscape Genetics
 }
 \description{
 Management and exploratory analysis of spatial data in landscape genetics. Easy integration of information from multiple sources with "ecogen" objects.
