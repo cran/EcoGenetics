@@ -2,4 +2,4 @@
 
 <h3><a href=https://leandroroser.github.io/EcoGenetics-Tutorial/> Tutorial </a></h3>
 
-<h3><a href=https://github.com/leandroroser/EcoGenetics-devel/> GitHub </a></h3>
+https://travis-ci.org/leandroroser/EcoGenetics-devel.svg?branch=master
