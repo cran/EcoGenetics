@@ -13,6 +13,6 @@ Data frame with simulated morphometric
 data of 225 individuals.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{data}

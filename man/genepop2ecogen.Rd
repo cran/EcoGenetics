@@ -27,6 +27,6 @@ ingpop
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}, adapting code
+Leandro Roser \email{learoser@gmail.com}, adapting code
 written by Emiel van Loon and Scott Davis
 }
