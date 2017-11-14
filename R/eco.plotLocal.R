@@ -56,7 +56,7 @@
 #' Additional parameters can be passed to eco.rankplot.
 #' 
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 eco.plotLocal <- function(x,
