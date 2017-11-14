@@ -1,6 +1,7 @@
 Package: EcoGenetics
 Type: Package
-Title: EcoGenetics: Management and Analysis of Spatial Data in Landscape Genetics
+Title: EcoGenetics: Management and Analysis of Spatial Data in
+        Landscape Genetics
 Version: 1.2.1-1
 Date: 2017-11-14
 Authors@R: c(person(given = "Leandro", family = "Roser", role = c("aut", "cre"), email = "learoser@gmail.com"), person(given = "Juan", family = "Vilardi", role = "aut"),  person(given = "Beatriz", family = "Saidman", role = "aut"), person(given = "Laura", family = "Ferreyra", role = "aut"))
@@ -39,4 +40,8 @@ Collate: 'ZZZ.R' 'auxiliar.R' 'int.genind.R' 'ecogen.1OF6.definition.R'
         'roxygen.auxiliar.R' 'show_summary.methods.R'
 RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2017-11-12 21:16:21 UTC; leandro
+Packaged: 2017-11-14 08:12:58 UTC; leandro
+Author: Leandro Roser [aut, cre],
+  Juan Vilardi [aut],
+  Beatriz Saidman [aut],
+  Laura Ferreyra [aut]
