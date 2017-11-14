@@ -1,38 +1,39 @@
 
-#' rasterplot graphs
-#' @param x data matrix (raster)
-#' @param filter optional data matrix used as filter
-#' @param condition condition used to filter data
-#' @param grp factor with groups to use in the plot. Default NULL
-#' @param limits values limits used for computing the data gradient for the plot
-#' @param title plot title
-#' @param z.name name for the legend
-#' @param vertical should be partitioned the populations on the x axis? Default
+#' Rasterplot graphs
+#' @param x Data matrix (raster)
+#' @param filter Optional data matrix used as filter
+#' @param condition Condition used to filter data
+#' @param grp Factor with groups to use in the plot. Default NULL
+#' @param limits Balues limits used for computing the data gradient for the plot
+#' @param title Plot title
+#' @param z.name Name for the legend
+#' @param vertical Should the populations on the x axis  be partitioned? Default
 #' TRUE. 
 #' @param interactivePlot Show an interactive plot via plotly? (default: TRUE)
 #' @param ... additional arguments
 #' 
 #' @description This function generates a multivariate plot for 
 #' a data matrix (raster), with an option for filtering the data
-#' and to graph using groups. The resterplot graph is a flexible tools
-#' for multiple data sources (environmental, genetic, phenotypic, etc.).
+#' and to plot using groups. The resterplot graph is a flexible tool useful
+#' for different data sources.
 #' 
 #' @examples
 #' 
 #'  \dontrun{
 #' data(eco.test)
+#' require(ggplot2)
 #' 
 #' # using the ecogen object "eco" to perform a multiple-lsa
 #' con <- eco.weight(eco[["XY"]], method = "knearest", k = 4, row.sd = TRUE)
 #' test.lsa <- eco.lsa(eco[["P"]], con = con, method = "I", nsim = 99, multi = "matrix")
 #' 
-#' # the default method for this object, is a resterplot
-#' eco.plotLocal(test.lsa)
+#' # the plot method for this object based in ggplot2, is a resterplot
+#' eco.plotLocal(test.lsa, multi = "ggplot2")
 #' 
 #' # adding a factor
 #' test.lsa <- eco.lsa(eco[["P"]], con = con, method = "I",
 #' nsim = 99, multi = "matrix", pop = eco[["S"]][,1])
-#' eco.plotLocal(test.lsa)
+#' eco.plotLocal(test.lsa, multi = "ggplot2")
 #' 
 #' # The generic rasterplot method requires a data matrix, and, as option, a condition 
 #' # and a filter matrix. The condition is an expression, containing the word "filter" and 
@@ -42,26 +43,29 @@
 #' # is applied over the data matrix, also using the word "filter". 
 #' # Internally, the multi.lsa plot uses three fundamental elements. 
 #' # - a data matrix: in the example, ecoslot.OBS(test.lsa)
-#' #  a filter matrix: in the example, ecoslt.PVAL(test.lsa); i.e., 
-#' the data matrix will be filtered
-#' # by P-value using the third element, an expresion.
+#' # - a filter matrix: in the example, ecoslt.PVAL(test.lsa); i.e., 
+#' # the data matrix will be filtered by P-value using the third element, an expresion.
 #' # - an expression: in the example: "filter < 0.05"
 #'  
-#'  # Combining the three elements, the multivariate plot can be manually constructed:
+#'  # by combining the three elements, the multivariate plot can be manually constructed:
 #'  my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
 #'  filter = ecoslot.PVAL(test.lsa), condition = "filter < 0.05")
+#'  my.plot
 #'  
 #'  
 #'  # add population
 #'  my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
 #'  filter = ecoslot.PVAL(test.lsa), 
 #'  condition = "filter < 0.05", grp = ecoslot.POP(test.lsa))
+#'  my.plot
 #'  
 #'  
-#'  # Extra manipulation with ggplot2 graphs (ggplot2 commands allowed by rasterplot)
+#'  # extra manipulation with ggplot2 graphs (ggplot2 commands allowed by rasterplot)
 #'  my.plot <- eco.rasterplot(x= ecoslot.OBS(test.lsa), 
 #'  filter = ecoslot.PVAL(test.lsa), condition = "filter < 0.05",
 #'  interactivePlot = FALSE)
+#'  my.plot
+#'  
 #'  
 #'  ## rotate plot
 #'  
@@ -203,7 +207,7 @@ setGeneric("eco.rasterplot",
              }
              
              if(interactivePlot) {
-               out <- plotly::ggplotly(out)
+               out <- suppressMessages(plotly::ggplotly(out))
              }
             # message(paste("plot options: interactivePlot =", interactivePlot))
              out
@@ -228,7 +232,7 @@ setGeneric("eco.rasterplot",
 #' @param ... additional arguments
 #' @description Plot method for local spatial analysis
 #' @aliases eco.rasterplot,eco.multilsa-method
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @seealso  \code{\link{eco.lsa}}
 #' @exportMethod eco.rasterplot
 

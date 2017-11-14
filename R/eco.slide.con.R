@@ -1,5 +1,5 @@
 
-#' Sliding window along a network
+#' Sliding a window along a connection network
 #' 
 #' @description This program applies a function defined by the user, over the individuals
 #' included in a connection network.
@@ -30,7 +30,7 @@
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 

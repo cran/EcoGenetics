@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.rbind.R
 \name{eco.rbind}
 \alias{eco.rbind}
-\title{Combining the rows of two ecogen objects}
+\title{Combining ecogen objects by row}
 \usage{
 eco.rbind(..., check_colnames = TRUE, check_rownames = TRUE)
 }
@@ -14,7 +14,7 @@ eco.rbind(..., check_colnames = TRUE, check_rownames = TRUE)
 \item{check_rownames}{Check for duplicated row names? Default TRUE.}
 }
 \description{
-Combining the rows of two ecogen objects
+Combining ecogen objects by row
 }
 \examples{
 
@@ -22,7 +22,7 @@ Combining the rows of two ecogen objects
 
 data(eco.test)
 
-# split eco into a list of ecogen objects by population
+# split the object "eco" into a list of ecogen objects by population
 x <- eco.split(eco, "pop", asList = TRUE)
 
 # re-bind the objects
@@ -40,6 +40,5 @@ eco.rbind(eco, eco2,check_rownames = FALSE)
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

@@ -11,7 +11,7 @@ eco.variogram(Z, XY, int = NULL, smin = 0, smax = NULL, nclass = NULL,
 \arguments{
 \item{Z}{Vector for the analysis.}
 
-\item{XY}{Data frame or matrix with individual's position (projected coordinates).}
+\item{XY}{Data frame or matrix with the position of individuals (projected coordinates).}
 
 \item{int}{Distance interval in the units of XY.}
 
@@ -37,7 +37,7 @@ the coordinates must be in a matrix/data frame with the longitude in the first
 column and latitude in the second. The position is projected onto a plane in
 meters with the function \code{\link[SoDA]{geoXY}}.}
 
-\item{angle}{direction for computation of bearing correlogram (angle between 0 and 180).
+\item{angle}{Direction for computation of a bearing variogram (angle between 0 and 180).
 Default NULL (omnidirectional).}
 }
 \value{
@@ -65,7 +65,7 @@ section below
 }
 \description{
 This program computes the empirical variogram of a selected variable.
-If the coordinates are given in decimal degrees, set latlon = TRUE. The program
+If the coordinates are in decimal degrees, set latlon = TRUE. The program
 return a table with the mean class distances (d.mean) and the semivariances (obs)
 for each class.
 }
@@ -95,9 +95,6 @@ ecoslot.BREAKS(variog)     # slot BREAKS
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Borcard D., F. Gillet, and P. Legendre. 2011. Numerical ecology with R. 
 Springer Science & Business Media.
@@ -109,4 +106,6 @@ Rosenberg, M. 2000. The bearing correlogram: a new method
 of analyzing directional spatial autocorrelation. 
 Geographical Analysis, 32: 267-278.
 }
-
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

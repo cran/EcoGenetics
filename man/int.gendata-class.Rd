@@ -30,5 +30,5 @@ int.gendata
 
 \item{\code{removed.image}}{removed columns (coded as 2) or rows (coded as 1)}
 }}
-\keyword{internal}
 
+\keyword{internal}

@@ -7,7 +7,7 @@
 eco.plotCorrelogB(x, var = NULL, xlabel = NULL, ylabel = NULL,
   title = NULL, legend = TRUE, background = c("grey", "white"),
   significant.S = TRUE, xlim = NULL, ylim = NULL,
-  interactivePlot = TRUE)
+  interactivePlot = TRUE, alpha = 0.05)
 }
 \arguments{
 \item{x}{Result of correlogram  analysis, with output using angles as independent 
@@ -26,7 +26,7 @@ To plot multiple variables in a same plot, use only the argument x (see examples
 
 \item{legend}{Show legends in ggplot graphs? (default: TRUE)}
 
-\item{background}{background color ("grey" or "white")}
+\item{background}{Background color ("grey" or "white")}
 
 \item{significant.S}{With single variables and permutation test: 
 show different colours for significant points? (default: TRUE)}
@@ -36,16 +36,17 @@ show different colours for significant points? (default: TRUE)}
 \item{ylim}{Y axis limits (as vector: c(min, max);  default: NULL)}
 
 \item{interactivePlot}{Show an interactive plot via plotly? (default: TRUE)}
+
+\item{alpha}{significance level for P (or P-adjusted) values (Default alpha = 0.05)}
 }
 \description{
 Plot method for bearing correlograms
-For examples see  \code{\link{eco.correlog}}. It constructs an angular correlogram
+For examples, see  \code{\link{eco.correlog}}. It constructs an angular correlogram
 for each distance class taken as fixed.
-}
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \seealso{
 \code{\link{eco.correlog}}
 }
-
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

@@ -10,7 +10,7 @@
 #' data(eco.test)
 #' variog <- eco.variogram(eco[["P"]][, 1], eco[["XY"]])
 #' 
-#' # Assignation of values can be made with the corresponding accessors,
+#' # the assignment of values can be made with the corresponding accessors,
 #' # using the generic notation of EcoGenetics 
 #' # (<ecoslot.> + <name of the slot> + <name of the object>).
 #' # See help("EcoGenetics accessors")
@@ -25,7 +25,7 @@
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

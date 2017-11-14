@@ -9,17 +9,17 @@ eco.theilsen(stacked, date, adjust = "none")
 \arguments{
 \item{stacked}{Stacked images ("RasterLayer"  or "RasterBrick").}
 
-\item{date}{data vector with dates for each image.}
+\item{date}{data vector with decimal dates for each image.}
 
 \item{adjust}{P-values correction method for multiple tests 
 passed to \code{\link[stats]{p.adjust}}. Defalut is "none".}
 }
 \description{
 This function computes the theil-sen estimator and 
-the P-value associated for each pixel over time in a stack of images,
-writing the values in a raster (one for the estimators and one for 
-the P-values). It is recommended to use a "RasterBrick", that
-is more efficient in managing memory.
+the associated P-value, for each pixel over time in a stack of images.
+The output consists of two rasters (one for the estimators and one for 
+the P-values). It is recommended to use a "RasterBrick", which
+is more efficient in memory management.
 }
 \examples{
 \dontrun{
@@ -52,9 +52,6 @@ plot(slope, main = "slope")
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Sen, P. 1968. Estimates of the regression coefficient based on Kendall's tau. 
 Journal of the American Statistical Association, Taylor and Francis Group, 63: 1379-1389.
@@ -65,4 +62,6 @@ Part 3 Proceedings of Koninalijke Nederlandse Akademie van Weinenschatpen A, 53:
 \seealso{
 \code{\link[rkt]{rkt}}.
 }
-
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

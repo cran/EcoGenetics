@@ -25,9 +25,9 @@ Dominant data must be coded with binary values (0 for absence - 1 for presence).
 in columns.}
 
 \item{S}{Data frame with n rows (individuals), and groups (factors) in columns.
-The program converts non factor data into factor.}
+The program converts non-factor data into factor.}
 
-\item{C}{data frame with n rows (individuals), and custom variables in columns.}
+\item{C}{Data frame with n rows (individuals), and custom variables in columns.}
 
 \item{G.processed}{If TRUE, the slot G will include a processed data frame (
 removed non informative loci (the data non available for all the individuals),
@@ -59,14 +59,15 @@ for remotion of non polymorphic loci (for dominant data). Default is 5 (5\%).}
 \item{rm.empty.ind}{Remotion of noinformtive individuals (row of "NAs").
 Default if FALSE.}
 
-\item{order.df}{Order data frames rows (all data frames with a same row names order). This 
+\item{order.df}{Order individuals of data frames by row? (all data frames with a same order in row names).
+ This 
 option works when the names of the data frames are used 
-(i.e., set.names and valid.names are NULL), otherwise order.df  = TRUE/FALSE has no effect
-in the function. 
-Defalut TRUE. If FALSE, row names of all data frames must be ordered. The use of data frames 
+(i.e., set.names and valid.names are NULL), otherwise the TRUE/FALSE value of this parameter
+ has no effect in the function. 
+Defalut TRUE. If FALSE, the row names of all the data frames must be ordered. The use of data frames 
 with row names in different order will return an error.
 In both cases, the program sets an internal names attribute of the object
-as the row names of the first non-empty data frame found in the following order: 
+using the row names of the first non-empty data frame found in the following order: 
 XY, P, G, E, S, C. This attribute is used as reference to order rows when order.df = TRUE.}
 
 \item{set.names}{Character vector with names for the rows of the non-empty data frames. 
@@ -79,21 +80,21 @@ set.names. The program will name individuals with valid tags I.1, I.2, etc.}
 Creating a new ecogen object
 }
 \details{
-This is a generic function for creating an ecogen object.
-In default option, the missing data input value is "NA", but any missing 
+This is a generic function for creation of ecogen objects.
+In the default option, missing data should be coded as "NA", but any missing 
 data character can be passed with the option NA.char. 
-The output in the slot G will have coded the missing data as NA. 
-For dominant markers, the slot A is unnecesary and is treated
-in ecogen methods as a symbolic link to G.
+In all the cases, the new object will have a slot G coding the missing data as NA. 
+For dominant markers (0/1 coding), the slot A is unnecesary an it is treated
+by ecogen methods as a symbolic link to G.
 
 
 \strong{ACCESS TO THE SLOTS. MODIFICATION OF ECOGEN OBJECTS}
 
-The content of the slots can be extracted with the corresponding accesors
+The content of the slots can be extracted with the corresponding accessors
 ecoslot.XY, ecoslot.P, ecoslot.G, ecoslot.A, ecoslot.E, ecoslot.C and ecoslot.OUT. 
-Data can be assigned individually to the slots, also with the corresponding accessors.
+Accessors can be also used to assign data to the slots.
 The correct use of ecogen objects requires the implementation of accessors, 
-as they ensure the data check and pre-processing. The use of accessors enables to
+as they ensure the checking and pre-processing of the data. The use of accessors allows to
 modify or fill the slots of ecogen objects, without the need of creating a new
 object each time. See \emph{help("EcoGenetics accessors")} for a detailed description 
 and examples about ecogen accessors. 
@@ -105,12 +106,12 @@ The use of brackets is defined for ecogen objects:
  - Single bracket: the single bracket ("[") is used to subset all the ecogen
  data frames (P, G, E, S, A and C) by row, at once. The notation for an object
  is eco[from:to], where eco is any ecogen object, and from: to is the row
- subset. For example: eco[1:10] , subsets the object eco from row 1 to row 10, 
+ range. For example: eco[1:10] , subsets the object eco from row 1 to row 10, 
  for all the data frames at once.
  
 - Double square brackets: the double square brackets are symbolic abbreviations 
 of the accessors (i.e., it is a call to the corresponding accessor). 
-The usage is: eco[["X"]], where X is any slot of interest: eco[["P"]], 
+The usage is: eco[["X"]], where X is a slot: eco[["P"]], 
 eco[["G"]], eco[["A"]], eco[["E"]], eco[["S"]], eco[["C"]] and eco[["OUT"]].
 Double square brackets can be used in get/set mode. 
 See Examples below and in help("EcoGenetics accessors").
@@ -118,26 +119,26 @@ See Examples below and in help("EcoGenetics accessors").
 
 \bold{ABOUT THE CONSTRUCTION OF NEW ECOGEN OBJECTS}
 
-The construction of a new ecogen object can be made in two different ways. 
+A new ecogen object can be constructed in two different ways. 
 First, a new object can be created, incorporating all the information 
 at once. Second, the data can be added in each slot, using the corresponding
-accessor / "[[". The accessor/double square brackets methods allow temporal modification 
-of any created ecogen object and ensures its modularity. 
-These methods are not only functions to get/assign values to the slots, 
+accessor / "[[". Accessor/double square brackets methods allow temporal modification 
+of any ecogen object and ensure the modularity of this kind of objets. 
+These methods are not only functions used to get/assign values to the slots, 
 they provide a basic pre-processing of the data during assignment, 
-generating a set of coherent information.
+generating a coherent and valid set of information.
 }
 \examples{
 \dontrun{
 
-#Example with G data of class "data.frame", corresponding to
-#microsatellites of a diploid organism:
+# Example with G data of class "data.frame", corresponding to
+# microsatellites of a diploid organism:
 data(eco.test)
 eco <- ecogen(XY = coordinates, P = phenotype, G = genotype,
 E = environment, S = structure)
 
-#Example with G data of class "data.frame", corresponding to a
-#presence - absence molecular marker:
+# Example with G data of class "data.frame", corresponding to a
+# presence - absence molecular marker:
 dat <- sample(c(0,1),100,rep = TRUE)
 dat <- data.frame(matrix(dat,10,10))
 eco <- ecogen(G = dat, type = "dominant")
@@ -168,7 +169,7 @@ eco[["E"]] <- environment
  
 ecoslot.OUT(eco) <- singers
  
-# Storing several data
+# Storing several datasets
 
 golden.number <- (sqrt(5) + 1) / 2
 ecoslot.OUT(eco) <- list(singers, golden.number)    # several objects must be passed as a list
@@ -181,6 +182,7 @@ eco[["OUT"]] <- list(singers, golden.number)
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
+Leandro Roser \email{learoser@gmail.com}
 
+Leandro Roser \email{learoser@gmail.com}
+}

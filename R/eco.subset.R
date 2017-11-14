@@ -1,9 +1,9 @@
 #' Subsetting an ecogen object by group
 #' 
 #' @param eco Object of class "ecogen". 
-#' @param hier The name of the S slot column with labels assigning individuals to groups.
-#' @param grp Label for the subset of individuals, contained in hier. 
-#' @param missing Missing data argument This can take three values ("0", "NA" or "MEAN"),
+#' @param hier The name of the S slot column containing labels assigning individuals to groups.
+#' @param grp Label shared by the subset of individuals, contained in hier. 
+#' @param missing Missing data argument It can take three values ("0", "NA" or "MEAN"),
 #' as described in  \code{\link{ecogen}}.
 #' Missing elements are treated as zeros in the default option.
 #' 
@@ -15,7 +15,7 @@
 #' eco.sub
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

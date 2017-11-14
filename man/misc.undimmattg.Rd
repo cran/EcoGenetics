@@ -13,7 +13,6 @@ misc.undimmattg(mat)
 Creates a matrix without diagonal, in row order
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

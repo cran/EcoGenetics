@@ -9,9 +9,9 @@
 #' @param legend Show legends in ggplot graphs? (default: TRUE)
 #' @param rescaled rescale join-count heatmap?
 #' @param alpha significance level for the join-count heatmat 
-#' @description This function allows to plot eco.gsa multiple objects.
-#' For examples see \code{\link{eco.gsa}} 
-#' @author Leandro Roser
+#' @description This function allows to plot results contained in eco.gsa objects.
+#' For examples, see \code{\link{eco.gsa}} 
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 eco.plotGlobal <- function(input, interactivePlot = TRUE, 
@@ -94,9 +94,10 @@ eco.plotGlobal <- function(input, interactivePlot = TRUE,
     
     
     mydat <- input@MULTI
-    mydat <- data.frame(rownames(mydat), mydat)
+    mydat <- data.frame(rownames(mydat), mydat, stringsAsFactors = FALSE)
     colnames(mydat)[1] <- "var"
-    levels(mydat$var) <- as.character(mydat$var)
+    mydat$var <- factor(mydat$var, levels =  as.character(mydat$var))
+
     
     mydat$ymin <- rep(0, nrow(mydat))
     
@@ -145,7 +146,7 @@ eco.plotGlobal <- function(input, interactivePlot = TRUE,
     
     if(interactivePlot) {
       
-      out <- plotly::ggplotly(out + ggplot2::theme(plot.margin = ggplot2::unit(c(0.6, 0.6, 0.7, 0.6), "cm")), tooltip = c("var", "obs")) 
+      out <- suppressMessages(plotly::ggplotly(out + ggplot2::theme(plot.margin = ggplot2::unit(c(0.6, 0.6, 0.7, 0.6), "cm")), tooltip = c("var", "obs"))) 
       
       for(i in 1:length(out$x$data)) {
         if(out$x$data[[i]]$name =="#00B0F6") {

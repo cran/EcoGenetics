@@ -23,7 +23,6 @@ aue.geom.dist(XY, geometry = c("ellipse", "square"), d = 1, a = 1,
 Spatial weights for individuals with XY coordinates
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

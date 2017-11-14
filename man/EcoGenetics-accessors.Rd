@@ -3,34 +3,52 @@
 \docType{data}
 \name{EcoGenetics accessors}
 \alias{EcoGenetics accessors}
+\alias{ecoslot.XY,ecogen-method}
+\alias{ecoslot.XY<-}
+\alias{ecoslot.XY<-,ecogen-method}
+\alias{ecoslot.P}
+\alias{ecoslot.P,ecogen-method}
+\alias{ecoslot.P<-}
+\alias{ecoslot.P<-,ecogen-method}
+\alias{ecoslot.G}
+\alias{ecoslot.G,ecogen-method}
+\alias{ecoslot.G<-}
+\alias{ecoslot.G<-,ecogen-method}
 \alias{ecoslot.A}
 \alias{ecoslot.A,ecogen-method}
 \alias{ecoslot.A<-,ecogen-method}
+\alias{ecoslot.E}
+\alias{ecoslot.E,ecogen-method}
+\alias{ecoslot.E<-}
+\alias{ecoslot.E<-,ecogen-method}
+\alias{ecoslot.S}
+\alias{ecoslot.S,ecogen-method}
+\alias{ecoslot.S<-}
+\alias{ecoslot.S<-,ecogen-method}
+\alias{ecoslot.C}
+\alias{ecoslot.C,ecogen-method}
+\alias{ecoslot.C<-}
+\alias{ecoslot.C<-,ecogen-method}
+\alias{ecoslot.OUT}
+\alias{ecoslot.OUT,ecogen-method}
+\alias{ecoslot.OUT<-}
+\alias{ecoslot.OUT<-,ecogen-method}
+\alias{int.ecoslot.INT}
+\alias{int.ecoslot.INT<-}
+\alias{EcoGenetics accessors}
 \alias{ecoslot.ALTER}
 \alias{ecoslot.ANALYSIS}
 \alias{ecoslot.ANOVA.MLM}
 \alias{ecoslot.AVERAGE}
 \alias{ecoslot.BREAKS}
-\alias{ecoslot.C}
-\alias{ecoslot.C,ecogen-method}
-\alias{ecoslot.C<-}
-\alias{ecoslot.C<-,ecogen-method}
 \alias{ecoslot.CARDINAL}
 \alias{ecoslot.COND}
 \alias{ecoslot.CONNECTED}
 \alias{ecoslot.DF1}
 \alias{ecoslot.DF2}
 \alias{ecoslot.DISTMETHOD}
-\alias{ecoslot.E}
-\alias{ecoslot.E,ecogen-method}
-\alias{ecoslot.E<-}
-\alias{ecoslot.E<-,ecogen-method}
 \alias{ecoslot.EXP}
 \alias{ecoslot.FREQUENCIES}
-\alias{ecoslot.G}
-\alias{ecoslot.G,ecogen-method}
-\alias{ecoslot.G<-}
-\alias{ecoslot.G<-,ecogen-method}
 \alias{ecoslot.IN}
 \alias{ecoslot.LOGMEAN}
 \alias{ecoslot.LWR}
@@ -45,14 +63,6 @@
 \alias{ecoslot.NSIM}
 \alias{ecoslot.OBS}
 \alias{ecoslot.OBS.RES}
-\alias{ecoslot.OUT}
-\alias{ecoslot.OUT,ecogen-method}
-\alias{ecoslot.OUT<-}
-\alias{ecoslot.OUT<-,ecogen-method}
-\alias{ecoslot.P}
-\alias{ecoslot.P,ecogen-method}
-\alias{ecoslot.P<-}
-\alias{ecoslot.P<-,ecogen-method}
 \alias{ecoslot.PADJUST}
 \alias{ecoslot.PAR}
 \alias{ecoslot.PAR.VAL}
@@ -62,10 +72,6 @@
 \alias{ecoslot.PVAL}
 \alias{ecoslot.RES}
 \alias{ecoslot.ROW.SD}
-\alias{ecoslot.S}
-\alias{ecoslot.S,ecogen-method}
-\alias{ecoslot.S<-}
-\alias{ecoslot.S<-,ecogen-method}
 \alias{ecoslot.SELF}
 \alias{ecoslot.SP}
 \alias{ecoslot.SUMMARY.MLM}
@@ -74,11 +80,6 @@
 \alias{ecoslot.UPPR}
 \alias{ecoslot.W}
 \alias{ecoslot.XY}
-\alias{ecoslot.XY,ecogen-method}
-\alias{ecoslot.XY<-}
-\alias{ecoslot.XY<-,ecogen-method}
-\alias{int.ecoslot.INT}
-\alias{int.ecoslot.INT<-}
 \title{Generic accessors for EcoGenetics objects}
 \format{An object of class \code{NULL} of length 0.}
 \usage{
@@ -105,14 +106,14 @@ ecoslot.G(X)
 ecoslot.G(object, G.processed = TRUE, order.G = FALSE,
   type = c("codominant", "dominant"), ploidy = 2, sep, ncod = NULL,
   missing = c("0", "NA", "MEAN"), NA.char = "NA", poly.level = 5,
-  rm.empty.ind = FALSE, use.object.names = FALSE, order.rows = FALSE) <-
-  value
+  rm.empty.ind = FALSE, use.object.names = FALSE,
+  order.rows = FALSE) <- value
 
 \S4method{ecoslot.G}{ecogen}(object, G.processed = TRUE, order.G = FALSE,
   type = c("codominant", "dominant"), ploidy = 2, sep, ncod = NULL,
   missing = c("0", "NA", "MEAN"), NA.char = "NA", poly.level = 5,
-  rm.empty.ind = FALSE, use.object.names = FALSE, order.rows = FALSE) <-
-  value
+  rm.empty.ind = FALSE, use.object.names = FALSE,
+  order.rows = FALSE) <- value
 
 ecoslot.A(X)
 
@@ -323,7 +324,7 @@ respectively.
 
 - The accessors in objects of class \code{\link{ecogen}} 
 have a double usage. First, the extraction of data included in a slot (\strong{get mode}).  
-Second, the assignation of data (\strong{set mode}). The data assigned 
+Second, the assignment of data (\strong{set mode}). The data assigned 
 to ecogen objects using this method is properly pre-processed. 
 
 - The get mode is defined for ecoslot.XY, ecoslot.P, ecoslot.G, 
@@ -505,8 +506,9 @@ ecoslot.OUT(eco)
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
+
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{datasets}
 \keyword{internal}
-

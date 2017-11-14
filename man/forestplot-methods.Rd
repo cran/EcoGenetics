@@ -3,9 +3,9 @@
 \docType{methods}
 \name{eco.forestplot}
 \alias{eco.forestplot}
-\alias{eco.forestplot,dataframeORmatrix-method}
-\alias{eco.forestplot,eco.lsa-method}
 \alias{eco.forestplot,generic-method}
+\alias{eco.forestplot,eco.lsa-method}
+\alias{eco.forestplot,dataframeORmatrix-method}
 \title{Forestplot graphs}
 \usage{
 eco.forestplot(input, xlabel = NULL, ylabel = NULL, titlelabel = NULL,
@@ -66,6 +66,5 @@ forest
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

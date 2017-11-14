@@ -20,7 +20,6 @@ coordinates indicating the matrix corners (1 = upper left, 2= upper right, 3 = l
 The position of the input matrix is c(1,2,3,4). For example, a transposition is c(1,4,3,2).
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

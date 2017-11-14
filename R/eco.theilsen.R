@@ -1,13 +1,14 @@
+
 #' Theil-sen regression for a raster time series
 #' 
 #' @description This function computes the theil-sen estimator and 
-#' the P-value associated for each pixel over time in a stack of images,
-#' writing the values in a raster (one for the estimators and one for 
-#' the P-values). It is recommended to use a "RasterBrick", that
-#' is more efficient in managing memory.
+#' the associated P-value, for each pixel over time in a stack of images.
+#' The output consists of two rasters (one for the estimators and one for 
+#' the P-values). It is recommended to use a "RasterBrick", which
+#' is more efficient in memory management.
 #' 
 #' @param stacked Stacked images ("RasterLayer"  or "RasterBrick").
-#' @param date data vector with dates for each image.
+#' @param date data vector with decimal dates for each image.
 #' @param adjust P-values correction method for multiple tests 
 #' passed to \code{\link[stats]{p.adjust}}. Defalut is "none".
 #' 
@@ -50,74 +51,54 @@
 #' Theil H. 1950. A rank-invariant method of linear and polynomial regression analysis, 
 #' Part 3 Proceedings of Koninalijke Nederlandse Akademie van Weinenschatpen A, 53: 397-1412.
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 
 setGeneric("eco.theilsen", 
            function(stacked, date, 
                     adjust = "none") {
-             
-             adjust <- match.arg(adjust)
-             
-             esperar <- function(i) {
-               cat ("\r", ceiling(100 * i / steps), "% ",
-                    "completed", sep = "")
-             }
-             
-             cat("starting...", "\n\n")
-             
-             fun <- function(date, data)  {
-               mod <- rkt::rkt(date, data)
-               return(c(as.numeric(mod[3]), as.numeric(mod[1])))
-             }
-             
-             cat("pre-processing data...", "\n\n")
-             
-             pendiente <- rep(NA, raster::ncell(stacked))
-             pvalor <- rep(NA, raster::ncell(stacked))
-             df <- raster::as.matrix(stacked)
-             steps = nrow(df)
-             
-             for(i in 1:nrow(df)) {
-               resultados <- fun(date,as.numeric(df[i, ]))
-               pendiente[i] <- resultados[1]
-               pvalor[i] <- resultados[2]
-               esperar(i)
-             }
-             cat("\n\n")
+
+  
+  adjust <- match.arg(adjust)
              
              
-             if(adjust != "none") {
-               cat(paste("adjusting p values with", adjust, "method"), "\n")
-               pvalor <- p.adjust(pvalor, "adjust")
-             }
+  cat("starting...", "\n\n")
              
-             cat("writing slope image to workspace...", "\n\n")
-             
-             pendiente <- matrix(pendiente, nrow = stacked@nrows,
-                                 ncol = stacked@ncols, byrow = TRUE)
-             pendiente <- raster::raster(pendiente, crs = stacked@crs,
-                                         xmn = stacked@extent@xmin,
-                                         ymn = stacked@extent@ymin, 
-                                         xmx = stacked@extent@xmax,
-                                         ymx = stacked@extent@ymax)
-             raster::writeRaster(pendiente, "slope.tif", overwrite = T)
-             
-             cat("writing P-value image to workspace...", "\n")
-             
-             pvalor <- matrix(pvalor, nrow=stacked@nrows, ncol = stacked@ncols,
-                              byrow = TRUE)
-             pvalor <- raster::raster(pvalor, crs = stacked@crs,
-                                      xmn = stacked@extent@xmin,
-                                      ymn = stacked@extent@ymin, 
-                                      xmx = stacked@extent@xmax,
-                                      ymx = stacked@extent@ymax)
-             
-             cat("\n","done!","\n\n" )
-             
-             
-             raster::writeRaster(pvalor, "pvalue.tif", overwrite = T)
-             
-             
-           })
+  # pre allocate memory
+  cellnumber <- ncell(stacked)
+  cat("Pre allocating memory...\n")
+  ts <- pval <- rep(NA, ncell(stacked))
+ 
+  # compute slope and p value
+   for(i in 1:ncell(stacked)) {
+    temporal <- stacked[i]
+    if(!any(is.na(temporal))) {
+	this_result <- rkt::rkt(date, stacked[i])
+    ts[i] <- this_result[3]
+    pval[i] <- this_result[1]
+    }
+    cat ("\r", ceiling(100 * i / cellnumber), "% ", "completed", sep = "")
+   }
+  cat("\n")
+  
+  r <- pout <-  raster(nrow = nrow(stacked), ncol = ncol(stacked), crs = crs(stacked))
+  extent(r) <- extent(pout) <- extent(stacked)
+  
+  r[] <- unlist(ts)
+  
+  if(adjust != "none") {
+    cat(paste("adjusting p values with", adjust, "method"), "\n\n")
+    pval <- p.adjust(pval, "adjust")
+  }
+  pout[] <- unlist(pval)
+  
+  # write output
+  cat("writing slope image into workspace...", "\n\n")
+  raster::writeRaster(r, "slope.tif", overwrite = T)
+  cat("writing P-value image into workspace...", "\n\n")
+  raster::writeRaster(pout, "pvalue.tif", overwrite = T)
+  cat("\n","done!","\n\n" )
+
+})
+

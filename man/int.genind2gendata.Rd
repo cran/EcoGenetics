@@ -13,4 +13,3 @@ int.genind2gendata(input)
 int.genind2gendata
 }
 \keyword{internal}
-

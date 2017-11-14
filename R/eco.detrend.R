@@ -80,6 +80,7 @@
 #' Spatial autocorrelation and autoregressive models in ecology. 
 #' Ecological monographs, 72: 445-463.
 #' 
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 setGeneric("eco.detrend", 

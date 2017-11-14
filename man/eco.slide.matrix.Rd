@@ -19,7 +19,7 @@ and row dimension}
 
 \item{window}{Window type. Default "square".}
 
-\item{within}{Should be computed the function in borders focal pixels only if 
+\item{within}{Should the function be computed in focal pixels of the borders, only if 
 the area is within the matrix? Default TRUE.}
 }
 \description{
@@ -49,6 +49,5 @@ image(ras.circle)
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

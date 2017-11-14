@@ -13,6 +13,5 @@ eco.listw2ew(X)
 Conversion from listw to ecoweight
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

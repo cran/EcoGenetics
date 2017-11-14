@@ -116,7 +116,7 @@
 #' A Conditional Inference Framework. Journal of Computational and Graphical Statistics, 
 #' 15: 651-674.
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

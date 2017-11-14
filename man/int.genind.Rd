@@ -12,4 +12,3 @@ int.genind(X, ploidy = 2, type = c("codominant", "dominant"),
 constructor
 }
 \keyword{internal}
-

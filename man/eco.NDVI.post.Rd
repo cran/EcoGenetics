@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.NDVI.post.R
 \name{eco.NDVI.post}
 \alias{eco.NDVI.post}
-\title{Postprocessing for NDVI and MSAVI 2 temporal series of Landsat 5 and 7}
+\title{Postprocessing for NDVI and MSAVI2 temporal series of Landsat 5 and 7}
 \usage{
 eco.NDVI.post(tab, correct = c("COST", "DOS"), method = c("NDVI", "MSAVI2"),
   datatype = c("FLT4S", "FLT8S", "INT4U", "INT4S", "INT2U", "INT2S", "INT1U",
@@ -19,18 +19,19 @@ eco.NDVI.post(tab, correct = c("COST", "DOS"), method = c("NDVI", "MSAVI2"),
 Default "FLT4S".}
 
 \item{what}{Functions to apply over the created stack. 
-The values permitted are: "none", "max", "min", "mean" and "var".
+The allowed values are: "none", "max", "min", "mean" and "var".
 The functions are implemented with \code{\link[raster]{calc}}.
-If more that one function would be applied, must be used the following
-syntax: c("fun_1", "fun:2", "fun_i").}
+For passing more than one function as argument, the following
+syntax must be used: c("fun_1", "fun_2", "fun_i"), where fun_1...fun_n are
+the functions that you want to compute.}
 }
 \description{
 This program must be used sequentially after \code{\link{eco.NDVI}}.
 The inputs required (tab, correct, method) are the same described
 and used in that function. The algorithm stacks the images and save
 the stack into the working directory with the name "time.tif". 
-If the user wishes, the program can also compute images of max, min,
-mean and var by pixel over the temporal sequence. Default is "mean".
+If the user wishes, the program can also compute images consisting in the
+max, min, mean and var for each pixel across the temporal sequence. Default is "mean".
 }
 \examples{
 \dontrun{
@@ -74,9 +75,6 @@ pch=15, main = "Mean NDVI", xlab = "X", ylab  = "Y")
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Chander G., B. Markham, and D. Helder. 2009. Summary of current radiometric calibration 
 coefficients for Landsat MSS, TM, ETM+, and EO-1 ALI sensors. Remote sensing of 
@@ -103,4 +101,6 @@ eco.NDVI
 
 extract
 }
-
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

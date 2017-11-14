@@ -9,11 +9,11 @@ eco.subset(eco, hier, grp, missing = c("0", "NA", "MEAN"))
 \arguments{
 \item{eco}{Object of class "ecogen".}
 
-\item{hier}{The name of the S slot column with labels assigning individuals to groups.}
+\item{hier}{The name of the S slot column containing labels assigning individuals to groups.}
 
-\item{grp}{Label for the subset of individuals, contained in hier.}
+\item{grp}{Label shared by the subset of individuals, contained in hier.}
 
-\item{missing}{Missing data argument This can take three values ("0", "NA" or "MEAN"),
+\item{missing}{Missing data argument It can take three values ("0", "NA" or "MEAN"),
 as described in  \code{\link{ecogen}}.
 Missing elements are treated as zeros in the default option.}
 }
@@ -30,6 +30,5 @@ eco.sub
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

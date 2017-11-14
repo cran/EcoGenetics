@@ -12,7 +12,6 @@ eco2
 ecogen object with simulated data of 900 individuals.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{data}
-

@@ -1,4 +1,4 @@
-#' Combining the rows of two ecogen objects
+#' Combining ecogen objects by row
 #' 
 #' @param ... "ecogen" objects to combine. 
 #' @param check_colnames Check for duplicated column names? Default TRUE.
@@ -9,7 +9,7 @@
 #' 
 #' data(eco.test)
 #' 
-#' # split eco into a list of ecogen objects by population
+#' # split the object "eco" into a list of ecogen objects by population
 #' x <- eco.split(eco, "pop", asList = TRUE)
 #' 
 #' # re-bind the objects
@@ -25,7 +25,7 @@
 #' eco.rbind(eco, eco2,check_rownames = FALSE)
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

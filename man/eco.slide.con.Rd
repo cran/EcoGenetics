@@ -2,7 +2,7 @@
 % Please edit documentation in R/eco.slide.con.R
 \name{eco.slide.con}
 \alias{eco.slide.con}
-\title{Sliding window along a network}
+\title{Sliding a window along a connection network}
 \usage{
 eco.slide.con(x, con, fun)
 }
@@ -43,6 +43,5 @@ result <- eco.slide.con(myMatrix2, con, function(x) mean(x, na.rm = TRUE))
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

@@ -31,4 +31,3 @@ in ploidy and number of digits coding alleles for loci data during conversion.}
 INTERNAL CONVERSION TOOLS FOR GENETIC DATA
 }
 \keyword{internal}
-

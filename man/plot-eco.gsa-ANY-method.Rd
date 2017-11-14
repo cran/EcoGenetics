@@ -15,7 +15,6 @@
 Plot method for an eco.gsa objects object.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

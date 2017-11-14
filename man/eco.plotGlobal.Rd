@@ -28,10 +28,9 @@ eco.plotGlobal(input, interactivePlot = TRUE, background = c("grey",
 \item{alpha}{significance level for the join-count heatmat}
 }
 \description{
-This function allows to plot eco.gsa multiple objects.
-For examples see \code{\link{eco.gsa}}
+This function allows to plot results contained in eco.gsa objects.
+For examples, see \code{\link{eco.gsa}}
 }
 \author{
-Leandro Roser
+Leandro Roser \email{learoser@gmail.com}
 }
-

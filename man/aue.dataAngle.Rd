@@ -22,7 +22,6 @@ meters with the function \code{\link[SoDA]{geoXY}}.}
 Angles for an XY coordinates matrix
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{export}
-

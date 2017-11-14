@@ -19,7 +19,6 @@ aue.point(mat, r, x0, y0)
 Solid circle
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

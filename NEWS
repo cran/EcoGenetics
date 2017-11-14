@@ -1,3 +1,11 @@
+EcoGenetics 1.2.1-1 (Release date: 2017-11-13)
+==============
+Changes:
+
+* Improvement of the function eco.theilsen
+* Correction of bugs and documentation
+
+
 EcoGenetics 1.2.1 (Release date: 2017-03-02)
 ==============
 Changes:
@@ -14,7 +22,7 @@ Changes:
   standardization of the nomenclature used for the names of conversion functions
  * eco.order has been converted in an internal function of the ecogen constructor
 
-EcoGenetics 1.2.0-3 (Release date: 2016-07-15)
+EcoGenetics 1.2.0-3 (Release date: 2015-07-15)
 ==============
 	
 	Changes:

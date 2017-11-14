@@ -1,9 +1,9 @@
-#' Generating atmospherically corrected NDVI and MSAVI2 images for 
+#' Generation of atmospherically corrected NDVI and MSAVI2 images for 
 #' temporal series of Landsat 5 and 7
 #' 
 #' @description This program generates atmospherically corrected images of
 #' NDVI and MSAVI2. The images of multiple dates can be processed in a single
-#' run. The bands 4 and 3 of each date (previously subsetted to
+#' run. The images for the bands 4 and 3 corresponding to each date (previously subsetted to
 #' the region of analysis) must be in the working directory. A table with information
 #' for each image as described in the parameter tab (see also the example) 
 #' is needed for processing the information.
@@ -72,7 +72,7 @@
 #' Tucker C. 1979. Red and photographic infrared linear combinations for monitoring 
 #' vegetation. Remote sensing of Environment, 8: 127-150. 
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

@@ -93,7 +93,7 @@
 #' 
 #'  # plot for the first distance class, 
 #'  use a number between 1 and the number of classes to select the corresponding class
-#' eco.plotCorrelogB(moran_b, interactivePlot = FALSE, var = 1) 
+#' eco.plotCorrelogB(corm_b, interactivePlot = FALSE, var = 1) 
 #' 
 #' # partial Mantel correlogram
 #' corm <- eco.cormantel(M = dist(eco[["P"]]), MC = dist(eco[["E"]]),
@@ -143,7 +143,7 @@
 #' Statistical Association, 21: 65-66.
 #' 
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

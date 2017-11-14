@@ -11,4 +11,3 @@
 show eco.detrend
 }
 \keyword{internal}
-

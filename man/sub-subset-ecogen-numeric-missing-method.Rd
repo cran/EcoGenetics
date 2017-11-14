@@ -10,5 +10,7 @@
 \description{
 [[<-
 }
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}
 \keyword{internal}
-

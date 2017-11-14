@@ -22,7 +22,6 @@ the value data[row, ], data[, col].}
 Filter a raster using a conditional expression and values in a conditional vector
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

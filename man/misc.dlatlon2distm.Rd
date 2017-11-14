@@ -18,7 +18,6 @@ Computing a distance matrix in meters among points in decimal degrees
 under a spherical Earth model
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

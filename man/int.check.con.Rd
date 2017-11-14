@@ -13,7 +13,6 @@ int.check.con(con)
 Check a connection network
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

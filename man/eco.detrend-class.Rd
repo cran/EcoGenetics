@@ -21,8 +21,8 @@ eco.detrend class
 \item{\code{ANALYSIS}}{object of class "eco.mlm" with 
 the regression results for each variable}
 }}
+
 \author{
 Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
 }
 \keyword{internal}
-

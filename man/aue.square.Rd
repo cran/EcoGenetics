@@ -21,7 +21,6 @@ aue.square(mat, d, x0, y0, theta = 0)
 Solid square
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

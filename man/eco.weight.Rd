@@ -29,8 +29,7 @@ neighbors are present, the program select them randomly.}
 
 \item{alpha}{Alpha value for exponential distance. Default = 1.}
 
-\item{dist.method}{Method of computing distance when XY is in metric
-units. If latlon is TRUE, the method is euclidean.}
+\item{dist.method}{Method used for computing distances passed to  \code{\link[stats]{dist}}. Default = euclidean.}
 
 \item{row.sd}{Logical. Should be row standardized the matrix? Default FALSE 
 (binary weights).}
@@ -211,7 +210,7 @@ eco.plotWeight(con)
 
 # 7) CUSTOM WEIGHT MATRIX
 
-## A eco.weight object can be created with a custom W matrix. In this case,
+## An eco.weight object can be created with a custom W matrix. In this case,
 ## the rows and the columns of W (weight matrix) must have names, 
 ## that must coincide (also in order) with the name of the XY (position) matrix.
 
@@ -278,6 +277,5 @@ ecoslot.PAR.VAL(con)       # slot PAR.VAL
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

@@ -1,4 +1,4 @@
-#' Combining the columns of ecogen object
+#' Combining ecogen object by column
 #' 
 #' @param eco1 Object of class "ecogen".
 #' @param eco2 Object of class "ecogen".
@@ -25,7 +25,7 @@
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 

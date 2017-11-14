@@ -9,5 +9,7 @@ check_ecogen(object)
 \description{
 check_ecogen
 }
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}
 \keyword{internal}
-

@@ -1,6 +1,7 @@
 
 ## validator-----------------------------------------------------------------#
 #' check_ecogen
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 check_ecogen <- function(object) {

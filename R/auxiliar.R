@@ -58,7 +58,7 @@ setClassUnion("logicalORmissing",
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @export
 
 aue.rescale  <- function(dfm, method =c("zero.one", "one.one")) {
@@ -77,7 +77,7 @@ aue.rescale  <- function(dfm, method =c("zero.one", "one.one")) {
 
 #' Conversion from listw to ecoweight
 #' @param X A listw object
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @export
 
 eco.listw2ew <- function(X) {
@@ -94,7 +94,7 @@ eco.listw2ew <- function(X) {
 #' Phenotypic similarity for vector, matrix or data frame acoording to Ritland (1996)
 #' @param X Data frame, matrix or vector. If X is not a vector, the program
 #' returns a list of matrices.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @export
 
 aue.phenosimil <- function(X) {
@@ -118,7 +118,7 @@ aue.phenosimil <- function(X) {
 #------------------------------------------------------------------------------#
 #' Detection of metacharacters
 #' @param X character string
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @keywords internal
 
 is.meta <- function(X) {
@@ -131,7 +131,7 @@ is.meta <- function(X) {
 #------------------------------------------------------------------------------#
 #' Metachacter to character
 #' @param X character string
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 meta2char <- function(X) {
@@ -148,7 +148,7 @@ meta2char <- function(X) {
 #------------------------------------------------------------------------------#
 #' Remove spaces in a line of text
 #' @param X character string
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 aue.formatLine <- function(X) {
@@ -225,7 +225,7 @@ gsub("[[:space:]]+|[[:blank:]]+", " ", X)
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 aue.sort <- function(X, ncod = NULL, ploidy = 2, 
@@ -316,7 +316,7 @@ aue.rm.nonpoly <- function(X, poly.level) {
 #' @param to end of sequence
 #' @param by interval between elements
 #' @param out.output format ("matrix2 or "list")
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @keywords internal
 
 aue.seqlist <- function(from, to, by, out.format = c("matrix", "list")) {
@@ -345,8 +345,8 @@ aue.seqlist <- function(from, to, by, out.format = c("matrix", "list")) {
 #------------------------------------------------------------------------------#
 #' Remove spaces and tabs at the begining and the end of each element of charvec
 #' @param charvec character vector
-#' @author Thibaut Jombart
 #' @keywords internal
+# author: Thibaut Jombart
 
 aue.rmspaces <- function(charvec){
   charvec <- gsub("^([[:blank:]]*)([[:space:]]*)","",charvec)
@@ -359,8 +359,8 @@ aue.rmspaces <- function(charvec){
 #' Generation of generic labels of constant length
 #' @param base a character string
 #' @param n number of labels
-#' @author Thibaut Jombart
 #' @keywords internal
+# author: Thibaut Jombart
 
 aue.genlab <- function(base, n) {
   f1 <- function(cha, n){
@@ -380,7 +380,7 @@ aue.genlab <- function(base, n) {
 #' Allelic frequencies 
 #' @param eco Object of class ecogen.
 #' @param grp Column in the slot S for summary by group.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 aue.fqal <- function(eco, grp = NULL) {
@@ -422,7 +422,7 @@ aue.fqal <- function(eco, grp = NULL) {
 #' of the object <X>
 #' @param ecoslot Slot of EcoGenetics object
 #' @param X object name
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 aue.access <- function(ecoslot, X) {
@@ -445,7 +445,7 @@ aue.access <- function(ecoslot, X) {
 }
 
 #' .printaccess
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 #' 
 # slot access message
@@ -454,8 +454,9 @@ aue.access <- function(ecoslot, X) {
   cat("--------------------------------------------------------------------------\n")
   cat(" Access to slots:",
       "<ecoslot.> + <name of the slot> + <(name of the object)>","\n",
-      "See help(\"EcoGenetics accessors\")")
+      "See: help(\"EcoGenetics accessors\")")
 }
+
 
 
 ################################################################################
@@ -472,7 +473,7 @@ aue.access <- function(ecoslot, X) {
 #' @param x0 Circle center- x position.
 #' @param y0 Circle center- y position.
 #' @param smooth Smoothing factor.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 aue.circle <- function(mat, r, x0, y0, smooth = 100) { 
@@ -492,7 +493,7 @@ aue.circle <- function(mat, r, x0, y0, smooth = 100) {
 #' @param r Radius of the circle in pixels.
 #' @param x0 Circle center- x position.
 #' @param y0 Circle center- y position. 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @keywords internal
 
 aue.point <- function(mat, r, x0, y0) { 
@@ -512,7 +513,7 @@ aue.point <- function(mat, r, x0, y0) {
 #' @param x0 Ellipse center- x position.
 #' @param y0 Ellipse center- y position. 
 #' @param theta rotation angle in degrees.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar} 
+#' @author Leandro Roser \email{learoser@@gmail.com} 
 #' @keywords internal
 
 aue.ellipse <- function(mat, a = 1, b = 1, x0, y0, theta = 0) { 
@@ -540,7 +541,7 @@ aue.ellipse <- function(mat, a = 1, b = 1, x0, y0, theta = 0) {
 #' @param x0 Square center in the x direction.
 #' @param y0 Square center in the y direction.
 #' @param theta rotation angle in degrees.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
  
 aue.square <- function(mat, d, x0, y0, theta = 0) {
@@ -569,7 +570,7 @@ aue.square <- function(mat, d, x0, y0, theta = 0) {
 #' @param mat Input raster matrix.
 #' @param x0 Circle center- x position.
 #' @param y0 Circle center- y position.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 aue.circle.w <- function(mat, x0, y0) { 
@@ -601,7 +602,7 @@ aue.circle.w <- function(mat, x0, y0) {
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 aue.image2df <- function(mat, origin = c("upperleft", "lowerleft"), out = c("data.frame", "matrix")) {
@@ -643,7 +644,7 @@ aue.image2df <- function(mat, origin = c("upperleft", "lowerleft"), out = c("dat
 #' @description This is the inverse function of aue.image2df
 #' @param x output of aue.image2df
 #' @param origin Origin of the reference for the coordinates. Default: upperleft.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 aue.df2image <- function(x, origin = c("upperleft", "lowerleft")) {
@@ -667,7 +668,7 @@ aue.df2image <- function(x, origin = c("upperleft", "lowerleft")) {
 #' @param x input graph
 #' @param x0 point row
 #' @param y0 point column
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 aue.ad2wg <- function(x, x0, y0) {
@@ -697,7 +698,7 @@ aue.ad2wg <- function(x, x0, y0) {
 #' 1 = upper left, 2= upper right, 3 = lower right, 4 = lower left. 
 #' 
 #' @param y0 point column
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 #' 
 
@@ -741,7 +742,7 @@ aue.rotate <- function(x, direction = c(1,2,3,4)) {
 
 
 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 aue.geom.dist <- function(XY, geometry = c("ellipse", "square"),  d = 1,
@@ -813,7 +814,7 @@ int.corvarToDeg <- function(x, angle) {
 #' the coordinates must be in a matrix/data frame with the longitude in the first
 #' column and latitude in the second. The position is projected onto a plane in
 #' meters with the function \code{\link[SoDA]{geoXY}}.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords export
 
 

@@ -49,11 +49,10 @@ eco.association(eco, "between", "pop", method = "chisq.test", ndig = 1)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \seealso{
 \code{\link[stats]{chisq.test}} \code{\link[stats]{fisher.test}}
 \code{\link[stats]{fisher.test}}
 }
-
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

@@ -2,18 +2,6 @@
 #                             SHOW METHODS
 ################################################################################
 
-
-#' print access - message for show methods
-#' @keywords internal
-
-.printaccess <- function() {
-  cat("\n -------------------------------------------------------------\n")
-  cat("  Slot access: <ecoslot.> + <slot name> + <(object x name)>","\n",
-      " See help(\"EcoGenetics accessors\")\n")
-  cat(" -------------------------------------------------------------\n")
-  
-}
-
 #-------------------------------------------------------------------#
 #' show eco.gsa
 #' @keywords internal
@@ -419,7 +407,7 @@ setMethod("show", 	"eco.mctree", function(object) {
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname eco.lmtree.mctree-summary
 #' @aliases summary,eco.lmtree-method
 #' @exportMethod summary

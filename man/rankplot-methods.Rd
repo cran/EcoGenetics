@@ -5,10 +5,10 @@
 \alias{eco.rankplot}
 \alias{eco.rankplot,eco.lsa,missing,missing-method}
 \alias{eco.rankplot,eco.lsa-method}
-\alias{eco.rankplot,factor,dataframeORmatrix,missing-method}
-\alias{eco.rankplot,factor-method}
 \alias{eco.rankplot,numeric,dataframeORmatrix,missing-method}
 \alias{eco.rankplot,numeric-method}
+\alias{eco.rankplot,factor,dataframeORmatrix,missing-method}
+\alias{eco.rankplot,factor-method}
 \title{Rankplot graphs}
 \usage{
 eco.rankplot(input, XY, xlabel = NULL, ylabel = NULL, title = NULL,
@@ -39,17 +39,17 @@ eco.rankplot(input, XY, xlabel = NULL, ylabel = NULL, title = NULL,
 
 \item{legendlabel}{Optional legend label.}
 
-\item{background}{color of the background ("grey" or "white")-}
+\item{background}{Background color ("grey" or "white")-}
 
 \item{...}{Additional elements to the generic.}
 
-\item{significant}{should be colored only the individuals with significant 
-result?. This argument can be used with \code{\link{eco.lsa}} results. 
+\item{significant}{Should only the individuals with significant 
+result be colored?. This argument can be used with \code{\link{eco.lsa}} results. 
 Default TRUE}
 
 \item{rescaled}{rescale values to [-1, 1] range?}
 
-\item{ns}{color for non significant individuals, when significant = TRUE.
+\item{ns}{Color for non significant individuals, when significant = TRUE.
 This argument can be used with \code{\link{eco.lsa}} results.}
 
 \item{interactivePlot}{Show an interactive plot via plotly? (default: TRUE)}
@@ -64,9 +64,10 @@ to the rank of the X and Y coordinates, respectively.
 \dontrun{
 data(eco3)
 
-# The data set eco3 has  50 points in two sites, 
-# but they are not visible in a usual X-Y plot 
-# due to the small distance among them
+# The data set eco3 has 50 points in two sites, 
+# but points are not visible in a usual X-Y plot, 
+# due to the small distance among them in relation to the large
+# distance between sites
 
 var <- eco3[["P"]][,1]
 plot(eco3[["XY"]], col = var)
@@ -78,7 +79,7 @@ y <- sample(1:100, 30)
 rankeco3 <- eco.rankplot(var, eco3[["XY"]])
 rankeco3
 
-# the rankplot method support the use of ggplot2 syntax with ggplot2 graphs
+# the rankplot method supports the use of ggplot2 syntax with ggplot2 graphs
 require(ggplot2)
 rankeco3 <- eco.rankplot(var, eco3[["XY"]], interactivePlot = FALSE)
 rankeco3 <- rankeco3 + theme_bw() + theme(legend.position="none")
@@ -87,6 +88,5 @@ rankeco3
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

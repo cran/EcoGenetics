@@ -6,6 +6,7 @@
 
 ## "$"-------------------------------------------------------------------------#
 #' $
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods
 #' @aliases $,ecogen,character-method 
 #' @exportMethod $
@@ -26,6 +27,7 @@ return(mess)
 
 ## "$<-"-----------------------------------------------------------------------#
 #' $<-
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases $<-,ecogen,character,ANY-method 
 #' @exportMethod $<-
@@ -49,6 +51,7 @@ setMethod("$<-","ecogen",
 
 ## "["-------------------------------------------------------------------------#
 #' [ 
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases [,ecogen,numeric,missing,ANY-method 
 #' @exportMethod [
@@ -134,6 +137,7 @@ setMethod("[", c("ecogen", "numericORmissing", "missing", "ANY"),
 
 
 #' [ 
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases [,ecogen,logical,missing,ANY-method 
 #' @exportMethod [
@@ -248,6 +252,7 @@ setMethod("[", c("ecogen", "logicalORmissing", "missing", "ANY"),
 
 ## [[ internal-----------------------------------------------------------------#
 #' [[
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 # THIS IS AN INTERNAL METHOD. IT INCLUDES THE SLOT INT.
@@ -278,6 +283,7 @@ setMethod("[[", c("ecogen","numeric", "missing"), function(x, i, j) {
 
 ## [[--------------------------------------------------------------------------#
 #' [[
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases [[,ecogen,character,missing-method
 #' @exportMethod [
@@ -306,6 +312,7 @@ setMethod("[[", c("ecogen","character", "missing"), function(x, i, j) {
 
 ## [[<- internal---------------------------------------------------------------#
 #' [[<-
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 # THIS IS AN INTERNAL METHOD. IT INCLUDES THE SLOT INT.
@@ -336,6 +343,7 @@ setReplaceMethod("[[", c("ecogen","numeric", "missing"), function (x, i, j, ...,
 
 
 #' [[<- -----------------------------------------------------------------------#
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases [,ecogen,character,missing-method
 #' @exportMethod [[<-

@@ -16,7 +16,6 @@ Plot method for an eco.weight object. This function
 makes a graph for the original coordinates and transformed as ranks.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

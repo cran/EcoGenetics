@@ -5,6 +5,7 @@
 # Names -----------------------------------------------------------------------#
 
 #' names 
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods
 #' @aliases names,ecogen-method
 #' @exportMethod names
@@ -15,6 +16,7 @@ setMethod("names", "ecogen",
           })
 
 #' names<- 
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods
 #' @aliases names,ecogen-method
 #' @exportMethod names<-
@@ -32,6 +34,7 @@ setReplaceMethod("names", c(x="ecogen", value="character"), function(x, value) {
 
 # is --------------------------------------------------------------------------#
 #' is.ecogen 
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases is,ecogen-method
 #' @export is.ecogen
@@ -44,6 +47,7 @@ is.ecogen <- function(x) {
 # nrow -----------------------------------------------------------------------#
 
 #' nrow
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods
 #' @aliases nrow,ecogen-method
 #' @exportMethod nrow
@@ -56,6 +60,7 @@ setMethod("nrow", "ecogen",
 # ncol -----------------------------------------------------------------------#
 
 #' ncol
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods
 #' @aliases ncol,ecogen-method
 #' @exportMethod ncol
@@ -68,6 +73,7 @@ setMethod("ncol", "ecogen",
 # dim -----------------------------------------------------------------------#
 
 #' dim
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods
 #' @aliases dim,ecogen-method
 #' @exportMethod dim
@@ -84,6 +90,7 @@ setMethod("dim", "ecogen",
 
 # as.list----------------------------------------------------------------------#
 #' as.list
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @param x Object of class ecogen
 #' @rdname ecogen-methods 
 #' @exportMethod as.list
@@ -108,6 +115,7 @@ setMethod("as.list",
 setGeneric("as.int.list", function(x, ...) standardGeneric("as.int.list"))
 
 #' as.int.list
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @name as.int.list
 #' @param x Object of class ecogen
 #' @rdname ecogen-methods 
@@ -134,6 +142,7 @@ setMethod("as.int.list",
 
 # Show-------------------------------------------------------------------------#
 #' show method
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal 
 #' @rdname ecogen-methods
 #' @aliases show,ecogen-method
@@ -220,7 +229,7 @@ setMethod("show",
               cat("----------------------------------------------------------------------------\n")
               cat(" Access to slots:",
                   "<ecoslot.> + <name of the slot> + <(name of the object)>","\n",
-                  "See help(\"EcoGenetics accessors\")\n")
+                  "See: help(\"EcoGenetics accessors\")\n")
               cat("----------------------------------------------------------------------------\n")
               
             }
@@ -257,7 +266,7 @@ setMethod("show",
 #' when a summary taking in account groups is required.
 #' @return Mean and sd table for the P data frame.
 #' @return allelic frequencies for the genetic data.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @examples
 #' 
 #' \dontrun{

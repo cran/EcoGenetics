@@ -2,7 +2,7 @@
 #' for an ecogen object
 #' 
 #' @details This program returns the Wilcoxon (Mann-Whitney U) or Tukey-HSD 
-#' statistics and p values for the multiple comparisons of the variables contained
+#' statistics and P-values for the multiple comparisons of the variables contained
 #' in the selected data frame, among the levels of a factor of the slot "S".
 #' 
 #' @param eco Object of class "ecogen".
@@ -10,7 +10,7 @@
 #' For dominant data, "A" is here considered here a synonym of the G data frame.
 #' @param x The name of the S slot column with the groups for the analysis.
 #' @param test Test to perform ("wilcoxon", "tukey").
-#' @param  only.p  Should be only returned a matrix with P-values? 
+#' @param  only.p  Should it be just a matrix with P-values returned? 
 #' Default TRUE.
 #' @param adjust P-values correction method for multiple tests 
 #' passed to \code{\link[stats]{p.adjust}}. Defalut is "fdr".
@@ -32,7 +32,7 @@
 #' wil
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

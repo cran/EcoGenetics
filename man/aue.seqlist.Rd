@@ -19,7 +19,6 @@ aue.seqlist(from, to, by, out.format = c("matrix", "list"))
 Creation of a sequence of numbers in matrix or list format, for indexing.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

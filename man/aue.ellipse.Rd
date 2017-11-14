@@ -25,7 +25,6 @@ aue.ellipse(mat, a = 1, b = 1, x0, y0, theta = 0)
 Solid ellipse
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

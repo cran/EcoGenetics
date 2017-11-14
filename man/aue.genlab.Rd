@@ -14,8 +14,4 @@ aue.genlab(base, n)
 \description{
 Generation of generic labels of constant length
 }
-\author{
-Thibaut Jombart
-}
 \keyword{internal}
-

@@ -40,4 +40,3 @@ head(ordered[["P"]]); head(eco[["P"]])
 Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

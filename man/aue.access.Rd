@@ -17,7 +17,6 @@ EcoGenetics slot standard notation. Returns an accessor to the slot <ecoslot>
 of the object <X>
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

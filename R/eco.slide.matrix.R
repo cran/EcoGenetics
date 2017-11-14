@@ -10,7 +10,7 @@
 #' and row dimension
 #' @param fun Function to apply in each focal pixel.
 #' @param window Window type. Default "square".
-#' @param within Should be computed the function in borders focal pixels only if 
+#' @param within Should the function be computed in focal pixels of the borders, only if 
 #' the area is within the matrix? Default TRUE.
 #' @examples
 #' 
@@ -32,7 +32,7 @@
 #'
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 eco.slide.matrix <- function(mat, r, slide, fun, 

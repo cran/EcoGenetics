@@ -12,7 +12,6 @@ table.sokal
 Allelic frequency table from 50 villages, analyzed in Sokal et al. (1986).
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{data}
-

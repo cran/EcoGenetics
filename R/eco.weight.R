@@ -11,8 +11,7 @@
 #' @param d2 Maximum distance for circle matrices.
 #' @param p Power for inverse distance. Default = 1.
 #' @param alpha Alpha value for exponential distance. Default = 1.
-#' @param dist.method Method of computing distance when XY is in metric
-#' units. If latlon is TRUE, the method is euclidean.
+#' @param dist.method Method used for computing distances passed to  \code{\link[stats]{dist}}. Default = euclidean.
 #' @param row.sd Logical. Should be row standardized the matrix? Default FALSE 
 #' (binary weights).
 #' @param max.sd Logical. Should be divided each weight by the maximum of the matrix?
@@ -173,7 +172,7 @@
 #' 
 #' # 7) CUSTOM WEIGHT MATRIX
 #' 
-#' ## A eco.weight object can be created with a custom W matrix. In this case,
+#' ## An eco.weight object can be created with a custom W matrix. In this case,
 #' ## the rows and the columns of W (weight matrix) must have names, 
 #' ## that must coincide (also in order) with the name of the XY (position) matrix.
 #' 
@@ -238,7 +237,7 @@
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 setGeneric("eco.weight", function(XY,
@@ -252,7 +251,7 @@ setGeneric("eco.weight", function(XY,
                                   ties = c("unique", "min", "random", "ring", "first")) {
   
   method <- match.arg(method)
-  dist.method <- match.arg(dist.method)
+  #dist.method <- match.arg(dist.method)
   ties <- match.arg(ties)
 
   #// custom matrix W configuration
@@ -298,17 +297,16 @@ setGeneric("eco.weight", function(XY,
     
     
   # // distance configuration
-  if(latlon == FALSE) {
-    distancia <- as.matrix(dist(XY), upper = T, method = dist.method)
-  } else {
+  if(latlon) {
     XY <- SoDA::geoXY(XY[,2], XY[,1], unit=1)
-    distancia <- dist(XY)
-    distancia <- as.matrix(distancia, upper = T, method = dist.method)
-  }
+    }
+  
+  distancia <- as.matrix(dist(XY, method = dist.method))
+
   #####
   
   if(method == "inverse") {
-    y <- as.matrix(dist(XY, upper = T, method = dist.method))
+    y <- distancia
     y <- 1 / (y ^ p)
     diag(y) <- 0
     
@@ -436,13 +434,13 @@ setGeneric("eco.weight", function(XY,
   
   y2 <- y
   diag(y2) <- 0
-  out@CONNECTED <- which(apply(y, 1, sum, na.rm=TRUE) != 0)
+  out@CONNECTED <- which(apply(y, 1, sum, na.rm = TRUE) != 0)
   out@NONZERO <- round(100* sum(y2 != 0) / (nrow(y2)^2 - nrow(y2)), 1)
   out@NONZEROIND <- round(100 * sum(apply(y2, 1, sum) != 0) / nrow(y2), 1)
   out@AVG <- round(sum(apply(y2, 1, function(x)sum (x != 0)))  / nrow(y2), 1)
   out@PAR <- param
   out@PAR.VAL <- param.values
-  avgdist <- y*as.matrix(dist(XY))
+  avgdist <- y * distancia
   avgdist <- mean(avgdist[avgdist != 0])
   out@AVG.DIST <- round(avgdist, 3)
   out@ANGLE <- NULL

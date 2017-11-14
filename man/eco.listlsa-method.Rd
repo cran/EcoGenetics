@@ -22,11 +22,10 @@
 \description{
 Plot method for local spatial analysis as list
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \seealso{
 \code{\link{eco.lsa}}
 }
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}
 \keyword{internal}
-

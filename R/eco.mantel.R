@@ -1,25 +1,23 @@
 #' Mantel and partial Mantel tests, with truncation option
 #' 
-#' @description This program computes the Mantel test between the distance matrices 
-#' d1 and d2, or a partial Mantel test between the distance matrices. The test can 
-#' be performed for truncated distances (Legendre et al. 2015) or with a direction
-#' Falsetti and Sokal (1993) using a weights object generated with  \code{\link{eco.bearing}}.
-#' d1 and d2, conditioned on dc.
+#' @description Mantel test or Partial Mantel test for distance matrices d1 and d2, 
+#' or partial Mantel test for d1 and d2, conditioned on the matrix dc.
+#'  The test can be performed for truncated distances (Legendre et al. 2015) or for a particular direction
+#' (Falsetti and Sokal, 1993) using a weights object generated with  \code{\link{eco.bearing}}.
 #' @param d1 Distance matrix.
 #' @param d2 Distance matrix.
 #' @param dc Distance matrix (optional).
-#' @param con binary eco.weight object used for truncation or a weights object obtained with eco.bearing.
-#' @param thres threshold distance used for truncation. distances above the threshold are
-#' set as 4 times the threshold. If null, and con is not null, it is set to the maximum
-#' distance observed in d2
-#' @param truncMat Matrix to be used for truncation (default = d2)
+#' @param con Binary eco.weight object used for truncation, or a weights object obtained with eco.bearing.
+#' @param thres Threshold distance used for truncation. Distances above the threshold are
+#' set as 4 times the threshold. If thres is null, and con is not null,
+#' the parameter set to the maximum distance observed in d2.
+#' @param truncMat Matrix used for truncation (default = d2)
 #' @param method Correlation method used for the construction of the statistic 
 #' ("pearson", "spearman" or "kendall"). Kendall's tau computation is slow.
 #' @param nsim Number of Monte-Carlo simulations. 
 #' @param alternative The alternative hypothesis. If "auto" is selected (default) the
-#' program determines the alternative hypothesis.
-#' Other options are: "two.sided", "greater" and "less".  
-#' @param plotit Should be generated a plot of the simulations? 
+#' program determines the alternative hypothesis. Other options are: "two.sided", "greater" and "less".  
+#' @param plotit Plot a histogram of the simulations? 
 #' @param ... Additional arguments passed to \code{\link[stats]{cor}}.
 #' @return An object of class "eco.gsa" with the following slots:
 #' @return > METHOD method used in the analysis 
@@ -45,25 +43,28 @@
 #' 
 #' data(eco.test)
 #' 
-#' eco.mantel(d1 = dist(eco[["P"]]), d2 = dist(eco[["E"]]), nsim = 99)   # ordinary Mantel test
+#' ### Ordinary Mantel test ###
+#' eco.mantel(d1 = dist(eco[["P"]]), d2 = dist(eco[["E"]]), nsim = 99)  
 #' 
+#' ### Partial Mantel test ###
 #' pm <- eco.mantel(d1 = dist(eco[["P"]]), d2 = dist(eco[["E"]]), 
-#' dc = dist(eco[["XY"]]), nsim = 99)                               # partial Mantel test
+#' dc = dist(eco[["XY"]]), nsim = 99)                               
 #' 
+#' ### Truncated Mantel test ###
 #' # checking threshold in a correlogram:
 #' corm <- eco.cormantel(M = dist(eco[["P"]]), XY = eco[["XY"]], nsim = 99)
 #' eco.plotCorrelog(corm)
-#' Correlation is around 0 when distance between points is > 5
+#' # Correlation is around 0 when distance between points is > 5
 #' 
-#' # create a weights object for truncation
+#' # creating a weights object for truncation
 #' con <- eco.weight(eco@XY, method="circle", d2=5)
-#' #compute a truncated mantel test
+#' # compute a truncated mantel test
 #' eco.mantel(dist(eco[["P"]]), dist(eco[["XY"]]), con=con)
 #' 
-#' # analize test mantel in a direction of 35 degrees
-#' con <- eco.bearing(XY = eco[["X"]], thata = 37)
+#' ### Directional Mantel test ###
+#' # analyzing with a Mantel test, in a direction of 35 degrees counterclockwise from E.
+#' con2 <- eco.bearing(XY = eco[["XY"]], theta = 37)
 #' eco.mantel(dist(eco[["P"]]), dist(eco[["XY"]]), con = con2)
-#' 
 #' 
 #' #-----------------------
 #' # ACCESSORS USE EXAMPLE
@@ -99,7 +100,7 @@
 #' extensions of the Mantel test of matrix correspondence. Systematic zoology, 627-632.
 #' 
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

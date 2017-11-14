@@ -46,11 +46,10 @@ plot(variog)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \seealso{
 \code{\link{eco.correlog}} \code{\link{eco.cormantel}}  \code{\link{eco.variogram}}
 }
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}
 \keyword{internal}
-

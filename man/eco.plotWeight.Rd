@@ -9,37 +9,36 @@ eco.plotWeight(x, type = c("simple", "igraph", "edgebundle", "network"),
   vertex.label = NA, bounded = FALSE, ...)
 }
 \arguments{
-\item{x}{connection network}
+\item{x}{Connection network}
 
-\item{type}{plot type: "edgebundle", for a circular network, "network" for a tension network"}
+\item{type}{Plot type: "edgebundle", for a circular network, "network" for a tension network}
 
-\item{group}{vector with classes assigned to the individuals, in the same original order}
+\item{group}{Vector with classes assigned to the individuals, in the same original order}
 
-\item{fontSize}{argument passed to \code{\link[networkD3]{forceNetwork}}
+\item{fontSize}{Argument passed to \code{\link[networkD3]{forceNetwork}}
 contained in the weight object  (which is the order of the table used to construct the weights)}
 
-\item{ebColor}{vector with edge colors for the groups of the edgebundler plot (Experimental feature)}
+\item{ebColor}{Vector with edge colors for the groups of the edgebundler plot (Experimental feature)}
 
-\item{vertex.size}{parameter passed to \code{\link[igraph]{plot.igraph}}}
+\item{vertex.size}{Parameter to \code{\link[igraph]{plot.igraph}}}
 
-\item{vertex.label}{parameter passed to \code{\link[igraph]{plot.igraph}}}
+\item{vertex.label}{Parameter passed to \code{\link[igraph]{plot.igraph}}}
 
-\item{bounded}{logical value to enable (TRUE) or disable (FALSE) 
-the bounding box limiting theF graph's extent see \code{\link[networkD3]{forceNetwork}}.}
+\item{bounded}{Logical. Value to enable (TRUE) or disable (FALSE) 
+the bounding box limiting the force network graph extent see \code{\link[networkD3]{forceNetwork}}.}
 
-\item{...}{additional arguments passed to \code{\link[igraph]{plot.igraph}}}
+\item{...}{Additional arguments passed to \code{\link[igraph]{plot.igraph}}}
 }
 \description{
-Plot method for an eco.weight object. For examples see  \code{\link{eco.weight}}  
-This function can make a static plot with the original coordinates and an aditional graph with
-the coordinates transformed as ranks. It also can construct dynamic plots 
-(force network and circle network)
+Plot method for an eco.weight object. For examples, see  \code{\link{eco.weight}}  
+This function can make a static plot with the original coordinates and an additional graph with
+the coordinates transformed as ranks. It can also construct dynamic plots 
+(force networks and circle networks).
 }
 \examples{
 # see the examples in the function eco.weight:
 # ?eco.weight
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

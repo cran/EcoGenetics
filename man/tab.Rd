@@ -18,7 +18,6 @@ The starting haze values (SHV) were estimated checking the
 profiles of the bands.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{data}
-

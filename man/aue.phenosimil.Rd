@@ -14,6 +14,5 @@ returns a list of matrices.}
 Phenotypic similarity for vector, matrix or data frame acoording to Ritland (1996)
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

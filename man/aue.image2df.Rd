@@ -32,6 +32,5 @@ image(matrix(ras.row[,3], 15, 15))
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

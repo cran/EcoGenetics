@@ -25,7 +25,7 @@ To plot multiple variables in a same plot, use only the argument x (see examples
 
 \item{legend}{Show legends in ggplot graphs? (default: TRUE)}
 
-\item{background}{background color ("grey" or "white")}
+\item{background}{Background color ("grey" or "white")}
 
 \item{errorbar}{Show error-bars? (default: FALSE)}
 
@@ -45,22 +45,21 @@ show only significant correlograms? (default: FALSE)}
 
 \item{interactivePlot}{Show an interactive plot via plotly? (default: TRUE)}
 
-\item{meanplot}{Show a line with the mean when plot is for multiple variables? (default: TRUE)}
+\item{meanplot}{Show a line with the mean, when the plot is for multiple variables? (default: TRUE)}
 
 \item{randtest}{Randomization test (one of: "permutation", "bootstrap", "none")}
 
-\item{alpha}{significance (alpha) for P (or P-adjusted) values (Default = 0.05)}
+\item{alpha}{significance level for P (or P-adjusted) values (Default alpha = 0.05)}
 
 \item{quiet}{print quietly? Default FALSE}
 }
 \description{
 Plot method for correlograms and variograms. 
-For examples see  \code{\link{eco.correlog}} \code{\link{eco.cormantel}}  \code{\link{eco.variogram}}
-}
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+For examples, see  \code{\link{eco.correlog}} \code{\link{eco.cormantel}}  \code{\link{eco.variogram}}
 }
 \seealso{
 \code{\link{eco.correlog}} \code{\link{eco.cormantel}}  \code{\link{eco.variogram}}
 }
-
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

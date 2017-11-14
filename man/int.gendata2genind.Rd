@@ -15,4 +15,3 @@ int.gendata2genind(tab, input)
 int.gendata2genind
 }
 \keyword{internal}
-

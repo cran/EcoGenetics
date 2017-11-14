@@ -80,6 +80,5 @@ The function generates plots for individual variables calling eco.rankplot.
 Additional parameters can be passed to eco.rankplot.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

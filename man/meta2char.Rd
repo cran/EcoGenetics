@@ -13,7 +13,6 @@ meta2char(X)
 Metachacter to character
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

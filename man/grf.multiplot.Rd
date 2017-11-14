@@ -18,7 +18,3 @@ grf.multiplot(..., plotlist = NULL, cols = 1, layout = NULL)
 \description{
 Multiple plot function for ggplot
 }
-\author{
-Hadley Wickham
-}
-

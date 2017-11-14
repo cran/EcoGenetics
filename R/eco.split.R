@@ -1,33 +1,43 @@
-#' Splitting an ecogen object by groups
+#' Splitting an ecogen object by group
 #' 
 #' @param eco Object of class "ecogen". 
 #' @param hier The name of the S slot column with labels assigning individuals to groups.
 #' @param name Name used for the output objects. Default is the name of the input,followed by
 #' a suffix (see Description). 
 #' @param missing Missing data argument This can take three values ("0", "NA" or "MEAN"),
-#' as described in  \code{\link{ecogen}}.
-#' @param overwrite Overwrite files in workspace with same name if exist?
-#' Missing elements are treated as zeros in the default option.
+#' as described in  \code{\link{ecogen}}. 
+#' #' Missing elements are treated as zeros in the default option.
+#' @param overwrite Overwrite files with the same name of the output
+#'  if already present in workspace when asList = FALSE? Default FALSE.
 #' @param asList Return a list with the objects instead of creating objects in workspace?
 #' Default = TRUE
-#' @description  The function splits an ecogen objects into the groups of a hierarchy
-#' contained in the slot S. If asList is TRUE,a list with the objects is created , 
+#' @description  The function splits an ecogen object into the groups defined
+#' in the slot S. If asList is TRUE, a list with the objects is created , 
 #' that can be assigned to a name with regular rules, using the operator "<-". 
-#' Else, the function creates one ecogen object for each level in the workspace
-#' with the following nomenclature: <name of ecogen object>.<name of hierarchical level>. 
+#' Otherwise, the function creates in the workspace an ecogen object for each group 
+#' with the following nomenclature: <name of ecogen object>.<name of the group>. 
 #' @examples
 #' \dontrun{
 #' data(eco3)
 #' eco3
-#' #list of objects
+#' 
+#' 
+#' # list of objects
 #' x <- eco.split(eco3, "structure", asList = TRUE)
-#' #r-ebinding
+#' 
+#' 
+#' # rebinding
 #' eco.bind <- eco.rbind(x)
+#' 
+#' 
 #' # note that different subsets can also be created
 #' S1.3 <- eco.rbind(x[[1]], x[[3]])
 #' 
+#' 
 #' # split and create objects with prefix "eco3"
-#' eco.split(eco3,"structure", asList = FALSE) 
+#' eco.split(eco3,"structure", asList = FALSE)
+#' 
+#' 
 #' # split and create objects with prefix "newObjects"
 #' eco.split(eco3,"structure", "newObjects", asList = FALSE) 
 #' 
@@ -35,7 +45,7 @@
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

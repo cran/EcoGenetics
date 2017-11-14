@@ -13,7 +13,6 @@ misc.2symmetric(mat)
 Conversion of a non symmetric binary matrix into symmetric.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

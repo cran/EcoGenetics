@@ -13,7 +13,6 @@ Data frame with cartesian coordinates of
 225 simulated individuals.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{data}
-

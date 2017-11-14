@@ -8,9 +8,9 @@ eco.correlog(Z, XY, Y = NULL, int = NULL, smin = 0, smax = NULL,
   nclass = NULL, size = NULL, seqvec = NULL, method = c("I", "C", "CC"),
   nsim = 99, test = c("permutation", "bootstrap"), alpha = 0.05,
   alternative = c("auto", "two.sided", "greater", "less"), adjust = "holm",
-  sequential = TRUE, include.zero = TRUE, cummulative = FALSE,
-  bin = c("sturges", "FD"), row.sd = FALSE, latlon = FALSE,
-  angle = NULL, as.deg = TRUE)
+  sequential = ifelse((as.deg), FALSE, TRUE), include.zero = TRUE,
+  cummulative = FALSE, bin = c("sturges", "FD"), row.sd = FALSE,
+  latlon = FALSE, angle = NULL, as.deg = TRUE)
 }
 \arguments{
 \item{Z}{Vector, matrix or data frame with variable/s
@@ -34,7 +34,7 @@ for each with Y.}
 
 \item{seqvec}{Vector with breaks in the units of XY.}
 
-\item{method}{Correlogram method. Could be I for Moran's I, C for Geary's C
+\item{method}{Correlogram method. It can be I for Moran's I, C for Geary's C
 and CC for Bivariate Moran's Ixy. 
 If method = "CC", the program computes for the first interval (d = 0)
 the corresponding P-value and CI with \code{\link[stats]{cor.test}}.}
@@ -46,17 +46,19 @@ resampling and the associated confidence intervals of the null hypothesis.
  If test = "permutation" (default) a permutation test is made and the P-values 
  are computed.}
 
-\item{alpha}{Value for alpha. Default alpha = 0.05.}
+\item{alpha}{Value for alpha (significance level). Default alpha = 0.05.}
 
 \item{alternative}{The alternative hypothesis. If "auto" is selected (default) the
 program determines the alternative hypothesis.
 Other options are: "two.sided", "greater" and "less".}
 
-\item{adjust}{P-values correction method for multiple tests 
-passed to \code{\link[stats]{p.adjust}}. Defalut is "holm".}
+\item{adjust}{P-values correction method for multiple tests. 
+The selected method is passed as argument to \code{\link[stats]{p.adjust}} (defalut = "holm").
+For bearing correlograms, the corrections (and permutation tests) are performed for individual correlograms 
+of fixed variables (i.e.,  angles fixed [distances variable] or distances fixed [angles variable]).}
 
-\item{sequential}{Should be performed a Holm-Bonberroni (Legendre and Legendre, 2012) 
-adjustment of P-values? Defalult TRUE.}
+\item{sequential}{Should a Holm-Bonberroni correction of P-values (Legendre and Legendre, 2012) be performed?
+Defalult TRUE (only available for omnidirectional correlograms or correlograms for fixed angles).}
 
 \item{include.zero}{Should be included the distance = 0 in cross correlograms 
 (i.e., the intra- individual correlation)?. Defalut TRUE.}
@@ -298,9 +300,6 @@ eco.plotCorrelog(cross, interactivePlot = FALSE)
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Freedman D., and P. Diaconis. 1981. On the histogram as a density estimator: 
 L 2 theory. Probability theory and related fields, 57: 453-476.
@@ -336,4 +335,6 @@ MD, pp. 167-96.
 Sturges  H. 1926. The choice of a class interval. Journal of the American 
 Statistical Association, 21: 65-66.
 }
-
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

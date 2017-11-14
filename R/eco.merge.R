@@ -1,9 +1,9 @@
 #' Merging two ecogen objects. Ordering the rows of an ecogen 
 #' object according to the rows of another
 #' 
-#' @details This program generates an ecogen object binding the columns 
-#' of the individuals with matching row names in e1 and e2. If the objects
-#' have different number of rows, the result is a merged data frame with 
+#' @details This program generates an ecogen object by binding the columns 
+#' of the individuals that have matching row names in the objects e1 and e2. 
+#' If the objects have different number of rows, the result is a merged data frame with 
 #' the rows in the order of the first object.
 #' If the objects have the same number of rows, but in a different order,
 #' the product is an object with the rows ordered as the first object.
@@ -14,7 +14,7 @@
 #' @param e2 Object of class "ecogen".
 #' @param ... Data frames to merge. Could be any combination of
 #' the following: "XY",P","G","E" and "C", or "ALL". If a "G" data frame
-#' is provided, the program generates also the INT slot coding the missing
+#' is provided, the program generates also the INT slot by coding the missing
 #' data as "0". 
 #' 
 #' @examples
@@ -26,7 +26,7 @@
 #' merged
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

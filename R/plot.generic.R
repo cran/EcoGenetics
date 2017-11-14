@@ -12,8 +12,8 @@
 # If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
 # then plot 1 will go in the upper left, 2 will go in the upper right, and
 # 3 will go all the way across the bottom.
-#'@author Hadley Wickham
 #'@export
+# author: Hadley Wickham
 
 setGeneric("grf.multiplot", function(..., plotlist = NULL, 
                                      cols = 1, layout = NULL) {
@@ -59,7 +59,7 @@ setGeneric("grf.multiplot", function(..., plotlist = NULL,
 #' @param n number of plot in layout
 #' @param nrow Number of rows in layout
 #' @param byrow plot by row?
-#' @author Leandro Roser
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 setGeneric("grf.seqmultiplot", 

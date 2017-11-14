@@ -1,12 +1,12 @@
 #' Empirical variogram
 #' 
 #' @description This program computes the empirical variogram of a selected variable.
-#' If the coordinates are given in decimal degrees, set latlon = TRUE. The program
+#' If the coordinates are in decimal degrees, set latlon = TRUE. The program
 #' return a table with the mean class distances (d.mean) and the semivariances (obs)
 #' for each class.
 #' 
 #' @param Z Vector for the analysis.
-#' @param XY Data frame or matrix with individual's position (projected coordinates).
+#' @param XY Data frame or matrix with the position of individuals (projected coordinates).
 #' @param int Distance interval in the units of XY.
 #' @param smin Minimum class distance in the units of XY.
 #' @param smax Maximum class distance iin the units of XY.
@@ -22,7 +22,7 @@
 #' the coordinates must be in a matrix/data frame with the longitude in the first
 #' column and latitude in the second. The position is projected onto a plane in
 #' meters with the function \code{\link[SoDA]{geoXY}}.
-#' @param angle direction for computation of bearing correlogram (angle between 0 and 180).
+#' @param angle Direction for computation of a bearing variogram (angle between 0 and 180).
 #' Default NULL (omnidirectional).
 #' 
 #' @return The program returns an object of class "eco.correlog" 
@@ -79,9 +79,10 @@
 #' of analyzing directional spatial autocorrelation. 
 #' Geographical Analysis, 32: 267-278.
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
+#' 
 
 setGeneric("eco.variogram",  
            function(Z, XY, 

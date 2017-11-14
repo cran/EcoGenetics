@@ -19,6 +19,5 @@ grf.seqmultiplot(x, n, nrow, byrow = TRUE)
 Plot a ggplot sequence in layers of n plots arranged in k rows
 }
 \author{
-Leandro Roser
+Leandro Roser \email{learoser@gmail.com}
 }
-

@@ -5,14 +5,14 @@
 #' Join-count statistics with P-values.
 #' 
 #' The program allows the analysis of a single variable or multiple variables. 
-#' in the last case, the variables must be in columns and the individuals in rows.
+#' in this latter last case, the variables must be in columns and the individuals in rows.
 #' 
-#' For join-count analysis, a ploidy argumen must be supplied. The data is then ordered with the 
-#' function \code{\link{aue.sort}}. This step is required in the analysis of
-#' genotypes. An individual with the alleles A and B, coded as AB, is identical 
-#' to other coded as BA. The ordination step ensures that both are considered
-#' in a single category. For the analysis of frequencies of single alleles, the input 
-#' is count data (ploidy-times the frequency, as provided by the slot
+#' In join-count analysis, a ploidy argument must be supplied. The data is then ordered with the 
+#' function \code{\link{aue.sort}}. This step is required for the analysis of
+#' genotypic data. An individual with the alleles A and B, coded as AB, is identical 
+#' to other coded as BA. The order step ensures the AB and BA 
+#' will be considered the same genotype. For the analysis of frequencies of single alleles, the input 
+#' is count data (ploidy times the frequency, as provided by the slot
 #' A of an ecogen object: the count data A' can be obtained as A' <- ploidy * A),
 #' using the function with the arguments ploidy = 1. 
 #'  
@@ -167,7 +167,7 @@
 #' 2. Some biological implications and four applications of evolutionary and 
 #' ecological interest. Biological Journal of the Linnean Society, 10: 229-49.
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @export
 

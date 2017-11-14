@@ -15,6 +15,5 @@ aue.df2image(x, origin = c("upperleft", "lowerleft"))
 This is the inverse function of aue.image2df
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

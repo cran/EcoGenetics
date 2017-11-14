@@ -18,10 +18,10 @@ Log posterior probability plot for Geneland repetitions with fixed K
 This program returns, for a series of Geneland 
 repetitions with fixed K, and a specified burn-in value,
 a plot of the log posterior probability
-vs the repetition number. This allow to choose the best run.
-The working directory will be setted to the folder containing the results
+vs the repetition number. This allows to choose the best run.
+The working directory will be set to the folder containing the results
 created by Geneland. The program expects each subfolder 
-(run) having a number as name, indicating the corresponding number of run.
+(run) to have a number as name, that indicates the corresponding number of run.
 (1, 2, etc., see the example).
 }
 \examples{
@@ -65,6 +65,5 @@ eco.post.geneland(5, 10)
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
-

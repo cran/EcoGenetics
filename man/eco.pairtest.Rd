@@ -21,7 +21,7 @@ For dominant data, "A" is here considered here a synonym of the G data frame.}
 \item{adjust}{P-values correction method for multiple tests 
 passed to \code{\link[stats]{p.adjust}}. Defalut is "fdr".}
 
-\item{only.p}{Should be only returned a matrix with P-values? 
+\item{only.p}{Should it be just a matrix with P-values returned? 
 Default TRUE.}
 
 \item{...}{Additional arguments passed to \code{\link{wilcox.test}} 
@@ -33,7 +33,7 @@ for an ecogen object
 }
 \details{
 This program returns the Wilcoxon (Mann-Whitney U) or Tukey-HSD 
-statistics and p values for the multiple comparisons of the variables contained
+statistics and P-values for the multiple comparisons of the variables contained
 in the selected data frame, among the levels of a factor of the slot "S".
 }
 \examples{
@@ -50,10 +50,9 @@ wil
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \seealso{
 \code{\link{wilcox.test}} \code{\link{TukeyHSD}}
 }
-
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

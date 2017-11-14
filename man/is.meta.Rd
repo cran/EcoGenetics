@@ -13,7 +13,6 @@ is.meta(X)
 Detection of metacharacters
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

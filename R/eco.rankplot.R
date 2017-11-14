@@ -10,12 +10,12 @@
 #' @param xlabel Optional label for x axis.
 #' @param ylabel Optional label for y axis.
 #' @param title Optional title label.
-#' @param background color of the background ("grey" or "white")-
+#' @param background Background color ("grey" or "white")-
 #' @param legendlabel Optional legend label.
-#' @param significant should be colored only the individuals with significant 
-#' result?. This argument can be used with \code{\link{eco.lsa}} results. 
+#' @param significant Should only the individuals with significant 
+#' result be colored?. This argument can be used with \code{\link{eco.lsa}} results. 
 #' Default TRUE
-#' @param ns color for non significant individuals, when significant = TRUE.
+#' @param ns Color for non significant individuals, when significant = TRUE.
 #' This argument can be used with \code{\link{eco.lsa}} results.
 #' @param rescaled rescale values to [-1, 1] range?
 #' @param interactivePlot Show an interactive plot via plotly? (default: TRUE)
@@ -25,9 +25,10 @@
 #' \dontrun{
 #' data(eco3)
 #' 
-#' # The data set eco3 has  50 points in two sites, 
-#' # but they are not visible in a usual X-Y plot 
-#' # due to the small distance among them
+#' # The data set eco3 has 50 points in two sites, 
+#' # but points are not visible in a usual X-Y plot, 
+#' # due to the small distance among them in relation to the large
+#' # distance between sites
 #' 
 #' var <- eco3[["P"]][,1]
 #' plot(eco3[["XY"]], col = var)
@@ -39,14 +40,14 @@
 #' rankeco3 <- eco.rankplot(var, eco3[["XY"]])
 #' rankeco3
 #' 
-#' # the rankplot method support the use of ggplot2 syntax with ggplot2 graphs
+#' # the rankplot method supports the use of ggplot2 syntax with ggplot2 graphs
 #' require(ggplot2)
 #' rankeco3 <- eco.rankplot(var, eco3[["XY"]], interactivePlot = FALSE)
 #' rankeco3 <- rankeco3 + theme_bw() + theme(legend.position="none")
 #' rankeco3
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @rdname rankplot-methods
 #' 
@@ -199,7 +200,7 @@ setMethod("eco.rankplot",
             #message(paste("plot options: rescaled =", rescaled))
             
             if(interactivePlot == TRUE) {
-              rankplot <- plotly::ggplotly(rankplot)
+              rankplot <- suppressMessages(plotly::ggplotly(rankplot))
             }
             #message(paste("plot options: interactivePlot =", interactivePlot))
             rankplot
@@ -288,7 +289,7 @@ setMethod("eco.rankplot",
             colnames(xy.out) <- c("X rank", "X rank")
             
             if(interactivePlot) {
-              rankplot <- plotly::ggplotly(rankplot)
+              rankplot <- suppressMessages(plotly::ggplotly(rankplot))
             }
             
             attr(rankplot, "data") <- xy.out
@@ -303,7 +304,7 @@ setMethod("eco.rankplot",
 #' @aliases eco.rankplot,factor-method
 #' @exportMethod eco.rankplot
 
-#plot with a factor for colours vs XY
+# plot with a factor for colors vs XY
 
 setMethod("eco.rankplot", 
           c("factor",
@@ -379,7 +380,7 @@ setMethod("eco.rankplot",
             colnames(xy.out) <- c("X rank", "X rank")
            
              if(interactivePlot) {
-              rankplot <- plotly::ggplotly(rankplot)
+              rankplot <- suppressMessages(plotly::ggplotly(rankplot))
              }
             
             attr(rankplot, "data") <- xy.out

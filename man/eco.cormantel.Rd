@@ -139,7 +139,7 @@ eco.plotCorrelogB(corm_b)
 
  # plot for the first distance class, 
  use a number between 1 and the number of classes to select the corresponding class
-eco.plotCorrelogB(moran_b, interactivePlot = FALSE, var = 1) 
+eco.plotCorrelogB(corm_b, interactivePlot = FALSE, var = 1) 
 
 # partial Mantel correlogram
 corm <- eco.cormantel(M = dist(eco[["P"]]), MC = dist(eco[["E"]]),
@@ -167,9 +167,6 @@ ecoslot.BREAKS(corm)     # slot BREAKS
 }
 
 }
-\author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
-}
 \references{
 Freedman D., and P. Diaconis. 1981. On the histogram as a density estimator: 
 L 2 theory. Probability theory and related fields, 57: 453-476.
@@ -191,4 +188,6 @@ The Netherlands, pp. 29-43.
 Sturges  H. 1926. The choice of a class interval. Journal of the American 
 Statistical Association, 21: 65-66.
 }
-
+\author{
+Leandro Roser \email{learoser@gmail.com}
+}

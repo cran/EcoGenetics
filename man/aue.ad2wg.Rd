@@ -17,7 +17,6 @@ aue.ad2wg(x, x0, y0)
 Transforming an adyacency matrix into a local weight matrix for a point with coordinates (x0,y0)
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

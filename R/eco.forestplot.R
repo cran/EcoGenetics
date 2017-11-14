@@ -42,7 +42,7 @@
 #' 
 #' @aliases eco.forestplot,generic-method
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @exportMethod eco.forestplot
 
@@ -146,7 +146,7 @@ setMethod("eco.forestplot",
                              plot.title = ggplot2::element_text(size = title.size, hjust=0.5))
             attr(p, "data") <- data.select
             if(interactivePlot) {
-              p <- plotly::ggplotly(p, tooltip = c("obs", "lwr", "uppr"))
+              p <-suppressMessages(plotly::ggplotly(p, tooltip = c("obs", "lwr", "uppr")))
             }
             message(paste("plot options: interactivePlot =", interactivePlot))
             p
@@ -224,7 +224,7 @@ setMethod("eco.forestplot",
                              plot.title = ggplot2::element_text(size = title.size, hjust=0.5))
             
             if(interactivePlot) {
-              p <- plotly::ggplotly(p, tooltip = c("obs", "lwr", "uppr"))
+              p <- suppressMessages(plotly::ggplotly(p, tooltip = c("obs", "lwr", "uppr")))
             }
             
             attr(p, "data") <- data.select

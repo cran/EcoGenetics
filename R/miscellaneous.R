@@ -1,7 +1,7 @@
 
 #' Conversion of a non symmetric binary matrix into symmetric.
 #' @param mat Matrix.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 
@@ -15,7 +15,7 @@ misc.2symmetric <- function(mat) {
 
 #' Creates a matrix without diagonal, in row order
 #' @param mat Matrix.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 misc.undimmattg <- function(mat) {
@@ -33,7 +33,7 @@ misc.undimmattg <- function(mat) {
 #' in decimal degrees format.
 #' This program computes a distance matrix for Earth points in decimal degrees.
 #' It assumes a spherical model with an Earth radius of 6371 km. 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 
@@ -68,7 +68,7 @@ misc.dlatlon2distm <- function(XY) {
 #' or excluded of the matrix). If a column or row of the data, filter is 
 #' the value data[row, ], data[, col].
 #' @param byrow filter the rows? default FALSE (filter the columns)
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 misc.parse.filter <- function(data, expr, filter, byrow = TRUE) {

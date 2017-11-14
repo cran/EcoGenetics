@@ -1,25 +1,25 @@
 
 #-------------------------------------------------------------------#
 #' Plot for a connection network
-#' @param x connection network
-#' @param group vector with classes assigned to the individuals, in the same original order
-#' @param type plot type: "edgebundle", for a circular network, "network" for a tension network"
-#' @param fontSize argument passed to \code{\link[networkD3]{forceNetwork}}
+#' @param x Connection network
+#' @param group Vector with classes assigned to the individuals, in the same original order
+#' @param type Plot type: "edgebundle", for a circular network, "network" for a tension network
+#' @param fontSize Argument passed to \code{\link[networkD3]{forceNetwork}}
 #' contained in the weight object  (which is the order of the table used to construct the weights)
-#' @param vertex.size parameter passed to \code{\link[igraph]{plot.igraph}}
-#' @param vertex.label parameter passed to \code{\link[igraph]{plot.igraph}}
-#' @param bounded logical value to enable (TRUE) or disable (FALSE) 
-#'                the bounding box limiting theF graph's extent see \code{\link[networkD3]{forceNetwork}}.
-#' @param ebColor vector with edge colors for the groups of the edgebundler plot (Experimental feature) 
-#' @param ... additional arguments passed to \code{\link[igraph]{plot.igraph}}
-#' @description Plot method for an eco.weight object. For examples see  \code{\link{eco.weight}}  
-#' This function can make a static plot with the original coordinates and an aditional graph with
-#' the coordinates transformed as ranks. It also can construct dynamic plots 
-#' (force network and circle network)
+#' @param vertex.size Parameter to \code{\link[igraph]{plot.igraph}}
+#' @param vertex.label Parameter passed to \code{\link[igraph]{plot.igraph}}
+#' @param bounded Logical. Value to enable (TRUE) or disable (FALSE) 
+#'                the bounding box limiting the force network graph extent see \code{\link[networkD3]{forceNetwork}}.
+#' @param ebColor Vector with edge colors for the groups of the edgebundler plot (Experimental feature) 
+#' @param ... Additional arguments passed to \code{\link[igraph]{plot.igraph}}
+#' @description Plot method for an eco.weight object. For examples, see  \code{\link{eco.weight}}  
+#' This function can make a static plot with the original coordinates and an additional graph with
+#' the coordinates transformed as ranks. It can also construct dynamic plots 
+#' (force networks and circle networks).
 #' @examples 
 #' # see the examples in the function eco.weight:
 #' # ?eco.weight
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 eco.plotWeight <-  function(x, type = c("simple", "igraph", "edgebundle", "network"),

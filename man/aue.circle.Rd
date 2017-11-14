@@ -21,7 +21,6 @@ aue.circle(mat, r, x0, y0, smooth = 100)
 Circle perimeter
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

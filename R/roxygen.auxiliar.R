@@ -67,7 +67,7 @@
 #' @docType data
 #' @description Data frame with simulated morphometric 
 #' data of 225 individuals.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco.test)
 #' phenotype
@@ -85,7 +85,7 @@
 #' provided with the image in \url{http://glovis.usgs.gov/}. 
 #' The starting haze values (SHV) were estimated checking the 
 #' profiles of the bands.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(tab)
 #' tab
@@ -98,7 +98,7 @@
 #' @name structure
 #' @docType data
 #' @description Factor with simulated groups of 225 individuals.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco.test)
 #' structure
@@ -115,7 +115,7 @@
 #' @usage
 #' data(eco.test)
 #' coordinates
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 
 0
@@ -124,7 +124,7 @@
 #' @name eco
 #' @docType data
 #' @description ecogen object with simulated data of 225 individuals.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco.test)
 #' eco
@@ -136,7 +136,7 @@
 #' @name eco2
 #' @docType data
 #' @description ecogen object with simulated data of 900 individuals.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco2)
 #' eco2
@@ -148,7 +148,7 @@
 #' @name eco3
 #' @docType data
 #' @description ecogen object with simulated data of 173 individuals.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco3)
 #' eco3
@@ -161,7 +161,7 @@
 #' @docType data
 #' @description Data frame with simulated environmental variables 
 #' of 225 individuals.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco.test)
 #' environment
@@ -175,7 +175,7 @@
 #' @docType data
 #' @description Data frame with simulated microsatellite 
 #' data of 225 individuals.
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco.test)
 #' genotype
@@ -187,7 +187,7 @@
 #' @name table.sokal
 #' @docType data
 #' @description Allelic frequency table from 50 villages, analyzed in Sokal et al. (1986). 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(sokal1986)
 #' table.sokal

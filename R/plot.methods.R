@@ -37,7 +37,7 @@
 #' 
 #' @aliases plot,eco.correlog-method
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @exportMethod plot 
 
@@ -71,7 +71,7 @@ setMethod("plot", "eco.IBD",
 #' @description Plot method for local spatial analysis
 #' @rdname eco.multilsa-method
 #' @aliases plot,eco.multilsa-method
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @seealso  \code{\link{eco.lsa}}
 
 setMethod("plot", 
@@ -90,7 +90,7 @@ setMethod("plot",
 #' @description Plot method for local spatial analysis as list
 #' @rdname eco.listlsa-method
 #' @aliases plot,eco.listlsa-method
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @seealso  \code{\link{eco.lsa}}
 #' @keywords internal
 
@@ -105,7 +105,7 @@ setMethod("plot", "eco.listlsa",
 #' @description Plot method for an eco.weight object. This function
 #' makes a graph for the original coordinates and transformed as ranks.
 #' @aliases plot,eco.weight-method
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 setMethod("plot", "eco.weight", 
@@ -117,7 +117,7 @@ setMethod("plot", "eco.weight",
 #' @param x eco.gsa object
 #' @description Plot method for an eco.gsa objects object. 
 #' @aliases plot,eco.gsa-method
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @keywords internal
 
 setMethod("plot", "eco.gsa", 

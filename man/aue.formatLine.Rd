@@ -13,7 +13,6 @@ aue.formatLine(X)
 Remove spaces in a line of text
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-

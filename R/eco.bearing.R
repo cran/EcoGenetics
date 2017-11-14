@@ -5,7 +5,7 @@
 #' @param theta reference angle in degrees, between 0 and 180,
 #' counterclockwise, with 0 representing the positive x axis,
 #' 90 representing the positive y axis, 180 representing 
-#' the negative x axis. Note that 0 and 180 yield identical results.
+#' the negative x axis. Note that angles 0 and 180 yield identical results.
 #' @param XY Matrix/data frame with projected coordinates. Default NULL.
 #' @param latlon Are the coordinates in decimal degrees format? Defalut FALSE. If TRUE,
 #' the coordinates must be in the XY matrix/data frame with longitude in the first
@@ -14,10 +14,10 @@
 #' @details This program computes an angular weights object (AW) 
 #' (or a list of AW). If a weights object is passed as argument
 #' ("con") the program computes an AW with this element.
-#' If XY is passed, the program first compute a matrix of N x N, where N is the
+#' If XY is passed, the program first computes a matrix of N x N, where N is the
 #' number of rows in XY, and then uses the matrix as input to compute the AW.
 #' Each element in the weights matrices is then weighted by the 
-#'  squared cosine of the angle formed with the x positive axis by aline connecting 
+#'  squared cosine of the angle formed with the x positive axis by a line connecting 
 #' the pair of points. Note that this method assumes that
 #' the distances in the eco.weight or eco.lagweight object
 #' are projected as great-circle distances (for example, 
@@ -26,7 +26,7 @@
 #' a coordinates element passed with XY).
 #' 
 #' Note also that when angular weights are constructed for XY coordinates,
-#' the output consits of a weights object with values bounded between 0 and 1,
+#' the output consists of a weights object with values bounded between 0 and 1,
 #' being 1 if the if the direction pointed by the vector V connecting the elements
 #' i, j in the matrix points in the same direction of the reference vector R (with 
 #' and angle theta with the positive x axis), and 0 if V is perpendicular to R.
@@ -66,7 +66,7 @@
 #'  of analyzing directional spatial autocorrelation. 
 #'  Geographical Analysis, 32: 267-278.
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 

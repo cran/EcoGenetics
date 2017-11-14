@@ -17,7 +17,6 @@ aue.circle.w(mat, x0, y0)
 Radial distance to a point.
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 }
 \keyword{internal}
-
