@@ -21,7 +21,7 @@
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 
@@ -79,7 +79,7 @@ setGeneric("ecogen2geneland",
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 
@@ -163,7 +163,7 @@ setGeneric("ecogen2genepop",
 #' ingpop
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}, adapting code
+#' @author Leandro Roser \email{learoser@@gmail.com}, adapting code
 #' written by Emiel van Loon and Scott Davis
 #' 
 #' @export
@@ -276,7 +276,7 @@ setGeneric("genepop2ecogen",
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 
@@ -356,7 +356,7 @@ setGeneric("genind2ecogen", function(from) {
 #' toeco
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 setGeneric("ecogen2gstudio", 
@@ -490,7 +490,7 @@ setGeneric("gstudio2ecogen", function(from, ID = "ID", lat = "Latitude", lon = "
 #' 
 #' }
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 
@@ -604,7 +604,7 @@ setGeneric("ecogen2hierfstat",
 #' Sturges  H. 1926. The choice of a class interval. Journal of the American 
 #' Statistical Association, 21: 65-66.
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 
@@ -749,7 +749,7 @@ setGeneric("ecogen2spagedi",
 #' }
 #' 
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
 
