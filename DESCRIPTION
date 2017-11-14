@@ -1,7 +1,6 @@
 Package: EcoGenetics
 Type: Package
-Title: Management and Analysis of Spatial Data in
-        Landscape Genetics
+Title: Management and Analysis of Spatial Data in Landscape Genetics
 Version: 1.2.1-1
 Date: 2017-11-14
 Authors@R: c(person(given = "Leandro", family = "Roser", role = c("aut", "cre"), email = "learoser@gmail.com"), person(given = "Juan", family = "Vilardi", role = "aut"),  person(given = "Beatriz", family = "Saidman", role = "aut"), person(given = "Laura", family = "Ferreyra", role = "aut"))
