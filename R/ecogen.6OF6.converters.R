@@ -163,10 +163,9 @@ setGeneric("ecogen2genepop",
 #' ingpop
 #' }
 #' 
-#' @author Leandro Roser \email{learoser@@gmail.com}, adapting code
-#' written by Emiel van Loon and Scott Davis
-#' 
 #' @export
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#  Code adapted from Emiel van Loon and Scott Davis
 
 
 setGeneric("genepop2ecogen", 

@@ -345,8 +345,8 @@ aue.seqlist <- function(from, to, by, out.format = c("matrix", "list")) {
 #------------------------------------------------------------------------------#
 #' Remove spaces and tabs at the begining and the end of each element of charvec
 #' @param charvec character vector
-#' @author Thibaut Jombart
 #' @keywords internal
+# author: Thibaut Jombart
 
 aue.rmspaces <- function(charvec){
   charvec <- gsub("^([[:blank:]]*)([[:space:]]*)","",charvec)
@@ -359,8 +359,8 @@ aue.rmspaces <- function(charvec){
 #' Generation of generic labels of constant length
 #' @param base a character string
 #' @param n number of labels
-#' @author Thibaut Jombart
 #' @keywords internal
+# author: Thibaut Jombart
 
 aue.genlab <- function(base, n) {
   f1 <- function(cha, n){

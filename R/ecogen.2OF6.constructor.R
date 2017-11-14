@@ -98,7 +98,7 @@
 #' generating a coherent and valid set of information.
 #' 
 #' 
-#' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
+#' @author Leandro Roser \email{learoser@@gmail.com}
 #' 
 #' @examples
 #' \dontrun{

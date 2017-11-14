@@ -12,7 +12,4 @@ aue.rmspaces(charvec)
 \description{
 Remove spaces and tabs at the begining and the end of each element of charvec
 }
-\author{
-Thibaut Jombart
-}
 \keyword{internal}

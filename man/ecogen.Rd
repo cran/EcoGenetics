@@ -182,7 +182,7 @@ eco[["OUT"]] <- list(singers, golden.number)
 
 }
 \author{
-Leandro Roser \email{leandroroser@ege.fcen.uba.ar}
+Leandro Roser \email{learoser@gmail.com}
 
 Leandro Roser \email{learoser@gmail.com}
 }
