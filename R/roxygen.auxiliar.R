@@ -1,4 +1,4 @@
-# Auxiliar commands for package documentation with roxygen2 in Rstudio
+# Auxiliar commands for package documentation with roxygen2 
 
 #--------------------
 # NAMESPACE COMMANDS
@@ -40,6 +40,7 @@
 #'@importFrom stats quantile
 #'@importFrom stats step
 #'@importFrom stats var
+#'@importFrom utils browseURL
 #'@importFrom utils capture.output
 #'@importFrom utils combn
 #'@importFrom utils data

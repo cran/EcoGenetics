@@ -9,7 +9,6 @@
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods
 #' @aliases $,ecogen,character-method 
-#' @exportMethod $
 #' 
 
 # DEPRECTED
@@ -17,7 +16,7 @@
 setMethod("$","ecogen",
           function(x, name) {	
 mess <- message(
-paste("NOTE: This method has been deprecated in EcoGenetics 1.2.0-2.\n",
+paste("NOTE: This method was deprecated in EcoGenetics 1.2.0-2.\n",
 "     Use instead the accessor", aue.access(name, deparse(substitute(x))), "or double square brackets,\n",
 "    ", paste(deparse(substitute(x)), "[[", deparse(substitute(name)),"]].", sep = ""), 
 "See help('EcoGenetics accessors')."))
@@ -30,7 +29,6 @@ return(mess)
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases $<-,ecogen,character,ANY-method 
-#' @exportMethod $<-
 
 # DEPRECTED
 
@@ -38,7 +36,7 @@ setMethod("$<-","ecogen",
           function(x,name,value) {
             tmp <- "name_of_this_object"
             mess <- message(
-              paste("NOTE: This method has been deprecated in EcoGenetics 1.2.0-2.\n",
+              paste("NOTE: This method was deprecated in EcoGenetics 1.2.0-2.\n",
                     "     Use instead the accessor, ", 
                     paste(aue.access(name, tmp), "<-,\n", sep = ""),
                     "     or double square brackets,",
@@ -54,7 +52,6 @@ setMethod("$<-","ecogen",
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases [,ecogen,numeric,missing,ANY-method 
-#' @exportMethod [
 
 setMethod("[", c("ecogen", "numericORmissing", "missing", "ANY"), 
           
@@ -140,7 +137,6 @@ setMethod("[", c("ecogen", "numericORmissing", "missing", "ANY"),
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases [,ecogen,logical,missing,ANY-method 
-#' @exportMethod [
 
 setMethod("[", c("ecogen", "logicalORmissing", "missing", "ANY"), 
           
@@ -243,7 +239,6 @@ setMethod("[", c("ecogen", "logicalORmissing", "missing", "ANY"),
 #[<-
 # @rdname ecogen-methods
 # @aliases [,ecogen-method
-# @exportMethod [<-
 
 #setReplaceMethod("[","ecogen",  function (x,i,j,value) {
 #message(paste("undefined operation for ecogen objects (would you mean",
@@ -286,7 +281,6 @@ setMethod("[[", c("ecogen","numeric", "missing"), function(x, i, j) {
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases [[,ecogen,character,missing-method
-#' @exportMethod [
 
 
 setMethod("[[", c("ecogen","character", "missing"), function(x, i, j) {
@@ -346,7 +340,6 @@ setReplaceMethod("[[", c("ecogen","numeric", "missing"), function (x, i, j, ...,
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecogen-methods 
 #' @aliases [,ecogen,character,missing-method
-#' @exportMethod [[<-
 
 setReplaceMethod("[[",c("ecogen","character", "missing"),  function (x, i, j,..., value) {
   
