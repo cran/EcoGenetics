@@ -1,6 +1,6 @@
-750cd9536a605f555ef9a114444baedc *DESCRIPTION
+80698b6162409fc1f25edcf0b82804dc *DESCRIPTION
 9b672ba9aa250de048a5e1b8789d80fb *NAMESPACE
-d3406950ee0d752485587cbae176159f *NEWS
+3388544a6a660658d043353a874302a5 *NEWS
 1e609ab7cee83800cbe8a19bb143a4b2 *R/ZZZ.R
 f6cfc3dc9161129ff1591aa6555e9c02 *R/accessors.R
 6beb16a8d3e0bc8598350283829b32b1 *R/auxiliar.R
@@ -70,7 +70,7 @@ b57204c93b4eb3d94181f158ada81cab *R/int.jackknife.R
 13e634326beaa64ce4e82ba4b035ba26 *R/int.mantel.R
 a98397c1fd7af833629e00dd23f3fcbc *R/int.moran.R
 3178a54a890e316ba90a5e49b0f58125 *R/int.multitable.R
-3b486e9a96d441415443a2c74c0b4143 *R/int.order.R
+7d7807752dc430d87b7a71170349da82 *R/int.order.R
 19e14b296e6e0ae42bac99565be23598 *R/int.random.test.R
 62e5b31abf4ee5240f9aea0df93a490b *R/miscellaneous.R
 c862fe52f6d66d0d8d0cc5e409ff92ba *R/plot.generic.R
@@ -86,7 +86,7 @@ dec0b2f305a01e703f89e7b08a8e07b7 *data/tab.RData
 878080cd5f2be8f6493b36b3852fea10 *inst/CITATION
 9716478f55f91ba740fecdd30ea7a3be *inst/extdata/ingpop
 b13634e138c8c339fbdb39d17201d3f6 *man/EcoGenetics-accessors.Rd
-8d3056b786b37caf98fbbf86637a259e *man/EcoGenetics-package.Rd
+66fc46b55174fb4877c5b63eff39ed4b *man/EcoGenetics-package.Rd
 ccafa914fb55b330f46f64dc8c2e8063 *man/aue.access.Rd
 7b1c40e116921f3afc9f3988609788de *man/aue.ad2wg.Rd
 40c1eaa5053b84f7307a0e1338e86f33 *man/aue.aggregated_df.Rd
@@ -236,7 +236,7 @@ e504bca306c5f2d04229f783c28b1a78 *man/int.loc2al.Rd
 54bbd877ba74f44d65fdbe394f61ef9a *man/int.multiplot-class.Rd
 169968c1bbdf66588b34ff23a2d7ef39 *man/int.multiplot.Rd
 f48e68adc8e586970d479c8561c0b324 *man/int.multitable.Rd
-0440ac6b93aa70315d3020009588f540 *man/int.order.Rd
+63a3a51b44f2c2130d862b1b776ca38a *man/int.order.Rd
 12b1e189da7db0c33d8629b06a91301a *man/int.popdata-class.Rd
 b4b8c96a34d80d3d34f78732be5d7f64 *man/int.random.test.Rd
 f078585821cd4a85522219dd2b055f8e *man/is.meta.Rd
