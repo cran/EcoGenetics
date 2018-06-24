@@ -14,31 +14,29 @@
 #' @param S Data frame with n rows (individuals), and groups (factors) in columns.
 #' The program converts non-factor data into factor.
 #' @param C Data frame with n rows (individuals), and custom variables in columns.
-#' @param G.processed If TRUE, the slot G will include a processed data frame (
-#' removed non informative loci (the data non available for all the individuals),
-#' removed non polymorphic loci (for dominant data) and ordered alleles in ascending
-#' order. 
+#' @param G.processed If TRUE, the slot G will include a processed data frame:
+#' removed non informative loci  (the data non available for all the individuals),
+#' or non polymorphic loci (for dominant data).
 #' @param order.G Genotypes must be ordered in G slot? (codominant data) 
-#' Default FALSE.
+#' Default FALSE. If true alleles are ordered in ascending order. 
 #' @param ploidy Ploidy of the G data frame. Default ploidy = 2.
 #' @param type Marker type: "codominant" or "dominant".
 #' @param sep Character separating alleles (codominant data). 
 #' Default option is no character separating alleles. 
 #' @param ncod Number of characters coding each allele (codominant data).
-#' @param missing Missing data treatment ("0", "NA", or "MEAN") for the A
-#' slot. Missing elements are set to 0 in the default option. missing elements
-#' are recoded as "NA" or the mean allelic frequency across individuals in "NA" 
+#' @param missing Missing data treatment ("NA", "0", or "MEAN") for the A
+#' slot. Missing elements are set to NA in the default option. missing elements
+#' are recoded as 0 or the mean allelic frequency across individuals in "0" 
 #' and "MEAN" options, respectively. 
 #' @param NA.char Character simbolizing missing data in the input. Default is "NA".
 #' @param poly.level Polymorphism threshold in percentage (0 - 100), 
 #' for remotion of non polymorphic loci (for dominant data). Default is 5 (5\%).
 #' @param rm.empty.ind Remotion of noinformtive individuals (row of "NAs").
-#' Default if FALSE.
+#' Default if FALSE. This option is only available when the 'lock.rows' parameter is FALSE.
 #' @param order.df Order individuals of data frames by row? (all data frames with a same order in row names).
-#'  This 
-#' option works when the names of the data frames are used 
-#' (i.e., set.names and valid.names are NULL), otherwise the TRUE/FALSE value of this parameter
-#'  has no effect in the function. 
+#'  This option is only available when the 'lock.rows' parameter is TRUE. 
+#' If the names of the data frames are not used (i.e., set.names and valid.names are not NULL),
+#' setting this parameter to TRUE/FALSE has no effect in the function. 
 #' Defalut TRUE. If FALSE, the row names of all the data frames must be ordered. The use of data frames 
 #' with row names in different order will return an error.
 #' In both cases, the program sets an internal names attribute of the object
@@ -48,7 +46,9 @@
 #' This argument is incompatible with valid.names
 #' @param valid.names Logical. Create valid row names? This argument is incompatible with 
 #' set.names. The program will name individuals with valid tags I.1, I.2, etc.
-#' 
+#' @param lock.rows Turn on row names check. Data frames require indentical individuals in rows.
+#' Default TRUE.
+
 #' @details This is a generic function for creation of ecogen objects.
 #' In the default option, missing data should be coded as "NA", but any missing 
 #' data character can be passed with the option NA.char. 
@@ -96,6 +96,15 @@
 #' These methods are not only functions used to get/assign values to the slots, 
 #' they provide a basic pre-processing of the data during assignment, 
 #' generating a coherent and valid set of information.
+#' 
+##' \bold{LOCKED AND UNLOCKED OBJECTS}
+#' #' Starting from version 1.2.1.5, ecogen and ecopop objects can be "locked" 
+#' (default) or "unlocked". A "locked" object must have identical number of rows and 
+#' row names in all the input data frames (or a rule must be provided to construct
+#' the row names in case of ecogen objects, with valid.names or set.names arguments).
+#' An unlocked objects allows to have a free number of rows
+#' in each table, and row names do not need to coincide among tables. See 
+#' examples below.
 #' 
 #' 
 #' @author Leandro Roser \email{learoser@@gmail.com}
@@ -150,6 +159,23 @@
 #' 
 #' eco[["OUT"]] <- list(singers, golden.number)
 #' 
+#' #---------------------------------
+#' # Locked and unlocked objects
+#' #---------------------------------
+#' 
+#' is.locked(eco) # check if object is locked
+#' 
+#' eco[["P"]] <- rbind(eco[["P"]], eco[["P"]]) # invalid 
+#'                                             # in locked object
+#' 
+#' 
+#' eco_unlocked <- eco.unlock(eco) #unlocked object
+#' eco_unlocked[["P"]]<-rbind(eco[["P"]], eco[["P"]]) # valid now
+#' 
+#' new_locked <- eco.lock(eco_unlocked) # invalid
+#' eco_unlocked[["P"]]<- eco[["P"]]
+#' new_locked <- eco.lock(eco_unlocked) # valid now
+#' 
 #' }
 #' 
 #' @author Leandro Roser \email{learoser@@gmail.com}
@@ -169,16 +195,16 @@ setGeneric("ecogen",
                     type = c("codominant", "dominant"),
                     sep = "", 
                     ncod = NULL,
-                    missing = c("0", "NA", "MEAN"),
+                    missing = c("NA", "0", "MEAN"),
                     NA.char = "NA", 
                     poly.level = 5,
                     rm.empty.ind = FALSE,
                     order.df = TRUE,
                     set.names = NULL,
-                    valid.names = FALSE) {				
+                    valid.names = FALSE,
+                    lock.rows = TRUE) {				
              
           
-             
              # general configuration
              type <- tolower(type)
              type <- match.arg(type)
@@ -208,7 +234,7 @@ setGeneric("ecogen",
                
                ## coherence between data ploidy and ncod is checked for int.df2genind
                
-               tempo <- int.df2genind(G, 
+               temporal_int_genind <- int.df2genind(G, 
                                       sep = sep, 
                                       ncod =  ncod,
                                       NA.char = NA.char, 
@@ -216,46 +242,55 @@ setGeneric("ecogen",
                                       type = type,
                                       missing = missing,
                                       rm.empty.ind = rm.empty.ind,
-                                      poly.level = poly.level)
-               
-               # unfolding tempo ------------------
+                                      poly.level = poly.level,
+                                      lock.rows = lock.rows)
+             
+               # unfolding temporal_int_genind ------------------
               
                ## if marker type is "dominant", A is a pointer to G for assignments
                ## and extraction methods, and the slot is empty
-               if(tempo@type == "codominant") {
+               if(type == "codominant") {
                  
                # matrix is lighter than data frame. LR 9/12/2016
-               object@A <- tempo@tab
-               } 
+               object@A <- temporal_int_genind@tab
+               }  else {
+               object@G <- as.data.frame(temporal_int_genind@tab)
+               }
  
-               object@INT <- int.genind2gendata(tempo)
+               object@INT <- int.genind2gendata(temporal_int_genind)
                
-               ncod <- tempo@ncod
-               ploidy <- tempo@ploidy
+               ncod <- temporal_int_genind@ncod
+               ploidy <- temporal_int_genind@ploidy
                
                # G processed case ~-~-~-~-~~-~-~-~-~
                if(G.processed) {
-                 tmp <- int.genind2df(tempo)
+                 tmp <- int.genind2df(temporal_int_genind, sep = sep, NA.char = NA.char)
                  # order data
                  if(order.G && type == "codominant") {
                    tmp <- aue.sort(tmp, 
-                                   ncod = ncod, ploidy = ploidy, 
+                                   ncod = ncod,
+                                   ploidy = ploidy, 
+                                   sep.loc = sep,
                                    chk.plocod = FALSE)
                  } 
                  
-                 # G processed data frame 
-                 G <- as.data.frame(tmp, stringsAsFactors = FALSE)
+                 # G processed data frame
+                 G <- as.data.frame(tmp)
                  
                  # G changes messages 
-                 
-                 if(order.G && type == "codominant") {
+                 if(dim(tmp)[1] != dim(G)[1]) {
+                   message("Note: removed noninformative individuals in slot G")
+                 }
+                 if(dim(tmp)[2] != dim(G)[2]) {
+                   message("Note: removed noninformative loci in slot G")
+                 }
+                 if(order.G) {
                    message("Note: ordered genotypes in slot G")
                  }
                } 
-               # END G processed case ~-~-~-~-~~-~-~-~-~
                
-               # fill now the G slot
-               object@G <- G
+               # fill now the G slot for
+               object@G <-  G
              }
              
              
@@ -268,19 +303,31 @@ setGeneric("ecogen",
              
              # all S columns as factors
              S <- as.data.frame(S)
-             if(dim(S)[1] != 0) {
-               # better this way. 2016/01/04 L.R.
+             if(dim(S)[1] != 0)  S[] <- lapply(S, factor)
+               # better the above way. 2016/01/04 L.R.
                # 'factor' is better than 'as.factor' because
                # it drops unused levels.
-             S[] <- lapply(S, factor)
-            #   for(i in 1:(ncol(S))) {
+              #   for(i in 1:(ncol(S))) {
             #     S[, i] <- factor(S[, i])
             #   }
-             }
+            
+             
              object@S <- S
              object@C <- as.data.frame(C)
              
-
+             if(!lock.rows) {
+               object@ATTR$names <- character(0)
+               object@ATTR$lock.rows <- FALSE
+             } else {
+               
+               object.names <- list(XY=rownames(object@XY), 
+                                    P=rownames(object@P), 
+                                    G=rownames(object@G), 
+                                    A=rownames(object@A),
+                                    E=rownames(object@E),
+                                    S=rownames(object@S), 
+                                    C=rownames(object@C))
+             
              # set names--------------------------------------------
              # case: use data frames names---->
              if(is.null(set.names) && !valid.names) {
@@ -288,27 +335,27 @@ setGeneric("ecogen",
                while(TRUE) {
                  
                  if(nrow(object@XY) != 0) {
-                   object@ATTR$names <- rownames(object@XY)
+                   object@ATTR$names <- object.names$XY
                    break
                  }
                  if(nrow(object@P) != 0) {
-                   object@ATTR$names <- rownames(object@P)
+                   object@ATTR$names <- object.names$P
                    break
                  }
                  if(nrow(object@G) != 0) {
-                   object@ATTR$names <- rownames(object@G)
+                   object@ATTR$names <- object.names$G
                    break
                  }
                  if(nrow(object@E) != 0) {
-                   object@ATTR$names <- rownames(object@E)
+                   object@ATTR$names <- object.names$E
                    break
                  }
                  if(nrow(object@S) != 0) {
-                   object@ATTR$names <- rownames(object@S)
+                   object@ATTR$names <- object.names$S
                    break
                  }
                  if(nrow(object@C) != 0) {
-                   object@ATTR$names <- rownames(object@C)
+                   object@ATTR$names <- object.names$C
                    break
                  }
                  object@ATTR$names <- character(0)
@@ -316,20 +363,18 @@ setGeneric("ecogen",
                }
                
              # order rows
-             if(order.df) {
+             if(order.df && lock.rows) {
                object <- int.order(object)
+             } else if(order.df && !lock.rows) {
+               message("Note: data frames will not be sorted by row in an unlock object\n")
              }
                
             # case: use set.names or valid.names---->
              } else {
                # use nrow method
                
-            
-               object.names <- list(XY=rownames(object@XY), P=rownames(object@P), G=rownames(object@G), 
-                                    A=rownames(object@A), E=rownames(object@E), S=rownames(object@S), 
-                                    C=rownames(object@C))
-               
-               object.names <- object.names[unlist(lapply(object.names, function(x) length(x)  != 0))]
+               object.names <- object.names[unlist(lapply(object.names,
+                                                          function(x) length(x)  != 0))]
                
                if(length(object.names) != 0) {
                  rownumber <- unique(unlist(lapply(object.names, length)))
@@ -363,6 +408,8 @@ setGeneric("ecogen",
                  
                } 
              } # end set names
+               
+             }
               
              # check validity 
              validObject(object)

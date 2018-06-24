@@ -1,11 +1,12 @@
 
 #' Conversion form ecogen to ecopop 
-#' 
 #' @description This function creates an ecopop object from an ecogen object
 #' @param from Object of class "ecogen"
 #' @param hier Name of the level of the slot S with hierarchies
 #' @param factor_to_counts Convert factors into counts for each level?
 #' @param aggregator Function used to aggregate data
+#' @param allele_data Genetic data should be created as counts ("counts") 
+#' or allele frequencies("frequencies")? Default is "counts".
 #' @rdname ecogen2ecopop
 #' @examples
 #' 
@@ -19,33 +20,41 @@
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @export
 
-setGeneric("ecogen2ecopop", function(from, hier, factor_to_counts = TRUE,
-                                     aggregator = function(x) mean(x, na.rm = TRUE)) { 
+setGeneric("ecogen2ecopop", function(from, hier, 
+                                     factor_to_counts = TRUE,
+                                     aggregator = function(x) mean(x, na.rm = TRUE),
+                                     allele_data = c("counts", "frequencies")) { 
   
-which_pop <- which(colnames(from@S)== hier)
+allele_data <- match.arg(allele_data)
+
+which_pop <- which(colnames(from@S) == hier)
 if(length(which_pop) == 0) {
   stop("non matching S column name")
 }
 
-pop <- from@S[, hier]
-
+pop <- from@S[, which_pop]
 to <- new("ecopop", ploidy = from@INT@ploidy, type = from@INT@type)
-
 to@XY <-  aue.aggregated_df(from@XY, pop, aggregator, factor_to_counts = FALSE)
-
 to@P <-   aue.aggregated_df(from@P, pop, aggregator, factor_to_counts = factor_to_counts )
 
 if(from@INT@type == "codominant") {
-  to@AF <- as.matrix(apply(from@A, 2, tapply, pop, sum, na.rm = TRUE))
+   to@AF <- as.matrix(apply(from@A, 2, tapply, pop, sum, na.rm = TRUE))
+  if(allele_data == "frequencies") {
+    to@AF <-  aue.dummy2af(to@AF, from@INT@loc.fac)
+  }
 } else {
   to@AF <-  as.matrix(apply(from@G, 2, tapply, pop, sum, na.rm = TRUE))
+  if(allele_data == "frequencies") {
+    to@AF <-  aue.dummy2af(to@AF, from@INT@loc.fac)
+  }
 }
 
-to@E <-  aue.aggregated_df(from@P, pop, aggregator, factor_to_counts = factor_to_counts )
+to@E <-  aue.aggregated_df(from@E, pop, aggregator, factor_to_counts = factor_to_counts)
 
-to@S <-  factor(levels(pop))
+to@S <-  data.frame(pop = factor(levels(pop)))
+rownames(to@S) <- to@S$pop
+to@C <-   aue.aggregated_df(from@C, pop, aggregator, factor_to_counts = factor_to_counts)
 
-to@C <-   aue.aggregated_df(from@C, pop, aggregator, factor_to_counts = factor_to_counts )
 
 popdat <- new("int.popdata")
 popdat@ploidy <- from@INT@ploidy
@@ -54,14 +63,19 @@ popdat@aggregator <- aggregator
 popdat@factor_to_counts <- factor_to_counts
 popdat@loc.fac <- from@INT@loc.fac
 popdat@all.names <- from@INT@all.names
+popdat@allele_data <- allele_data
 to@INT <- popdat
+
+# set attributes
+to@ATTR$names <- levels(pop)
+to@ATTR$whereIs <- parent.frame()
+to@ATTR$.call <- match.call()
 
 to
 })
 
 
 #' Conversion form ecopop to genpop and genpop to ecopop
-#' 
 #' @description These functions export from ecopop to genpop and viceversa
 #' @param from Object of class "ecopop" / "genpop"
 #' @rdname ecopop2genpop
@@ -97,7 +111,8 @@ setGeneric("ecopop2genpop", function(from) {
     temp <- as(temp, "numeric")
     names(temp) <- nomloc
     to@loc.n.all <- temp
-    temp <-  tapply(from@INT@all.names, names(from@INT@all.names), function(x) return(unname(x)),simplify = FALSE)
+    temp <-  tapply(from@INT@all.names, names(from@INT@all.names), 
+                    function(x) return(unname(x)),simplify = FALSE)
     #reorder temp an convert to list
     temp <- temp[pmatch(nomloc, names(temp))]
     nomloc <- names(temp)
@@ -115,7 +130,6 @@ setGeneric("ecopop2genpop", function(from) {
 #' @rdname ecopop2genpop
 #' @export
 
-
 setGeneric("genpop2ecopop", function(from) { 
   
   if(!require(adegenet)) stop("Please install the adegenet package first")
@@ -125,7 +139,8 @@ setGeneric("genpop2ecopop", function(from) {
     stop("multiple ploidy levels are not supported by ecopop objects")
   }
   
-  to <- ecopop(AF = from@tab, S = as.factor(rownames(from@tab)), ploidy = this_ploidy,
+  to <- ecopop(AF = from@tab, S = data.frame(pop = as.factor(rownames(from@tab))), 
+               ploidy = this_ploidy,
                type =  ifelse(from@type == "codom", "codominant", "dominant"))
   to@INT@loc.fac <- from@loc.fac
   
@@ -139,8 +154,30 @@ setGeneric("genpop2ecopop", function(from) {
     to@XY <- from@other$xy
   }
   
+  to@ATTR$names <- rownames(from@tab)
   to@ATTR$whereIs <- parent.frame()
   to@ATTR$.call <- match.call()
 
   to
 })
+
+
+#' ecopop_counts2af
+#' @rdname ecopop_counts2af
+#' @description Conversion from ecopop with genetic data as count,
+#' into ecopop with genetic data as allele frequencies
+#' @param from ecopop object
+#' @examples
+#' \dontrun{
+#' data(eco.test)
+#' ecopop_counts2af(my_ecopop)
+#' }
+#' @export
+
+setGeneric("ecopop_counts2af", function(from) { 
+  to <- from
+  to@AF <- aue.dummy2af(from@AF, from@INT@loc.fac)
+  to@INT@allele_data <- "frequency"
+  to
+})
+

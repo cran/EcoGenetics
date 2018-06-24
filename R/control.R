@@ -124,11 +124,14 @@ int.check.vnames <- function(X, len.X, lab = "V") {
 #' @param ncod Number of digits coding each allele.
 #' @param sep Character string separating alleles.
 #' @param numeric.dat Numeric data checks. Default FALSE.
+#' @param strict_nchar Test if the number of characters is uniform when sep != "". Default FALSE
 #' @author Leandro Roser \email{leandroroser@@ege.fcen.uba.ar}
 #' @keywords internal
 
 
-int.check.ncod <- function(X, ploidy, ncod = NULL, sep = "", numeric.dat = FALSE) {
+int.check.ncod <- function(X, ploidy, ncod = NULL,
+                           sep = "", numeric.dat = FALSE,
+                           strict_nchar = FALSE) {
   
   X <- as.matrix(X)
   mode(X) <- "character"
@@ -154,51 +157,34 @@ int.check.ncod <- function(X, ploidy, ncod = NULL, sep = "", numeric.dat = FALSE
   
   
   #---check ncod and ploidy-----------#
-  
-  X.sub <- gsub(meta2char(sep), "", X)
-  X.sub <- X.sub[!is.na(X.sub)]
-  n.control <- as.numeric(unique(nchar(X.sub)))
-  
-  ## more than one character length
-  if(length(n.control) != 1) {
-    stop("non unique character length found for alleles")
+  split_matrix <- strsplit(X[!is.na(X)], sep)
+  if(strict_nchar) {
+    n.control <- unique(unlist(lapply(split_matrix, nchar)))
+    if(length(n.control) != 1) stop("non unique character length found for alleles")
+  } else {
+    n.control <- unique(unlist(lapply(split_matrix, length)))
+    if(length(n.control) != 1) stop("more than one ploidy level found (is sep != '' in your data?)")
   }
-  
+
   ## check that ncontrol(mod = ploidy) = 0
   if(n.control %% ploidy != 0) {
-    stop("incongruence found between the number of (non-missing)
-         characters in some cells and the ploidy level")
-  }
-  
-  if(sep != "") {
-    ## check that <sep> appears ploidy-1 times
-    sep.rep <- gsub(paste("[^", meta2char(sep), "]", sep = ""), "", X)
-    sep.rep <- sep.rep[!is.na(sep.rep)]
-    sep.rep <- nchar(sep.rep) + 1
-    if(any(sep.rep != ploidy)) {
-      stop("incongruence between the number of alleles 
-           determined by <sep> and the ploidy level 
-           in some cells")
-    }
+    stop(paste0("incongruence found between the number of (non-missing)
+         characters in some cells and the ploidy level. ",
+                "Predicted ploidy = ", n.control)) 
     }
   
   # when ncod is NULL, determine its value using the ploidy and the number
   # of non "sep" characters.
   if(is.null(ncod)) {
-    
     ncod <- n.control / ploidy 
-    
   } else {
-    
     if((n.control / ploidy)  != ncod) {
       stop(paste("all (non <0>) cells must have", "a length of", 
                  paste("(", ncod, ")", sep = ""), "non <sep> characters, but
                  seems to have", paste("(", n.control, ")", sep =  "")))
     }
-    }
-  
+  }
   ncod
-  
   }
 
 

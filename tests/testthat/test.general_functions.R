@@ -11,7 +11,6 @@ data(tab)
 set.seed(6)
 
 
-
 test_that("eco.alfreq works fine", {
   skip_on_cran()
   expect_true(class(eco.alfreq(eco)[[1]])[2] == "ggplot")
@@ -206,6 +205,7 @@ test_that("eco.theilsen works fine", {
   temp <- list()
   for(i in 1:100) {
     temp[[i]] <- runif(36,-1, 1)
+    temp[[i]][sample(1:36, 10)] <- NA
     temp[[i]] <- matrix(temp[[i]], 6, 6)
     temp[[i]] <- raster(temp[[i]])
   }
@@ -219,13 +219,39 @@ test_that("eco.theilsen works fine", {
   
   date <- seq(from = 1990.1, length.out = 100, by = 0.2)
   
-  eco.theilsen(ndvisim, date)
+  # parallel
+  # For some reason, the check allows up to 2 workers
+  eco.theilsen(ndvisim, date, workers = 2, run_parallel = TRUE)
   
   pvalue <- raster("pvalue.tif")
   slope <- raster("slope.tif")
   
   expect_true(file.exists("slope.tif"))
   expect_true(file.exists("pvalue.tif"))
+  # expect_true(!all(is.na(as.matrix(slope))))
+  # expect_true(!all(is.na(as.matrix(pvalue))))
   
+  file.remove(c("slope.tif", "pvalue.tif"))
+  
+  ## serial
+  eco.theilsen(ndvisim, date, run_parallel  = FALSE)
+  
+  pvalue <- raster("pvalue.tif")
+  slope <- raster("slope.tif")
+  
+  expect_true(file.exists("slope.tif"))
+  expect_true(file.exists("pvalue.tif"))
+  # expect_true(!all(is.na(as.matrix(slope))))
+  # expect_true(!all(is.na(as.matrix(pvalue))))
+  # 
   file.remove(c("temporal.tif", "slope.tif", "pvalue.tif"))
 })
+
+
+test_that("eco.dom_af works fine", {
+  skip_on_cran()
+  out <- eco.dom_af(my_ecopop)
+  expect_true(all(names(out) == c("freq", "var")))
+})
+
+

@@ -238,8 +238,8 @@ int.df2genind <- function(indata,
                           type = c("codominant","dominant"),
                           missing = c("0", "NA", "MEAN"),
                           rm.empty.ind = FALSE,
-                          poly.level = 5) {
-  
+                          poly.level = 5,
+                          lock.rows = TRUE) {
   
   
   # DATA CHECK-----------------------------------------------------------------#
@@ -350,9 +350,16 @@ int.df2genind <- function(indata,
     ## NA individuals. In case of rm.empty.ind = FALSE,
     ## reset removed image for these individuals 
     ## (because removed image is defined as is.na(X))
+    
+    if(rm.empty.ind && lock.rows) {
+     stop("Remotion of empty individuals only available if the paramter lock.rows = FALSE")  
+    }
+    
     if(!rm.empty.ind) {
       removed.image[remove.ind, ] <- 0
-    }
+    } 
+    
+
     ## preserve order
     old.order.row <- seq(nrow(indata))
     new.order.ind <- old.order.row[-remove.ind]
@@ -426,7 +433,8 @@ int.df2genind <- function(indata,
     
     # Handling separators
     
-    if(sep == "" && ploidy > 1) {
+    if(ploidy > 1) {
+    if(sep == "") {
       
       ## add "/" as separator
       X <- gsub(paste("([[:alnum:]]{",ncod,"})", sep = ""), "\\1/", X)
@@ -438,6 +446,7 @@ int.df2genind <- function(indata,
       X <- gsub(meta2char(sep),"/",X)
       sep <- "/"
     }
+  }
     
     
     # Translate data into allelic frequencies 
@@ -445,7 +454,7 @@ int.df2genind <- function(indata,
     ## unfold data for each cell of the table
     if (ploidy > 1) {
       allele.data <- strsplit(X, "/")
-      n.items <- sapply(allele.data, length)
+      n.items <- vapply(allele.data, length, numeric(1))
       locus.data <- rep(rep(loc.names, each = nind), n.items)
       ind.data <- rep(rep(ind.names,ncol(X)), n.items)
       allele.data <- unlist(allele.data)
@@ -470,9 +479,27 @@ int.df2genind <- function(indata,
     
     ## get matrix with frequencies
     allele.data <- paste(locus.data, allele.data, sep = ".")
-    allele.data <- factor(allele.data, levels = unique(allele.data))
+    
+    # sort allele names   4/14/2018 L.R
+    my_names <- unique(allele.data)
+    if(length(my_names) > 1) {
+      pre <- gsub("(^.+)([.])(.+$)", "\\1", my_names)
+      names_order <- character(length(my_names))
+      j <- 1
+      names_order[1] <- 1
+      for(i in seq(2, length(my_names), 1)) {
+        if(pre[i] != pre[i-1]) j <- j +1
+        names_order[i] <- j
+      }
+    }
+
+    my_names <- unname(unlist(tapply(my_names, as.integer(names_order), sort)))
+   
+    allele.data <- factor(allele.data, levels = my_names)
     out <- table(ind.data, allele.data)
-    out <- out[ind.names, , drop = FALSE] # table sorts alphabetically. This resets.
+    out <- out[ind.names, , drop = FALSE] # table sorts rownames alphabetically. This resets.
+
+    
     #out <- out/2
     ## force type 'matrix'
     class(out) <- NULL

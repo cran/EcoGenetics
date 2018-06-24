@@ -6,8 +6,11 @@
 
 check_ecogen <- function(object) {
   
-  
   errors <- character()
+  
+  locked <- is.locked(object)
+  
+  if(locked) {
   
   # check number of rows  = 0 or unique -----
   
@@ -47,6 +50,8 @@ check_ecogen <- function(object) {
       msg <- "data frames with invalid row names"
       errors <- c(errors, msg)
     }
+  }
+  
   }
   
   if(length(errors) == 0) TRUE else errors
@@ -96,10 +101,11 @@ setClass("ecogen",
                    OUT = list(),
                    INT = new("int.gendata"),
                    ATTR = list(names = character(0),
+                               lock.rows = TRUE,
                                whereIs = new.env(emptyenv()), 
-                               .call = call("."))
+                               .call = call("."),
+                               ver = utils::packageDescription("EcoGenetics", fields = "Version"))
                    ),
-         
          validity = check_ecogen
 )
 

@@ -1,3 +1,4 @@
+
 ################################################
 #### ECOPOP CONSTRUCTOR
 ################################################
@@ -15,6 +16,7 @@
 #' @param C Data frame with n rows (populations), and m columns (custom variables).
 #' @param ploidy Ploidy of the AF data frame. 
 #' @param type Marker type: "codominant" or "dominant".
+#' @param allele_data format for allele data output (slot AF). Can be "counts" or "frequencies".
 #' @param order.df Order populations of data frames by row? 
 #' (all data frames with a same row order).
 #' Defalut FALSE. The row names of all the data frames must be ordered. In this case,
@@ -22,6 +24,10 @@
 #' In both cases, the program set the content of the S slots as the reference names of the object
 #' using the row names of the first non-empty data frame found in the following order: 
 #' XY, P, AF, E, C. This attribute is used as reference to order rows when order.df = TRUE. 
+#' @param pop_names_column Column with the population in the slot S that represents used
+#' to create the name of the object. Dafault is the first column.
+#' @param lock.rows Turn on row names check. Data frames require indentical individuals in rows.
+#' Default TRUE.
 #' 
 #' @details This is a generic function for creation of ecopop objects.
 #' Missing data should be coded as "NA". 
@@ -65,7 +71,15 @@
 #' Second, the data can be added to each slot, using the corresponding
 #' accessor or, in an equivalent way, with double brackets notation ("[[").
 #' 
-
+##' \bold{LOCKED AND UNLOCKED OBJECTS}
+#' #' Starting from version 1.2.1.5, ecogen and ecopop objects can be "locked" 
+#' (default) or "unlocked". A "locked" object must have identical number of rows and 
+#' row names in all the input data frames (or a rule must be provided to construct
+#' the row names in case of ecogen objects, with valid.names or set.names arguments).
+#' An unlocked objects allows to have a free number of rows
+#' in each table, and row names do not need to coincide among tables. See 
+#' examples below.
+#' 
 #' @examples
 #' \dontrun{
 #' 
@@ -78,13 +92,14 @@
 #' 
 #' # extracting tables with accessors (double brackets notation)
 #' XY_pop <- my_ecopop[["XY"]]
-#' AF_pop <- my_ecopop[["P"]]
+#' P_pop <- my_ecopop[["P"]]
 #' AF_pop <- my_ecopop[["AF"]]
 #' E_pop <- my_ecopop[["E"]]
 #' S_pop <- my_ecopop[["S"]]
 #' 
 #' ## 2) Creating a new ecopop object
-#' my_ecopop2 <- ecopop(XY = XY_pop, P = XY_pop, AF = AF_pop, E = E_pop, S = S_pop,
+#' my_ecopop2 <- ecopop(XY = XY_pop, P = XY_pop, AF = AF_pop, E = E_pop, 
+#'                      S = S_pop,
 #'                      ploidy = 2, type = "codominant")
 #' 
 #' ## 3) From an empty object
@@ -102,6 +117,26 @@
 #' 
 #' ## Subsetting by rows:
 #' my_ecopop3[1:10]
+#' #--------------------------------
+#' # Locked and unlocked objects 
+#' #--------------------------------
+#' 
+#' is.locked(my_ecopop) # check if object is locked
+#' my_ecopop[["P"]] <- rbind(my_ecopop[["P"]], my_ecopop[["P"]]) # invalid in locked object
+#' 
+#' my_ecopop_unlocked <- eco.unlock(my_ecopop) #unlocked object
+#' my_ecopop_unlocked[["P"]]<-rbind(my_ecopop[["P"]], my_ecopop[["P"]])  # valid now
+#' 
+#' new_locked <- eco.lock(my_ecopop_unlocked) # invalid
+#' my_ecopop_unlocked[["P"]]<- my_ecopop[["P"]]
+#' new_locked <- eco.lock(my_ecopop_unlocked) # valid now
+#' 
+#' 
+#' 
+#' 
+#' 
+#'
+#' 
 #' 
 #' }
 #' 
@@ -114,42 +149,122 @@ setGeneric("ecopop",
                     P = data.frame(),
                     AF = data.frame(), 
                     E = data.frame(),
-                    S = factor(),
+                    S = data.frame(),
                     C = data.frame(),
+                    pop_names_column = 1L,
                     ploidy,
                     type = c("codominant", "dominant"),
-                    order.df = FALSE) {				
+                    order.df = FALSE,
+                    allele_data = c("counts", "frequencies"),
+                    lock.rows = TRUE) {				
              
-            
+             
              type <- match.arg(type)
              if(is.null(ploidy) || missing(ploidy)) {
                stop("Please provide the ploidy of your data")
              }
+             allele_data <- match.arg(allele_data)
              
              # creating a new ecopop object
              object <- new("ecopop", ploidy, type)
-            
-             # set object environment
-             object@ATTR$whereIs <- parent.frame()
-             object@ATTR$.call <- match.call()
              
              object@XY <- as.data.frame(XY)
              object@P <- as.data.frame(P)
              object@AF <- as.matrix(AF)
-             mode(object@AF)<- "integer"
-             object@E <- as.data.frame(E)
-             object@S <- as.factor(S)
-             object@C <- as.data.frame(C)
              
-             # order rows
-             if(order.df) {
-               object@XY = object@XY[ , match(rownames(object@XY), object@S) ]
-               P = object@P[ , match(rownames(object@P), object@S) ]
-               AF = object@AF[ , match(rownames(object@AF), object@S) ]
-               E = object@E[ , match(rownames(object@E), object@S) ]
-               C = object@C[ , match(rownames(object@C), object@S) ]
+             if(allele_data == "counts") {
+               mode(object@AF)<- "integer"
+             }
+             object@E <- as.data.frame(E)
+             
+             # all S columns as factors
+             S <- as.data.frame(S)
+             if(dim(S)[1] != 0) {
+               S[] <- lapply(S, factor)
              }
              
+             object@S <- S
+             object@C <- as.data.frame(C)
+             
+             # set object environment
+             
+             # set row names
+             
+             
+             if(!lock.rows) {
+               object@ATTR$names <- list(character(0))
+               object@ATTR$lock.rows <- FALSE
+             } else {
+               object.names <- list(XY=rownames(object@XY), P=rownames(object@P),
+                                    AF=rownames(object@AF), E=rownames(object@E), 
+                                    S=rownames(object@S), C=rownames(object@C))
+               
+               object.names <- object.names[unlist(lapply(object.names, 
+                                                          function(x) length(x)  != 0))]
+               
+               if(length(object.names) != 0) {
+                 rownumber <- unique(unlist(lapply(object.names, length)))
+                 # check nrow consistency
+                 if(length(rownumber)> 1) {
+                   stop("Non unique row number found")
+                 }
+               } 
+               
+               ## set names
+               S_ncol <- ncol(S)
+               if(S_ncol > 0) {
+                 
+                 if(!( pop_names_column %in% seq_len(S_ncol))) {
+                   stop("Invalid pop column")
+                 }
+                 object@ATTR$names <- as.factor(S[, pop_names_column])
+               } else {
+                 if(length(object.names) != 0) {
+                   while(TRUE) {
+                     
+                     if(nrow(object@XY) != 0) {
+                       object@ATTR$names <- object.names$XY
+                       break
+                     }
+                     if(nrow(object@P) != 0) {
+                       object@ATTR$names <- object.names$P
+                       break
+                     }
+                     if(nrow(object@AF) != 0) {
+                       object@ATTR$names <- object.names$G
+                       break
+                     }
+                     if(nrow(object@E) != 0) {
+                       object@ATTR$names <- object.names$E
+                       break
+                     }
+                     if(nrow(object@E) != 0) {
+                       object@ATTR$names <- object.names$S
+                       break
+                     }
+                     if(nrow(object@C) != 0) {
+                       object@ATTR$names <- object.names$C
+                       break
+                     }
+                     object@ATTR$names <- character(0)
+                     break
+                   }
+                   object@ATTR$names <- factor(paste0("P.", seq_along(object@ATTR$names)))
+                   for(i in names(object.names)) {
+                     eval(expr = parse(text=paste0("rownames(object@", i, ") <- object@ATTR$names")))
+                   }
+                 }
+               }
+             }
+             
+             if(order.df && lock.rows) {
+               object <- int.order(object)
+             } else if(order.df && !lock.rows) {
+               message("Note: data frames will not be sorted by row in an unlock object\n")
+             }
+             
+             object@ATTR$whereIs <- parent.frame()
+             object@ATTR$.call <- match.call()
              validObject(object)
              
              object

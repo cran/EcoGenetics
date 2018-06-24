@@ -41,7 +41,8 @@
 
 
 setGeneric("ecogen2geneland", 
-           function(eco, dir = "", ncod = NULL, ploidy = 2,  to_numeric = FALSE, nout = 3, 
+           function(eco, dir = "", ncod = NULL, ploidy = 2,  
+                    to_numeric = FALSE, nout = 3, 
                     recode = c("all", "column", "paired"),
                     replace_in = NULL,
                     replace_out =NULL, ...) {
@@ -376,11 +377,21 @@ setGeneric("genind2ecogen", function(from) {
   to <- ecogen(G = to)
  
   if(!is.null(from@other$xy)) {
-    to@XY <- from@other$xy
+    if(nrow(from@other$xy) != nrow(to@G)) {
+    message("Note: other$xy slot with a different number of rows 
+    than the present in the genetic data table. Skipping this data\n")  
+    } else {
+    ecoslot.XY(to) <- from@other$xy
+    }
   }
  
   if(!is.null(from@strata)) {
-    to@S <- from@strata
+    if(nrow(from@strata) != nrow(to@G)) {
+      message("Note: strata slot with a different number of rows 
+      than the present in the genetic data table. Skipping this data\n")  
+    } else {
+    ecoslot.S(to) <- from@strata
+    }
   }
   to
 })
@@ -423,7 +434,7 @@ setGeneric("ecogen2gstudio",
              if(type == "codominant") {
                dat <- eco.convert(from@G, "matrix", sep.out = ":")
                dat <- as.data.frame(dat, stringsAsFactors = FALSE)
-               for(i in 1:ncol(dat)) {  
+               for(i in 1:ncol(dat)) {
                  class(dat[, i]) <- "locus"
                  #out[[i]] <- gstudio::locus(dat[, i, drop = FALSE], type = "separated")
                }
@@ -464,7 +475,8 @@ setGeneric("ecogen2gstudio",
 #' @export
 
 
-setGeneric("gstudio2ecogen", function(from, ID = "ID", lat = "Latitude", lon = "Longitude",
+setGeneric("gstudio2ecogen", function(from, ID = "ID", 
+                                      lat = "Latitude", lon = "Longitude",
                                       struct = NULL) {
   
   myID <- myLat <- myLon <- NULL
@@ -505,8 +517,8 @@ setGeneric("gstudio2ecogen", function(from, ID = "ID", lat = "Latitude", lon = "
   myloc <- as.matrix(myloc)
   rownames(myloc) <- myID
   myloc[myloc == ""] <- NA
-  G <- eco.convert(myloc, sep.in = ":", sep.out = "")
-  ecoslot.G(to) <- G
+  #G <- eco.convert(myloc, sep.in = ":", sep.out = "")
+  ecoslot.G(to, sep =":") <- myloc
   
   if(!is.na(myLat) && !is.na(myLon)) {
     XY <- data.frame(Longitude = from[, myLon], Latitude = from[, myLat])
@@ -940,4 +952,3 @@ setGeneric("spagedi2ecogen",
   ecogen(XY = XY, G = G, S = S, missing = miss, type = type, ...)
   
 })
-

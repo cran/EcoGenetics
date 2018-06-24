@@ -8,9 +8,9 @@ ecogen(XY = data.frame(), P = data.frame(), G = data.frame(),
   E = data.frame(), S = data.frame(), C = data.frame(),
   G.processed = TRUE, order.G = FALSE, ploidy = 2,
   type = c("codominant", "dominant"), sep = "", ncod = NULL,
-  missing = c("0", "NA", "MEAN"), NA.char = "NA", poly.level = 5,
+  missing = c("NA", "0", "MEAN"), NA.char = "NA", poly.level = 5,
   rm.empty.ind = FALSE, order.df = TRUE, set.names = NULL,
-  valid.names = FALSE)
+  valid.names = FALSE, lock.rows = TRUE)
 }
 \arguments{
 \item{XY}{Data frame with m columns (coordinates) and n rows (individuals).}
@@ -30,13 +30,12 @@ The program converts non-factor data into factor.}
 
 \item{C}{Data frame with n rows (individuals), and custom variables in columns.}
 
-\item{G.processed}{If TRUE, the slot G will include a processed data frame (
-removed non informative loci (the data non available for all the individuals),
-removed non polymorphic loci (for dominant data) and ordered alleles in ascending
-order.}
+\item{G.processed}{If TRUE, the slot G will include a processed data frame:
+removed non informative loci  (the data non available for all the individuals),
+or non polymorphic loci (for dominant data).}
 
 \item{order.G}{Genotypes must be ordered in G slot? (codominant data) 
-Default FALSE.}
+Default FALSE. If true alleles are ordered in ascending order.}
 
 \item{ploidy}{Ploidy of the G data frame. Default ploidy = 2.}
 
@@ -47,9 +46,9 @@ Default option is no character separating alleles.}
 
 \item{ncod}{Number of characters coding each allele (codominant data).}
 
-\item{missing}{Missing data treatment ("0", "NA", or "MEAN") for the A
-slot. Missing elements are set to 0 in the default option. missing elements
-are recoded as "NA" or the mean allelic frequency across individuals in "NA" 
+\item{missing}{Missing data treatment ("NA", "0", or "MEAN") for the A
+slot. Missing elements are set to NA in the default option. missing elements
+are recoded as 0 or the mean allelic frequency across individuals in "0" 
 and "MEAN" options, respectively.}
 
 \item{NA.char}{Character simbolizing missing data in the input. Default is "NA".}
@@ -58,13 +57,12 @@ and "MEAN" options, respectively.}
 for remotion of non polymorphic loci (for dominant data). Default is 5 (5\%).}
 
 \item{rm.empty.ind}{Remotion of noinformtive individuals (row of "NAs").
-Default if FALSE.}
+Default if FALSE. This option is only available when the 'lock.rows' parameter is FALSE.}
 
 \item{order.df}{Order individuals of data frames by row? (all data frames with a same order in row names).
- This 
-option works when the names of the data frames are used 
-(i.e., set.names and valid.names are NULL), otherwise the TRUE/FALSE value of this parameter
- has no effect in the function. 
+ This option is only available when the 'lock.rows' parameter is TRUE. 
+If the names of the data frames are not used (i.e., set.names and valid.names are not NULL),
+setting this parameter to TRUE/FALSE has no effect in the function. 
 Defalut TRUE. If FALSE, the row names of all the data frames must be ordered. The use of data frames 
 with row names in different order will return an error.
 In both cases, the program sets an internal names attribute of the object
@@ -76,6 +74,9 @@ This argument is incompatible with valid.names}
 
 \item{valid.names}{Logical. Create valid row names? This argument is incompatible with 
 set.names. The program will name individuals with valid tags I.1, I.2, etc.}
+
+\item{lock.rows}{Turn on row names check. Data frames require indentical individuals in rows.
+Default TRUE.}
 }
 \description{
 Creating a new ecogen object
@@ -128,6 +129,15 @@ of any ecogen object and ensure the modularity of this kind of objets.
 These methods are not only functions used to get/assign values to the slots, 
 they provide a basic pre-processing of the data during assignment, 
 generating a coherent and valid set of information.
+
+\bold{LOCKED AND UNLOCKED OBJECTS}
+#' Starting from version 1.2.1.5, ecogen and ecopop objects can be "locked" 
+(default) or "unlocked". A "locked" object must have identical number of rows and 
+row names in all the input data frames (or a rule must be provided to construct
+the row names in case of ecogen objects, with valid.names or set.names arguments).
+An unlocked objects allows to have a free number of rows
+in each table, and row names do not need to coincide among tables. See 
+examples below.
 }
 \examples{
 \dontrun{
@@ -178,6 +188,23 @@ ecoslot.OUT(eco) <- list(singers, golden.number)    # several objects must be pa
 # this is identical to:
 
 eco[["OUT"]] <- list(singers, golden.number)
+
+#---------------------------------
+# Locked and unlocked objects
+#---------------------------------
+
+is.locked(eco) # check if object is locked
+
+eco[["P"]] <- rbind(eco[["P"]], eco[["P"]]) # invalid 
+                                            # in locked object
+
+
+eco_unlocked <- eco.unlock(eco) #unlocked object
+eco_unlocked[["P"]]<-rbind(eco[["P"]], eco[["P"]]) # valid now
+
+new_locked <- eco.lock(eco_unlocked) # invalid
+eco_unlocked[["P"]]<- eco[["P"]]
+new_locked <- eco.lock(eco_unlocked) # valid now
 
 }
 

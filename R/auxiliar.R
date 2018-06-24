@@ -4,7 +4,8 @@
 
 #------------------------------------------------------------------------------#
 # Union of classes
-
+setClassUnion("any_vector",
+              c("character", "numeric", "integer", "factor"))
 setClassUnion("dataframeORmatrix",
 							c("data.frame", "matrix"))
 setClassUnion("matrixORnull",
@@ -15,23 +16,23 @@ setClassUnion("characterORlogical",
               c("character", "logical"))
 setClassUnion("characterORmissing",
               c("character", "missing"))
-setClassUnion("listORnull", 
+setClassUnion("listORnull",
               c("list","NULL"))
 setClassUnion("factorORnull",
               c("factor","NULL"))
 setClassUnion("callORnull",
               c("call","NULL"))
-setClassUnion("intORnumeric", 
+setClassUnion("intORnumeric",
               c("integer","numeric","NULL"))
-setClassUnion("intORmissing", 
+setClassUnion("intORmissing",
               c("integer","missing","NULL"))
-setClassUnion("intORnull", 
+setClassUnion("intORnull",
               c("integer","NULL"))
-setClassUnion("numericORnull", 
+setClassUnion("numericORnull",
               c("numeric","NULL"))
-setClassUnion("numericORmissing", 
+setClassUnion("numericORmissing",
               c("numeric","missing"))
-setClassUnion("logicalORmissing", 
+setClassUnion("logicalORmissing",
               c("logical","missing","NULL"))
 
 
@@ -785,6 +786,7 @@ aue.geom.dist <- function(XY, geometry = c("ellipse", "square"),  d = 1,
 #' @param x eco.correlog object
 #' @description convert a eco.correlog  output into a list for degrees 
 #' @keywords internal
+
 int.corvarToDeg <- function(x, angle) {
   outlist <- list()
   mynames <- colnames(x[[1]])
@@ -913,6 +915,41 @@ aue.aggregated_df <- function(X, hier, fun, factor_to_counts = FALSE, ...) {
   do.call("cbind", temp)
 }
 
+
+#' Converion from dummy allele matrix to frequencies
+#' @param df data frame with alleles coded in dummy format
+#' @param loc_fac factor with the locus of each allele
+#' @export
+
+aue.dummy2af <- function(df, loc_fac) {
+out <- apply(df, 1, function(x) tapply(x, loc_fac, function(y) y / sum(y, na.rm =  TRUE)))
+out <- lapply(out, function(x) unlist(unname(x)))
+do.call("rbind", out)
+}
+
+#' Detect operative system
+#' @keywords internal
+
+aue.get_os <- function() {
+  sysinf <- Sys.info()
+  if (!is.null(sysinf)){
+    os <- sysinf['sysname']
+    if (os == 'Darwin')
+      os <- "osx"
+  } else { ## mystery machine
+    os <- .Platform$OS.type
+    if (grepl("^darwin", R.version$os))
+      os <- "osx"
+    if (grepl("linux-gnu", R.version$os))
+      os <- "linux"
+  }
+  tolower(os)
+}
+
+
+#---------------------------------------------------------------------------------------------
+
+
 #' EcoGenetic devel site
 #' @description The function opens the EcoGenetics-devel web site:
 #' https://github.com/leandroroser/EcoGenetics-devel
@@ -930,7 +967,6 @@ ecogenetics_tutorial <- function(){
   cat("Opening link: https://leandroroser.github.io/EcoGenetics-Tutorial \n")
   browseURL("https://leandroroser.github.io/EcoGenetics-Tutorial/")
 }
-
 
 
 

@@ -21,10 +21,12 @@
 #'@importFrom party where
 #'@importFrom raster addLayer
 #'@importFrom raster brick
+#'@importFrom raster crs
 #'@importFrom raster calc
 #'@importFrom raster crop
 #'@importFrom raster extent
 #'@importFrom raster intersect
+#'@importFrom raster ncell
 #'@importFrom raster raster
 #'@importFrom raster writeRaster
 #'@importFrom rkt rkt
@@ -57,24 +59,14 @@
 #'@importFrom grDevices heat.colors
 #'@importFrom graphics barplot legend
 #'@importFrom stats sd
+#'@importFrom foreach foreach "%dopar%" getDoParWorkers getDoParName
+#'@importFrom parallel makeCluster stopCluster detectCores
+#'@importFrom doParallel registerDoParallel stopImplicitCluster
 0
 
 #--------------------
 # DATA FILES 
 #--------------------
-
-#' phenotype
-#' @name phenotype
-#' @docType data
-#' @description Data frame with simulated morphometric 
-#' data of 225 individuals.
-#' @author Leandro Roser \email{learoser@@gmail.com}
-#' @usage
-#' data(eco.test)
-#' phenotype
-#' @keywords data
-
-0
 
 #' tab
 #' @name tab
@@ -92,22 +84,137 @@
 #' tab
 #' @keywords data
 
-
 0
 
-#' structure
-#' @name structure
+
+#' eco
+#' @name eco
 #' @docType data
-#' @description Factor with simulated groups of 225 individuals.
+#' @description ecogen object with simulated data of 225 individuals, with codominant markers
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco.test)
-#' structure
+#' eco
 #' @keywords data
 
 0
 
-#' Coordinates
+#' eco_dom
+#' @name eco_dom
+#' @docType data
+#' @description ecogen object with simulated data of 225 individuals, with dominant markers
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco.test)
+#' eco
+#' @keywords data
+
+0
+
+
+#' eco2
+#' @name eco2
+#' @docType data
+#' @description ecogen object with simulated data of 900 individuals.
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco2)
+#' eco2
+#' @keywords data
+
+0
+
+#' eco3
+#' @name eco3
+#' @docType data
+#' @description ecogen object with simulated data of 173 individuals.
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco3)
+#' eco3
+#' @keywords data
+
+0
+
+#' eco4
+#' @name eco4
+#' @docType data
+#' @description data frames with simulated data of 173 individuals. 
+#' The data frams can be used to construct an ecogen object that includes
+#' genetic data separated by a character ad with non uniform of number of characters
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco3)
+#' eco3
+#' @keywords data
+#' 
+
+0
+
+
+#' XY
+#' @name XY
+#' @docType data
+#' @description Factor with simulated coordinates of 173 individuals.
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco4)
+#' XY
+#' @keywords data
+
+0
+
+
+#' P
+#' @name P
+#' @docType data
+#' @description Factor with simulated phenotypic data of 173 individuals.
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco4)
+#' P
+#' @keywords data
+
+0
+
+#' G
+#' @name G
+#' @docType data
+#' @description data frame with simulated genetic data of 173 individuals.
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco4)
+#' G
+#' @keywords data
+
+0
+
+#' E
+#' @name E
+#' @docType data
+#' @description data frame with simulated environmental data of 173 individuals.
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco4)
+#' E
+#' @keywords data
+
+0
+
+
+#' S
+#' @name S
+#' @docType data
+#' @description Factor with simulated groups of 173 individuals.
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco4)
+#' S
+#' @keywords data
+
+0
+
+#' coordinates
 #' @name coordinates
 #' @docType data
 #' @description Data frame with cartesian coordinates of 
@@ -121,38 +228,30 @@
 
 0
 
-#' Eco
-#' @name eco
+
+#' phenotype
+#' @name phenotype
 #' @docType data
-#' @description ecogen object with simulated data of 225 individuals.
+#' @description Data frame with simulated morphometric 
+#' data of 225 individuals.
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco.test)
-#' eco
+#' phenotype
 #' @keywords data
 
 0
 
-#' Eco2
-#' @name eco2
+
+#' genotype
+#' @name genotype
 #' @docType data
-#' @description ecogen object with simulated data of 900 individuals.
+#' @description Data frame with simulated microsatellite 
+#' data of 225 individuals.
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
-#' data(eco2)
-#' eco2
-#' @keywords data
-
-0
-
-#' Eco3
-#' @name eco3
-#' @docType data
-#' @description ecogen object with simulated data of 173 individuals.
-#' @author Leandro Roser \email{learoser@@gmail.com}
-#' @usage
-#' data(eco3)
-#' eco3
+#' data(eco.test)
+#' genotype
 #' @keywords data
 
 0
@@ -168,21 +267,34 @@
 #' environment
 #' @keywords data
 
+0
+
+#' structure
+#' @name structure
+#' @docType data
+#' @description Factor with simulated groups of 225 individuals.
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @usage
+#' data(eco.test)
+#' structure
+#' @keywords data
 
 0
 
-#' genotype
-#' @name genotype
+
+#' genotype_dom
+#' @name genotype_dom
 #' @docType data
-#' @description Data frame with simulated microsatellite 
+#' @description Data frame with simulated dominant data
 #' data of 225 individuals.
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @usage
 #' data(eco.test)
-#' genotype
+#' genotype_dom
 #' @keywords data
 
 0
+
 
 #' my_ecopop
 #' @name my_ecopop
@@ -217,3 +329,14 @@
 #' @importFrom magrittr %>%
 #' @usage lhs \%>\% rhs
 NULL
+
+ 
+# #' dopar operator
+# #'
+# #' @name %dopar%
+# #' @rdname dopar
+# #' @keywords internal
+# #' @export
+# #' @importFrom foreach %dopar%
+# #' @usage obj %dopar% ex
+# NULL

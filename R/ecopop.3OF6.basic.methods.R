@@ -1,3 +1,4 @@
+
 ################################################
 #### BASIC METHODS
 ################################################
@@ -17,11 +18,72 @@ setMethod("initialize", "ecopop",
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecopop-methods
 #' @aliases names,ecopop-method
+#' @exportMethod names
 
 setMethod("names", "ecopop",
           function(x){
-            return(x@S)
+            if(is.locked(x)) {
+              x@ATTR$names
+            } else {
+              cat("Free rows object, with empty 'names' attribute\n")
+              invisible(NULL)
+            }
           })
+
+
+# names<- -----------------------------------------------------------------------#
+#' @author Leandro Roser \email{learoser@@gmail.com}
+#' @rdname ecopop-methods
+#' @aliases names,ecopop-method
+#' @exportMethod names<-
+
+setReplaceMethod("names", c(x = "ecopop", value = "any_vector"), function(x, value) {
+  
+    if(!is.locked(x)) {
+      stop("Free rows object, with empty 'names' attribute\n")
+    }
+      
+    if(length(x@ATTR$names) != length(value)) {
+      stop("Length of input names different of the length of the names present in the object")
+    }
+    
+    if(length(value) != length(unique(value))) {
+      stop("Duplicate values found in the input names")
+    }
+    
+    nrow_data <- nrow(x)
+    x@ATTR$names <- value
+    
+    if(nrow_data["XY"] != 0) {
+      rownames(x@XY) <- value
+    }
+    
+    if(nrow_data["P"] != 0) {
+      rownames(x@P) <- value
+    }
+    
+    if(nrow_data["AF"] != 0) {
+      rownames(x@AF) <- value
+    }
+    
+    
+    if(nrow_data["E"] != 0) {
+      rownames(x@E) <- value
+    }
+    
+    
+    if(nrow_data["S"] != 0) {
+      rownames(x@S) <- value
+    }
+    
+    
+    if(nrow_data["C"] != 0) {
+      rownames(x@C) <- value
+    }
+    
+    return(x)
+  
+})
 
 
 
@@ -43,10 +105,16 @@ is.ecopop <- function(x) {
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecopop-methods
 #' @aliases nrow,ecopop-method
+#' @exportMethod nrow
 
 setMethod("nrow", "ecopop",
           function(x){
-            c(XY=nrow(x@XY), P=nrow(x@P), AF=nrow(x@AF), E=nrow(x@E), C=nrow(x@C))
+            c(XY = nrow(x@XY), 
+              P = nrow(x@P),
+              AF = nrow(x@AF), 
+              E = nrow(x@E),  
+              S = nrow(x@S), 
+              C = nrow(x@C))
           })
 
 # ncol -----------------------------------------------------------------------#
@@ -55,6 +123,7 @@ setMethod("nrow", "ecopop",
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecopop-methods
 #' @aliases ncol,ecopop-method
+#' @exportMethod ncol
 
 setMethod("ncol", "ecopop",
           function(x){
@@ -62,6 +131,7 @@ setMethod("ncol", "ecopop",
               P=ncol(x@P), 
               AF=ncol(x@AF), 
               E=ncol(x@E),
+              S = ncol(x@S),
               C=ncol(x@C))
           })
 
@@ -71,13 +141,15 @@ setMethod("ncol", "ecopop",
 #' @author Leandro Roser \email{learoser@@gmail.com}
 #' @rdname ecopop-methods
 #' @aliases dim,ecopop-method
+#' @exportMethod dim
 
 setMethod("dim", "ecopop",
-          function(x){
+          function(x) {
             list(XY=c(nrow(x@XY), ncol(x@XY)), 
                  P=c(nrow(x@P), ncol(x@P)), 
                  AF=c(nrow(x@AF), ncol(x@AF)), 
                  E=c(nrow(x@E), ncol(x@E)), 
+                 S=c(nrow(x@S), ncol(x@S)), 
                  C=c(nrow(x@C), ncol(x@C)))
           })
 
@@ -100,6 +172,7 @@ setMethod("as.list",
             to$P <- x@P
             to$AF <- x@AF
             to$E <- x@E
+            to$S <- x@S
             to$C <- x@C
             return(to)
           })
@@ -110,11 +183,12 @@ setMethod("as.list",
 #' @keywords internal 
 #' @rdname ecopop-methods
 #' @aliases show,ecopop-method
+#' @exportMethod show
 
 setMethod("show", 
           "ecopop", 
           function(object) {
-            # check validity using a temporal element to pass environment
+          
             validObject(object)
 
             
@@ -148,11 +222,10 @@ setMethod("show",
             l4.1 <-  ifelse(ncol(object@E) > 1 || ncol(object@E) == 0, 
                             "environmental variables", "environmental variable")
             #---S slot---
-            l5 <- paste(length(object@S))
-            l5.1 <- paste(">>", length(object@S), 
-                            ifelse(length(object@S) > 1, 
-                                   "populations found", 
-                                   "population found"))
+            l5 <- paste(nrow(object@S), "x", ncol(object@S))
+            l5.1 <-  ifelse(ncol(object@S) > 1 || ncol(object@S) == 0, 
+                            "populations found", 
+                            "population found")
       
             #---C slot---
             l6 <- paste(nrow(object@C), "x", ncol(object@C))
@@ -185,3 +258,212 @@ setMethod("show",
             cat("\n", "#", "slot C:", e(3), "", "#", "=> ", l6, e(1), e(13 - nchar(l6)),  l6.1)
             cat("\n****************************************************************************\n")
           })
+
+
+#' Test if rows of an ecopop object are locked
+#' @description  Test if rows of an ecopop object are locked 
+#' @param object ecopop object
+#' @aliases is.locked,ecopop
+#' @examples
+#' \dontrun{
+#' data(eco.test)
+#' is.locked(my_ecopop) 
+#' eco2 <- eco.unlock(eco)
+#' is.locked(eco2) 
+#' }
+#' @exportMethod is.locked
+
+setMethod("is.locked", "ecopop", 
+          function(object) {
+            if(object@ATTR$ver < '1.2.1-5' || is.null(object@ATTR$ver)) {
+              out <- TRUE
+            } else {
+              if(object@ATTR$lock.rows) {
+                out <- TRUE
+              } else {
+                out <- FALSE
+              }
+            }
+            out
+          })
+
+#' Update an old ecogen or ecopop object to a version compatible with EcoGenetics >= 1.5.0-1
+#' @description Update an old ecogen or ecopop object to a version compatible with EcoGenetics >= 1.5.0-1
+#' @param object ecopop object
+#' @aliases eco.old2new,ecopop
+#' @exportMethod eco.old2new
+
+setMethod("eco.old2new", "ecopop", 
+          function(object) {
+            
+            ver <- as.numeric(gsub("[.]|-", "", object@ATTR$ver))
+            
+            if(ver < 1215 || is.null(object@ATTR$ver)) {
+              
+              out <- new("ecopop", ploidy = object@INT@ploidy, type = object@INT@type)
+              out@XY <- object@XY
+              out@P <- object@P
+              out@AF <- object@AF
+              out@E <- object@E
+              out@S <- object@S
+              out@C <- object@C
+              out@INT <- object@INT
+              out@ATTR$names <- object@ATTR$names
+              out@ATTR$lock.rows <- TRUE
+              out@ATTR$whereIs <- object@ATTR$whereIs 
+              out@ATTR$ver <- utils::packageDescription("EcoGenetics", fields = "Version")
+              out@ATTR$.call <- match.call()
+            } else {
+              message("The object is already compatible with EcoGenetics >= 1.5.0-1")
+            }
+            out
+          })
+
+
+
+#' Lock rows in an ecogen object
+#' @description  This methods locks the rows in an ecogen object.  When rows are locked,
+#' the object requires rows with identical indviduals in the non empty data frames, and
+#' identity in the row names of the data frames.
+#' @param object ecopop object
+#' @param set.names Character vector with names for the rows of the non-empty data frames. 
+#' This argument is incompatible with valid.names
+#' @param valid.names Logical. Create valid row names? This argument is incompatible with 
+#' set.names. The program will name individuals with valid tags I.1, I.2, etc.
+#' @param order.df Order individuals of data frames by row? (all data frames with a same order in row names).
+#'  This option is only available when the 'lock.rows' parameter is TRUE. 
+#' If the names of the data frames are not used (i.e., set.names and valid.names are not NULL),
+#' setting this parameter to TRUE/FALSE has no effect in the function. 
+#' Defalut TRUE. If FALSE, the row names of all the data frames must be ordered. The use of data frames 
+#' with row names in different order will return an error.
+#' In both cases, the program sets an internal names attribute of the object
+#' using the row names of the first non-empty data frame found in the following order: 
+#' XY, P, G, E, S, C. This attribute is used as reference to order rows when order.df = TRUE. 
+#' @aliases eco.lock,ecopop
+#' @examples
+#' \dontrun{
+#' data(eco.test)
+#' my_ecopop2 <- eco.unlock(my_ecopop)
+#' is.locked(my_ecopop2) 
+#' my_ecopop3 <- eco.lock(my_ecopop)
+#' is.locked(my_ecopop3) 
+#' }
+#' 
+#'@exportMethod eco.lock
+
+setMethod("eco.lock", "ecopop", 
+          function(object, set.names = NULL, valid.names = FALSE, order.df = FALSE) {
+  
+  object.names <- list(XY=rownames(object@XY), 
+                       P=rownames(object@P), 
+                       AF=rownames(object@AF), 
+                       E=rownames(object@E),
+                       S=rownames(object@S), 
+                       C=rownames(object@C))
+  
+  # set names--------------------------------------------
+  # case: use data frames names---->
+  if(is.null(set.names) && !valid.names) {
+    
+    while(TRUE) {
+      
+      if(nrow(object@XY) != 0) {
+        object@ATTR$names <- object.names$XY
+        break
+      }
+      if(nrow(object@P) != 0) {
+        object@ATTR$names <- object.names$P
+        break
+      }
+      if(nrow(object@AF) != 0) {
+        object@ATTR$names <- object.names$AF
+        break
+      }
+      if(nrow(object@E) != 0) {
+        object@ATTR$names <- object.names$E
+        break
+      }
+      if(nrow(object@S) != 0) {
+        object@ATTR$names <- object.names$S
+        break
+      }
+      if(nrow(object@C) != 0) {
+        object@ATTR$names <- object.names$C
+        break
+      }
+      object@ATTR$names <- character(0)
+      break
+    }
+    
+    # order rows
+    if(order.df) {
+      object <- int.order(object)
+    }
+    
+    # case: use set.names or valid.names---->
+  } else {
+    # use nrow method
+    
+    object.names <- object.names[unlist(lapply(object.names,
+                                               function(x) length(x)  != 0))]
+    
+    if(length(object.names) != 0) {
+      rownumber <- unique(unlist(lapply(object.names, length)))
+      # check nrow consistency
+      if(length(rownumber)> 1) {
+        stop("Non unique row number found")
+      }
+      
+      # set.names case --
+      if(!is.null(set.names)) {
+        
+        #check length consistency
+        if(length(set.names) != rownumber) {
+          stop("the length of valid.names do not match 
+               with the number of rows in the object")
+        }
+        
+        the.names <- set.names
+        
+        # valid.names case --
+        } else if(valid.names) {
+          the.names <- paste0("I.", seq_len(rownumber))
+        }
+      
+      # set data frames names and object names --
+      for(i in names(object.names)) {
+        eval(expr = parse(text=paste0("rownames(object@", i, ") <- the.names")))
+      }
+      
+      object@ATTR$names <- the.names
+      
+    } 
+  }
+  
+  object@ATTR$lock.rows <- TRUE
+  # check validity 
+  validObject(object)
+  
+  object
+})
+
+#' Unlock rows in an ecogen object
+#' @description  This methods unlocks the rows in an ecogen object. This means that 
+#' different data frames in the object can have different rows, with different row names.
+#' @param object ecopop object
+#' @aliases eco.unlock,ecopop
+#' @examples
+#' \dontrun{
+#' data(eco.test)
+#' my_ecopop2 <- eco.unlock(my_ecopop)
+#' is.locked(my_ecopop2) 
+#' my_ecopop3 <- eco.lock(my_ecopop)
+#' is.locked(my_ecopop3) 
+#' }
+#' @exportMethod eco.unlock
+
+setMethod("eco.unlock", "ecopop", function(object) {
+  object@ATTR$names <- list(character(0))
+  object@ATTR$lock.rows <- FALSE
+  object
+})
