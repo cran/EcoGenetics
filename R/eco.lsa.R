@@ -8,7 +8,7 @@
 #' @param var Vector, matrix or data frame for the analysis. Multiple variables in columns.
 #' @param con An object of class eco.weight obtained with the function \code{\link{eco.weight}},
 #' a "listw" object, or a matrix, containing the weights for the analysis. 
-#' If a matrix, an attribute "xy" with the projected coordinates is required. 
+#' If a matrix, an attribute "xy" with the projected coordjdinates is required. 
 #' @param method Method of analysis: "G" for Getis-Ord G, "G*" for Getis-Ord G*, 
 #'  "I" for local Moran's I or "C" for local Geary's C. 
 #' @param zerocon If zerocon = 0 the program assigns the value 0 to those individuals

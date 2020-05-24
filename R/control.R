@@ -44,7 +44,7 @@ int.check.numeric <- function(mat) {
   x <- mat
   clases <- character()
   for(i in 1:ncol(x)) {
-    clases[i] <- class(x[, i])
+    clases[i] <- class(x[, i])[1]
   }
   
   if(any(clases != "numeric" | clases != "integer")) {
@@ -52,7 +52,7 @@ int.check.numeric <- function(mat) {
     colhier <- ncol(x)
     rowhier <- nrow(x)
     x <- matrix(as.numeric(x), ncol = colhier, nrow= rowhier)
-    if(class(mat) == "data.frame") {
+    if(class(mat)[1] == "data.frame") {
       x <- as.data.frame(x)
     }
     colnames(x) <- colnames(mat)
@@ -286,7 +286,7 @@ if(to_numeric) {
     testclass <- unlist(x[, seq_len(ncolx)])
   }
   
-  if(class(testclass) != "numeric" && class(testclass) != "integer") {
+  if(class(testclass)[1] != "numeric" && class(testclass)[1] != "integer") {
     stop("Note: recoding of data into numeric format is off (to_numeric = FALSE), 
                        but the program detected character data in your genetic matrix. 
                        Try setting: to_numeric = TRUE")

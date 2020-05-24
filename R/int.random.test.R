@@ -15,7 +15,7 @@ int.random.test <- function(repsim = NULL, obs, nsim,
   test <- match.arg(test)
   alternative <- match.arg(alternative)
   
-  clase <- class(repsim)
+  clase <- class(repsim)[1]
   if(clase == "matrix" || clase == "data.frame") {
     multi <- TRUE 
     N <- nrow(obs)

@@ -336,12 +336,12 @@ setGeneric("eco.correlog",
              }
              
              
-             Z.class <- class(Z)
+             Z.class <- class(Z)[1]
              if(Z.class != "numeric" & Z.class != "integer" &  Z.class != "matrix" & Z.class != "data.frame") {
                stop("Z must me a numeric vector, a matrix or a data.frame")
              }
              if(!is.null(Y)) {
-               Y.class <- class(Y)
+               Y.class <- class(Y)[1]
                if(Y.class != "numeric" & Y.class != "integer" & Y.class != "vector") {
                  stop("Y must me a numeric vector")
                  if(is.null(method)) {

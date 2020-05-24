@@ -151,10 +151,10 @@ test_that("eco.pairtest works fine", {
   t2 <- eco.pairtest(eco = eco3,df = "E", x = "structure")
   t3 <- eco.pairtest(eco = eco3, df = "P", x = "structure", only.p = FALSE)
   t4 <- eco.pairtest(eco = eco3,df = "P", x = "structure", test = "tukey")
-  expect_true(class(t1$kruskall.test) == "matrix")
-  expect_true(class(t2$kruskall.test) == "matrix")
-  expect_true(class(t3$kruskall.test) == "matrix")
-  expect_true(class(t4$aov) == "matrix")
+  expect_true(class(t1$kruskall.test)[1] == "matrix")
+  expect_true(class(t2$kruskall.test)[1] == "matrix")
+  expect_true(class(t3$kruskall.test)[1] == "matrix")
+  expect_true(class(t4$aov)[1] == "matrix")
 })
 
 

@@ -15,15 +15,15 @@ setGeneric("eco.nei_dist", function(obj, as_dist = TRUE) {
   
   # get matrix matr with 'allele counts'
   
-  if (class(obj) == "genpop") {
-    matr <- obj@tab
-  } else if (class(obj) == "ecopop") {
-    if (obj@INT@allele_data == "frequency") {
-      stop("ecopop object with genetic data as counts needed, 
-           but this object has allele frequencies")
+  if (class(obj)[1] == "genpop") {
+    x <- makefreq(obj)  
+  } else if (class(obj)[1] == "ecopop") {
+    if (obj@INT@allele_data == "counts") {
+      stop("ecopop object with genetic data as frequencies needed,
+           but this object has allele counts")
     }
     x <- obj@AF
-  } else if (class(obj) == "matrix" || class(obj) == "data.frame") {
+  } else if (class(obj)[1] == "matrix" || class(obj)[1] == "data.frame") {
     x <- obj
   } else {
     stop("object of invalid class")

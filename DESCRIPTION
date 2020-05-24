@@ -2,8 +2,8 @@ Package: EcoGenetics
 Type: Package
 Title: Management and Exploratory Analysis of Spatial Data in Landscape
         Genetics
-Version: 1.2.1-5
-Date: 2018-06-23
+Version: 1.2.1-6
+Date: 2020-05-24
 Authors@R: c(person(given = "Leandro", family = "Roser", role = c("aut", "cre"), email = "learoser@gmail.com"), person(given = "Juan", family = "Vilardi", role = "aut"),  person(given = "Beatriz", family = "Saidman", role = "aut"), person(given = "Laura", family = "Ferreyra", role = "aut"), person(given = "Thibaut", family = "Jombart", role = "ctb", comment = "author of included adegenet code"), person(given = "Winston", family = "Chang", role = "ctb", comment = "author of the multiplot function included under the name grf.multiplot"))
 Maintainer: Leandro Roser <learoser@gmail.com>
 Description: Management and exploratory analysis of spatial data in landscape genetics. Easy integration of information from multiple sources with "ecogen" objects.
@@ -12,9 +12,9 @@ URL: https://github.com/cran/EcoGenetics,
         https://leandroroser.github.io/EcoGenetics-Tutorial
 LazyLoad: yes
 Depends: R (>= 3.0), methods
-Imports: d3heatmap, edgebundleR, ggplot2, grid, htmlwidgets, igraph,
-        jsonlite, magrittr, networkD3, party, pheatmap, plotly, raster,
-        reshape2, rgdal, rkt, SoDA, sp, parallel, doParallel, foreach
+Imports: edgebundleR, ggplot2, grid, htmlwidgets, igraph, jsonlite,
+        magrittr, networkD3, party, pheatmap, plotly, raster, reshape2,
+        rgdal, rkt, SoDA, sp, parallel, doParallel, foreach
 Suggests: adegenet, testthat, covr, vegan, hierfstat
 Collate: 'ZZZ.R' 'generics.R' 'auxiliar.R' 'int.genind.R'
         'ecogen.1OF6.definition.R' 'ecogen.2OF6.constructor.R'
@@ -42,9 +42,10 @@ Collate: 'ZZZ.R' 'generics.R' 'auxiliar.R' 'int.genind.R'
         'miscellaneous.R' 'fill_ecogen_with_pop.R' 'plot.generic.R'
         'plot.methods.R' 'roxygen.auxiliar.R' 'show_summary.methods.R'
         'eco.dom_af.R' 'eco.kin.hardy.R' 'eco.nei_dist.R'
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.0
 NeedsCompilation: no
-Packaged: 2018-06-24 05:42:15 UTC; leandro
+Packaged: 2020-05-24 06:01:19 UTC; Leandro
+LazyData: true
 Author: Leandro Roser [aut, cre],
   Juan Vilardi [aut],
   Beatriz Saidman [aut],
@@ -53,4 +54,4 @@ Author: Leandro Roser [aut, cre],
   Winston Chang [ctb] (author of the multiplot function included under
     the name grf.multiplot)
 Repository: CRAN
-Date/Publication: 2018-06-24 06:13:31 UTC
+Date/Publication: 2020-05-24 15:20:17 UTC

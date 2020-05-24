@@ -4,18 +4,26 @@
 \alias{eco.lsa}
 \title{Local spatial analysis}
 \usage{
-eco.lsa(var, con, method = c("G*", "G", "I", "C"), zerocon = NA,
-  nsim = 99, conditional = c("auto", "TRUE", "FALSE"),
-  test = c("permutation", "bootstrap"), alternative = c("auto", "two.sided",
-  "greater", "less"), adjust = "none", multi = c("matrix", "list"),
-  pop = NULL)
+eco.lsa(
+  var,
+  con,
+  method = c("G*", "G", "I", "C"),
+  zerocon = NA,
+  nsim = 99,
+  conditional = c("auto", "TRUE", "FALSE"),
+  test = c("permutation", "bootstrap"),
+  alternative = c("auto", "two.sided", "greater", "less"),
+  adjust = "none",
+  multi = c("matrix", "list"),
+  pop = NULL
+)
 }
 \arguments{
 \item{var}{Vector, matrix or data frame for the analysis. Multiple variables in columns.}
 
 \item{con}{An object of class eco.weight obtained with the function \code{\link{eco.weight}},
 a "listw" object, or a matrix, containing the weights for the analysis. 
-If a matrix, an attribute "xy" with the projected coordinates is required.}
+If a matrix, an attribute "xy" with the projected coordjdinates is required.}
 
 \item{method}{Method of analysis: "G" for Getis-Ord G, "G*" for Getis-Ord G*, 
 "I" for local Moran's I or "C" for local Geary's C.}

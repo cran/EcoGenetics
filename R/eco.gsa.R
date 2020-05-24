@@ -186,7 +186,7 @@ setGeneric("eco.gsa",
              alternative <- match.arg(alternative)
              method <- match.arg(method)
              
-             if(any(class(con) == "ecoweight")) {
+             if(any(class(con)[1] == "ecoweight")) {
                XY <- attr(con, "XY")
              } else {
                XY <- attr(con, "xy")
@@ -196,10 +196,10 @@ setGeneric("eco.gsa",
                stop(paste0("incompatible dimension between <Z> (", u, ") and <XY> (",  nrow(con), ")"))
              }
              
-             Z.class <- class(Z)
+             Z.class <- class(Z)[1]
              if(method != "JC") {
                if(Z.class == "matrix" | Z.class == "data.frame") {
-                 c.Z <- apply(Z, 2, class)
+                 c.Z <- apply(Z, 2, function(x)class(x)[1])
                  if(any(c.Z != "integer") & any(c.Z != "numeric")) {
                    stop(paste("Non numeric data.", method, "requires numeric data"))
                  }
@@ -220,7 +220,7 @@ setGeneric("eco.gsa",
              
              
              if(!is.null(Y)) {
-               Y.class <- class(Y)
+               Y.class <- class(Y)[1]
                if(Y.class != "numeric" & Y.class != "integer" & Y.class != "vector") {
                  stop("Y must me a numeric vector")
                }

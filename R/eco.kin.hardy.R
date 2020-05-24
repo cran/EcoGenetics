@@ -11,11 +11,11 @@
 
 eco.kin.hardy <- function(x, fi) { 
   
-  if(class(x) == "genind") {
+  if(class(x)[1] == "genind") {
     mata <- x@tab
-  } else if(class(x) == "ecogen") {
+  } else if(class(x)[1] == "ecogen") {
     mata <- x@A
-  } else if(class(x) == "matrix" || class(x) == "data.frame") {
+  } else if(class(x)[1] == "matrix" || class(x)[1] == "data.frame") {
     mata <- x
   }
   

@@ -61,7 +61,7 @@
 
 eco.plotLocal <- function(x,
                           interactivePlot = TRUE,
-                          multi = c("d3heatmap", "ggplot"),
+                          multi = c("ggplot", "d3heatmap"),
                           significant = TRUE,
                           alpha = 0.05,
                           rescaled = FALSE,
@@ -76,7 +76,7 @@ eco.plotLocal <- function(x,
                           byrow = TRUE,
                           ...) {
   
-  if(class(x) == "eco.lsa") {
+  if(class(x)[1] == "eco.lsa") {
     if(x@TEST == "permutation" || x@NSIM == 0) {
       out <- eco.rankplot(x, rescaled = rescaled, 
                           interactivePlot = interactivePlot, ...)
@@ -85,19 +85,20 @@ eco.plotLocal <- function(x,
                             interactivePlot = interactivePlot, ...)
     }
     
-  } else if(class(x) == "eco.multilsa"){
+  } else if(class(x)[1] == "eco.multilsa"){
   
    if(multi == "d3heatmap" && interactivePlot) {
+   stop("Sorry, the use of d3heatmap has been deprecated")
      
    # if significant, set to 0 when no SA has been found
-   if(significant) {
-   modelmat <- x@PVAL < alpha
-   mode(modelmat) <- "integer"
-   mymat <- x@OBS.RES * modelmat
-   } else {
-   mymat <- x@OBS.RES 
-   }
-   out <- d3heatmap::d3heatmap(mymat)
+   #if(significant) {
+   #modelmat <- x@PVAL < alpha
+   #mode(modelmat) <- "integer"
+   #mymat <- x@OBS.RES * modelmat
+   #} else {
+   #mymat <- x@OBS.RES 
+   #}
+   #out <- d3heatmap::d3heatmap(mymat)
    
    } else {
    out <- eco.rasterplot(x = x, 
@@ -114,7 +115,7 @@ eco.plotLocal <- function(x,
    }
     
     
-  } else if (class(x) == "eco.listlsa") {
+  } else if (class(x)[1] == "eco.listlsa") {
     
     
     if(legend) {

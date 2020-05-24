@@ -426,11 +426,11 @@ aue.fqal <- function(eco, grp = NULL) {
 
 aue.access <- function(ecoslot, X) {
   
-  if(class(X) == "name") {
+  if(class(X)[1] == "name") {
     class(X) <- "character"
   }
   
-  if(class(ecoslot) == "name") {
+  if(class(ecoslot)[1] == "name") {
     class(ecoslot) <- "character"
   }
   
@@ -604,8 +604,8 @@ aue.circle.w <- function(mat, x0, y0) {
 
 aue.image2df <- function(mat, origin = c("upperleft", "lowerleft"), out = c("data.frame", "matrix")) {
   
-  if(class(mat) != "matrix") {
-  if(class(mat) == "data.frame") {
+  if(class(mat)[1] != "matrix") {
+  if(class(mat)[1] == "data.frame") {
   mat <- as.matrix(mat)
   } else {
     stop("the input must be of class <matrix> or <data.frame>")

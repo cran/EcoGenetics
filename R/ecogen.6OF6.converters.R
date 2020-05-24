@@ -512,7 +512,7 @@ setGeneric("gstudio2ecogen", function(from, ID = "ID",
   
   to<- ecogen()
   
-  cuales <- sapply(from, class)
+  cuales <- sapply(from, function(x) class(x)[1])
   myloc <- from[, cuales == "locus"]
   myloc <- as.matrix(myloc)
   rownames(myloc) <- myID
@@ -629,7 +629,7 @@ setGeneric("ecogen2hierfstat",
              clases <- character()
              j <- 1
              for(i in 2:ncol(datahier)) {
-               clases[j] <- class(datahier[, i])
+               clases[j] <- class(datahier[, i])[1]
                j <- j + 1
              }
              if(any(clases != "numeric" | clases != "integer")) {
@@ -836,10 +836,10 @@ setGeneric("ecogen2spagedi",
   cat(final, sep = "\t")
   
   if(!is.null(distmat)) {
-    if(class(distmat) == "dist") {
+    if(class(distmat)[1] == "dist") {
       distmat <- as.matrix(distmat)
     } 
-    if(class(distmat) != "matrix" & class(distmat) != "data.frame") {
+    if(class(distmat)[1] != "matrix" & class(distmat)[1] != "data.frame") {
       stop("invalid distance matrix format (It should be of class: dist, matrix or data.frame")
     }
     distnames <- rownames(distmat)

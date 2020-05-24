@@ -1,7 +1,7 @@
 context("Test ecogen-ecopop importation/exportation methods")
 
 require("hierfstat")
-require("gstudio")
+#require("gstudio")
 require("adegenet")
 data(eco.test)
 data(eco3)
@@ -35,24 +35,24 @@ test_that("genind importation/exportation works", {
 })
 
 
-test_that("gstudio importation/exportation works", {
-  skip_on_cran()
-  togstudio <- ecogen2gstudio(eco, type = "codominant")
-  toeco <- gstudio2ecogen(togstudio, ID = "ID", lat = "Latitude",
-                          lon = "Longitude", struct = "pop")
+#test_that("gstudio importation/exportation works", {
+#  skip_on_cran()
+#  togstudio <- ecogen2gstudio(eco, type = "codominant")
+#  toeco <- gstudio2ecogen(togstudio, ID = "ID", lat = "Latitude",
+#                          lon = "Longitude", struct = "pop")
 
-  expect_true(class(togstudio[, 5]) == "locus")
-  expect_true(all(dim(togstudio) == c(225, 14)))
+#  expect_true(class(togstudio[, 5]) == "locus")
+#  expect_true(all(dim(togstudio) == c(225, 14)))
 
-  expect_that(toeco, is_a("ecogen"))
-  expect_true(all(dim(toeco[["XY"]]) == c(225, 2)))
-  expect_true(all(dim(toeco[["P"]]) == c(0, 0)))
-  expect_true(all(dim(toeco[["G"]]) == c(225, 10)))
-  expect_true(all(dim(toeco[["A"]]) == c(225, 40)))
-  expect_true(all(dim(toeco[["E"]]) == c(0, 0)))
-  expect_true(all(dim(toeco[["S"]]) == c(225, 1)))
-  expect_true(all(dim(toeco[["C"]]) == c(0, 0)))
-})
+#  expect_that(toeco, is_a("ecogen"))
+#  expect_true(all(dim(toeco[["XY"]]) == c(225, 2)))
+#  expect_true(all(dim(toeco[["P"]]) == c(0, 0)))
+#  expect_true(all(dim(toeco[["G"]]) == c(225, 10)))
+#  expect_true(all(dim(toeco[["A"]]) == c(225, 40)))
+#  expect_true(all(dim(toeco[["E"]]) == c(0, 0)))
+#  expect_true(all(dim(toeco[["S"]]) == c(225, 1)))
+#  expect_true(all(dim(toeco[["C"]]) == c(0, 0)))
+#})
 
 test_that("spagedi importation/exportation works", {
   skip_on_cran()

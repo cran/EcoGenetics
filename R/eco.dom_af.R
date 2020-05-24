@@ -23,15 +23,15 @@ setGeneric("eco.dom_af", function(x, method = c("zhivor", "zhivonu", "rawfreq"))
   
   # get matrix matr with 'allele counts'
   
-  if (class(x) == "genpop") {
+  if (class(x)[1] == "genpop") {
     matr <- x@tab
-  } else if (class(x) == "ecopop") {
+  } else if (class(x)[1] == "ecopop") {
     if (x@INT@allele_data == "frequency") {
       stop("ecopop object with genetic data as counts needed, 
            but this object has allele frequencies")
     }
     matr <- x@AF
-    } else if (class(x) == "matrix" || class(x) == "data.frame") {
+    } else if (class(x)[1] == "matrix" || class(x)[1] == "data.frame") {
       matr <- x
     } else {
       stop("object of invalid class")
@@ -159,7 +159,8 @@ setGeneric("eco.dom_af", function(x, method = c("zhivor", "zhivonu", "rawfreq"))
     matrs[, index3] <- (1 - frsq[, index]^2)/(4 * (matr[, index] + matr[, index2]))
     LM <- frsq
     numer <- frsq[, index]
-    denom <- 1 - (matrs[, index3])/(8 * (frsq[, index]))^4
+    Vx <- frsq[, index]^2*(1-frsq[, index]^2)/(matr[, index] + matr[, index2])
+    denom <-1 - Vx/(8*frsq[, index]^4)
     LM[, index] <- numer/denom
     LM[, index2] <- 1 - LM[, index]
     result <- list(frsq, matrs, LM)
