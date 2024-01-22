@@ -28,7 +28,6 @@ jobs:
         run: |
           sudo apt-get install -y libgdal-dev libproj-dev
 
-
       - name: Install dependencies
         run: |
           R -e 'install.packages(c("remotes", "rcmdcheck"))'
@@ -39,7 +38,6 @@ jobs:
       - name: Build and check
         run: R CMD build . && R CMD check *tar.gz
 
-      - name: Check if on Linux and install
-        if: runner.os == 'Linux'
+      - name: Install
         run: R CMD INSTALL *tar.gz
 
